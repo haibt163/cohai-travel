@@ -1,3 +1,5 @@
+import { createAuthClient } from "better-auth/react";
+
 export const authEnabled = true;
 
 export const GROK_PROVIDERS = [
@@ -7,12 +9,19 @@ export const GROK_PROVIDERS = [
 
 export type ProviderId = (typeof GROK_PROVIDERS)[number]["providerId"];
 
-/** Preview host replaces this with the Better Auth client. */
+export const authClient = createAuthClient({
+  baseURL: import.meta.env.VITE_BETTER_AUTH_URL,
+});
+
 export async function signIn(providerId: ProviderId, opts?: { callbackURL?: string }) {
   const callbackURL = opts?.callbackURL ?? "/account";
-  window.location.href = `/api/auth/signin/${providerId}?callbackURL=${encodeURIComponent(callbackURL)}`;
+  await authClient.signIn.social({
+    provider: providerId,
+    callbackURL,
+  });
 }
 
 export async function signOut() {
-  window.location.href = "/api/auth/signout";
+  await authClient.signOut();
+  window.location.href = "/";
 }

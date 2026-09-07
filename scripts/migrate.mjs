@@ -1,7 +1,8 @@
 /**
  * Apply ordered SQL files in /migrations against DATABASE_URL.
- * Usage: DATABASE_URL=... npm run db:migrate
+ * Usage: npm run db:migrate   (reads .env if present)
  */
+import "./load-env.mjs";
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
