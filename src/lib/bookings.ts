@@ -45,6 +45,7 @@ export const createBooking = createServerFn({ method: "POST" })
     return sql.transaction(async (tx) => {
       let total = 0;
       let startDate = data.startDate;
+      let inventoryUnits = 1;
 
       if (data.kind === "tour") {
         if (!data.departureId) throw new Error("Choose a departure");
@@ -68,27 +69,63 @@ export const createBooking = createServerFn({ method: "POST" })
         total = num(dep.price) * data.guests;
         startDate = dep.start_date;
       } else if (data.kind === "stay") {
-        const stays = await tx<{ price_per_night: string | number }>`
-          select price_per_night from stays where id = ${data.itemId} limit 1
+        const stays = await tx<{
+          price_per_night: string | number;
+          inventory_unit_count: number;
+        }>`
+          select price_per_night, inventory_unit_count
+          from stays
+          where id = ${data.itemId}
+          for update
         `;
-        if (!stays[0]) throw new Error("Stay not found");
-        total = num(stays[0].price_per_night) * data.nights;
+        const stay = stays[0];
+        if (!stay) throw new Error("Stay not found");
+        const conflicts = await tx<{ booked_units: number }>`
+          select coalesce(sum(inventory_units), 0)::int as booked_units
+          from bookings
+          where kind = 'stay'
+            and item_id = ${data.itemId}
+            and status = 'confirmed'
+            and start_date < (${startDate}::date + ${data.nights})
+            and (start_date + nights) > ${startDate}::date
+        `;
+        const bookedUnits = num(conflicts[0]?.booked_units ?? 0);
+        if (bookedUnits + inventoryUnits > stay.inventory_unit_count) {
+          throw new Error("Not enough rooms for those dates");
+        }
+        total = num(stay.price_per_night) * data.nights;
       } else {
-        const cars = await tx<{ price_per_day: string | number }>`
-          select price_per_day from cars where id = ${data.itemId} limit 1
+        const cars = await tx<{ price_per_day: string | number; inventory_unit_count: number }>`
+          select price_per_day, inventory_unit_count
+          from cars
+          where id = ${data.itemId}
+          for update
         `;
-        if (!cars[0]) throw new Error("Car not found");
-        total = num(cars[0].price_per_day) * data.nights;
+        const car = cars[0];
+        if (!car) throw new Error("Car not found");
+        const conflicts = await tx<{ booked_units: number }>`
+          select coalesce(sum(inventory_units), 0)::int as booked_units
+          from bookings
+          where kind = 'car'
+            and item_id = ${data.itemId}
+            and status = 'confirmed'
+            and start_date < (${startDate}::date + ${data.nights})
+            and (start_date + nights) > ${startDate}::date
+        `;
+        if (num(conflicts[0]?.booked_units ?? 0) + inventoryUnits > car.inventory_unit_count) {
+          throw new Error("Car is unavailable for those dates");
+        }
+        total = num(car.price_per_day) * data.nights;
       }
 
       const id = crypto.randomUUID();
       await tx`
         insert into bookings (
-          id, user_id, kind, item_id, departure_id, start_date, guests, nights,
+          id, user_id, kind, item_id, departure_id, start_date, guests, nights, inventory_units,
           first_name, last_name, email, phone, notes, total_price, status
         ) values (
           ${id}, ${context.userId}, ${data.kind}, ${data.itemId}, ${data.departureId ?? null},
-          ${startDate}, ${data.guests}, ${data.nights}, ${data.firstName}, ${data.lastName},
+          ${startDate}, ${data.guests}, ${data.nights}, ${inventoryUnits}, ${data.firstName}, ${data.lastName},
           ${data.email}, ${data.phone ?? null}, ${data.notes ?? null}, ${total}, 'confirmed'
         )
       `;
