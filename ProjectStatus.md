@@ -1,6 +1,6 @@
 # CoHai Travel — project status
 
-Last updated: 7 September 2026.
+Last updated: 7 September 2026 (UI source landed on `main`).
 
 ## One-line status
 
@@ -59,7 +59,7 @@ Auth is **on** because bookings and contact messages store PII and must be scope
 - `src/lib/catalog.ts` — list/get/search for public inventory; remaining seats computed from confirmed bookings
 - `src/lib/bookings.ts` — `createBooking`, `listMyBookings`, `sendContact` behind `authMiddleware`
 
-### Surfaces
+### Surfaces now in this repo
 
 - Home with Ha Long hero, chapter tiles (Nature / Coast / UNESCO), featured journeys, neighbour gates (Angkor, Bangkok)
 - Tour index with chapter chips; tour detail with itinerary + departure picker
@@ -68,12 +68,15 @@ Auth is **on** because bookings and contact messages store PII and must be scope
 - Contact form (signed-in)
 - Login (Google / X) and My trips
 - EN/VN toggle persisted in `localStorage`
+- Tokens, shell, cards, booking form, locale dictionary
+
+Auth adapters under `src/lib/auth/` stand in for the preview host. A standalone checkout still needs `package.json` / Vite Start config, `routeTree.gen.ts`, Better Auth wiring, and `public/media/` photography — those were not part of this UI source drop.
 
 ### Design
 
 - Tokens in `src/styles.css`
 - Shell: currency + language + auth slot, sticky nav, ink footer
-- Generated destination photography under `public/media/`
+- Generated destination photography under `public/media/` (preview only until copied)
 - Brand card `public/og.jpg`, mark `public/favicon.svg`
 
 ### Quality bar that already passed in the builder
@@ -94,12 +97,13 @@ Auth is **on** because bookings and contact messages store PII and must be scope
 | Reviews, room types, two-location car dropoff | Flattened or omitted |
 | URL-prefixed locales (`/vn/...`) | Client toggle only |
 | Standalone Next.js repo | This React app *is* the rebuild |
+| App scaffold (`package.json`, Vite config, generated route tree) | Not in this drop |
 
 ## Implementation plan
 
 ### Phase 0 — done
 
-Brand, stack, IA, schema, seed, chrome, public catalog, authenticated booking + contact.
+Brand, stack, IA, schema, seed, chrome, public catalog, authenticated booking + contact. Preview UI source is on `main`.
 
 ### Phase 1 — desk
 
@@ -130,8 +134,8 @@ Brand, stack, IA, schema, seed, chrome, public catalog, authenticated booking + 
 
 | Surface | Role |
 | --- | --- |
-| This GitHub repo (`haibt163/cohai-travel`) | Source of record, docs, catalog seed, UI |
-| Grok App Builder preview | Running v1 with platform auth + PGLite/Neon |
+| This GitHub repo (`haibt163/cohai-travel`) | Source of record: docs, catalog seed, and the preview UI (`src/routes`, `src/components`, `src/lib`) |
+| Grok App Builder preview | Running v1 with platform auth + PGLite/Neon. Auth host files here are adapters so the UI compiles outside the sandbox. |
 | `haibt163/travel` | Frozen WordPress dump — do not overwrite |
 
 ## How to extend the catalog

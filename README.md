@@ -20,6 +20,15 @@ React 19 · TanStack Start · Vite · Tailwind v4 · Better Auth · Postgres.
 
 The playable preview was built in the Grok App Builder sandbox, which is why this is TanStack Start rather than Next.js App Router. See `ProjectStatus.md` for the rationale.
 
+## What is in the repo now
+
+- `src/routes/` — home, journeys, places, stays, cars, search, contact, login, My trips
+- `src/components/` — shell, cards, booking form, cover, search box
+- `src/lib/` — catalog + bookings server functions, locale, tokens helpers, auth adapters
+- `migrations/` — catalog schema and seed
+
+A standalone `npm run dev` still needs the TanStack Start scaffold (`package.json`, Vite config, generated route tree), Better Auth credentials, and `public/media/` images from the preview.
+
 ## Status
 
-v1 catalog + booking UI is implemented and verified in that preview. Operator admin, payments, and a row-level import of `data_vietaustravel` are later phases.
+v1 catalog + booking UI source is on `main`. Operator admin, payments, and a row-level import of `data_vietaustravel` are later phases.
