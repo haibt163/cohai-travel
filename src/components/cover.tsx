@@ -16,6 +16,8 @@ export function Cover({
       src={src}
       alt={alt}
       loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
       className={cn("h-full w-full object-cover", className)}
     />
   );
