@@ -31,6 +31,7 @@ jobs:
           node-version: 22
           cache: npm
 
+      # npm ci intentionally enforces package.json/package-lock.json parity.
       - name: Install dependencies
         run: npm ci
 
