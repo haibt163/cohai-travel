@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getCar } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
 import { aud } from "@/lib/utils";
+import { seoHead } from "@/lib/seo";
 import { BookingForm } from "@/components/booking-form";
 import { Cover } from "@/components/cover";
 
@@ -11,6 +12,15 @@ export const Route = createFileRoute("/cars/$slug")({
     if (!car) throw notFound();
     return { car };
   },
+  head: ({ loaderData }) =>
+    loaderData
+      ? seoHead({
+          title: `${loaderData.car.title} | CoHai Travel`,
+          description: loaderData.car.excerpt,
+          pathname: `/cars/${loaderData.car.slug}`,
+          image: loaderData.car.image,
+        })
+      : {},
   component: CarDetail,
 });
 
