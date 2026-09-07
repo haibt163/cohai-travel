@@ -1,0 +1,14 @@
+node_modules
+.vercel
+dist
+.output
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+screenshots
+.tmp
+artifacts
+.grok/og-pending
+pglite-debug.log
