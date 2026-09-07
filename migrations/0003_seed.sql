@@ -9,3 +9,53 @@ insert into destinations (id, slug, country, title_en, title_vn, excerpt_en, exc
 ('nhatrang', 'nha-trang', 'Vietnam', 'Nha Trang', 'Nha Trang', 'Bay city, islands, Cham towers inland.', 'Thành phố vịnh, đảo, tháp Chăm.', 'Use Nha Trang as a hinge on the central coast: a morning on the water, an afternoon at Po Nagar, then south toward the dunes.', 'Nha Trang là khớp nối miền Trung: sáng trên nước, chiều Po Nagar, rồi xuống cồn cát.', '/media/dest-nhatrang.jpg', 'Vietnamese, English', 'VND'),
 ('siemreap', 'siem-reap', 'Cambodia', 'Siem Reap', 'Xiêm Riệp', 'Gateway to Angkor, Tonle Sap, slow evenings.', 'Cửa ngõ Angkor, Biển Hồ.', 'Siem Reap is more than a launchpad. Dawn at Angkor Wat, then the quieter temples, then a boat onto Tonle Sap when the lake is high.', 'Xiêm Riệp không chỉ là bàn đạp. Bình minh Angkor, đền vắng hơn, rồi thuyền ra Biển Hồ.', '/media/dest-angkor.jpg', 'Khmer, English', 'USD'),
 ('bangkok', 'bangkok', 'Thailand', 'Bangkok', 'Bangkok', 'River city, teak houses, late trains of light.', 'Thành phố sông, nhà gỗ tếch.', 'Treat Bangkok as a river. Cross at dawn for Wat Arun, eat in a shophouse, and use the city as the southern gate to Indochina.', 'Hãy coi Bangkok là một dòng sông. Qua sông lúc rạng đông tới Wat Arun, ăn quán nhà phố.', '/media/dest-bangkok.jpg', 'Thai, English', 'THB');
+
+insert into tours (id, slug, destination_id, chapter, duration_days, title_en, title_vn, excerpt_en, excerpt_vn, body_en, body_vn, image, featured) values
+('junk-halong', 'ha-long-overnight-junk', 'halong', 'unesco', 3, 'Ha Long overnight junk', 'Thuyền overnight Hạ Long', 'Two nights among the karsts on a timber junk, kayaks at dusk.', 'Hai đêm giữa đá vôi trên thuyền gỗ, kayak lúc chạng vạng.', 'Day 1: transfer from Hanoi, board at noon, swim in a quiet cove. Day 2: kayak through a limestone tunnel, lunch on deck, night at anchor. Day 3: tai chi at sunrise and road back to Hanoi.', 'Ngày 1: từ Hà Nội, lên thuyền buổi trưa. Ngày 2: kayak qua hang, neo đêm. Ngày 3: về Hà Nội.', '/media/hero-halong.jpg', true),
+('hue-hoian', 'imperial-hue-hoi-an', 'hue', 'unesco', 6, 'Imperial Hue and Hoi An', 'Huế kinh thành và Hội An', 'Citadel, tombs, then lantern streets on the Thu Bon.', 'Kinh thành, lăng tẩm, rồi phố đèn lồng.', 'A six-day arc of central Vietnam: the Imperial City, Perfume River, Hai Van, three nights in Hoi An.', 'Sáu ngày miền Trung: Đại Nội, sông Hương, đèo Hải Vân, ba đêm Hội An.', '/media/unesco-hue.jpg', true),
+('angkor-dawn', 'angkor-dawn-tonle-sap', 'siemreap', 'unesco', 5, 'Angkor dawn and Tonle Sap', 'Bình minh Angkor và Biển Hồ', 'First light at Angkor Wat, quieter temples, a day on the lake.', 'Ánh sáng đầu tiên ở Angkor, đền vắng, một ngày trên hồ.', 'Five days paced for heat. One dawn at Angkor Wat, Bayon and Ta Prohm, one full day on Tonle Sap.', 'Năm ngày theo nắng. Một bình minh Angkor, một chiều Bayon, một ngày Biển Hồ.', '/media/dest-angkor.jpg', true),
+('hanoi-heritage', 'hanoi-old-quarter-walk', 'hanoi', 'unesco', 3, 'Hanoi heritage walk', 'Đi bộ di sản Hà Nội', 'Three days on foot: lakes, temples, and a cooking table.', 'Ba ngày bộ: hồ, đền, một bàn bếp.', 'Walk the Old Quarter with a historian, Temple of Literature, a family table in a tube house.', 'Đi phố cổ với nhà sử học, Văn Miếu, ăn nhà ống.', '/media/dest-hanoi.jpg', false),
+('sapa-terraces', 'sapa-terraces-villages', 'sapa', 'nature', 8, 'Sapa terraces and villages', 'Ruộng bậc thang Sa Pa', 'A walking week through Hmong and Dao country.', 'Một tuần đi bộ bản Mông và Dao.', 'Eight days with homestays and one lodge night. The guide is from the valley.', 'Tám ngày homestay và một đêm lodge. Hướng dẫn người trong thung.', '/media/nature-sapa.jpg', true),
+('mekong-slow', 'mekong-slow-boat', 'mekong', 'nature', 6, 'Mekong slow boat', 'Thuyền chậm sông Mekong', 'Canals, floating markets, a night in an orchard house.', 'Kênh, chợ nổi, một đêm nhà vườn.', 'Leave Ho Chi Minh City by river. Sleep on a small boat one night and in an orchard house the next.', 'Rời TP.HCM theo sông. Một đêm thuyền, một đêm nhà vườn.', '/media/dest-mekong.jpg', false),
+('puluong', 'pu-luong-nature-escape', 'sapa', 'nature', 4, 'Pu Luong nature escape', 'Pu Luong lặng', 'Limestone valley, stilt houses, a two-night walk.', 'Thung lũng đá vôi, nhà sàn, đi bộ hai đêm.', 'Pu Luong is Sapa without the coaches. Community-run stilt house.', 'Pu Luong là Sa Pa không xe khách. Nhà sàn cộng đồng.', '/media/nature-sapa.jpg', false),
+('phuquoc-drift', 'phu-quoc-island-drift', 'phuquoc', 'beach', 5, 'Phu Quoc island drift', 'Phú Quốc trôi chậm', 'West-coast villa, pepper farm, a night-squid boat.', 'Villa bờ tây, vườn tiêu, thuyền mực đêm.', 'Five nights on the quiet side. No casino circuit.', 'Năm đêm phía yên. Không sòng bạc.', '/media/beach-phuquoc.jpg', true),
+('central-coast', 'central-coast-run', 'nhatrang', 'beach', 7, 'Central coast run', 'Dải biển miền Trung', 'Hoi An to Nha Trang along the water, with island time.', 'Hội An tới Nha Trang theo nước, có đảo.', 'A seven-day drive and boat. Private car, small hotels.', 'Bảy ngày xe và thuyền. Xe riêng, khách sạn nhỏ.', '/media/dest-nhatrang.jpg', false);
+
+insert into stays (id, slug, destination_id, star_count, price_per_night, title_en, title_vn, excerpt_en, excerpt_vn, body_en, body_vn, image) values
+('maison-hanoi', 'maison-hoan-kiem', 'hanoi', 5, 420, 'Maison Hoan Kiem', 'Maison Hoàn Kiếm', 'A courtyard house two lanes from the lake.', 'Nhà sân trong, hai ngõ tới hồ.', 'Twelve rooms around a pool court. Walk to the lake in four minutes.', 'Mười hai phòng quanh sân hồ. Bốn phút ra hồ.', '/media/stay-hanoi.jpg'),
+('junk-suite', 'karst-cabin-ha-long', 'halong', 4, 380, 'Karst cabin, Ha Long', 'Cabin đá vôi Hạ Long', 'A private cabin on a six-cabin junk.', 'Cabin riêng trên thuyền sáu phòng.', 'Timber, a window onto the karsts, meals on deck.', 'Gỗ, cửa sổ ra đá vôi, cơm trên boong.', '/media/hero-halong.jpg'),
+('hoian-river', 'thu-bon-house', 'hoian', 4, 265, 'Thu Bon house', 'Nhà sông Thu Bồn', 'Yellow-walled townhouse on the river.', 'Nhà phố vàng trên sông.', 'Four rooms, a tailor on the ground floor, bicycles in the hall.', 'Bốn phòng, thợ may tầng trệt, xe đạp trong hành lang.', '/media/dest-hoian.jpg'),
+('sapa-lodge', 'cloud-ridge-lodge', 'sapa', 4, 210, 'Cloud ridge lodge', 'Lodge sườn mây', 'Timber and stone above the terraces.', 'Gỗ và đá trên ruộng bậc.', 'Eight rooms, wood stoves, a long breakfast.', 'Tám phòng, bếp củi, bữa sáng dài.', '/media/stay-sapa.jpg'),
+('phuquoc-villa', 'west-salt-villa', 'phuquoc', 5, 510, 'West salt villa', 'Villa muối tây', 'Infinity pool facing the west coast.', 'Hồ vô cực nhìn bờ tây.', 'A four-bedroom villa on a quiet beach.', 'Villa bốn phòng, bếp theo yêu cầu.', '/media/stay-phuquoc.jpg'),
+('angkor-garden', 'garden-siem-reap', 'siemreap', 4, 195, 'Garden Siem Reap', 'Vườn Xiêm Riệp', 'A low hotel in a fruit garden.', 'Khách sạn thấp trong vườn cây.', 'Pool under mango trees, a 5am temple car.', 'Hồ dưới xoài, xe đền 5 giờ sáng.', '/media/dest-angkor.jpg');
+
+insert into cars (id, slug, pickup_id, seats, transmission, price_per_day, title_en, title_vn, excerpt_en, excerpt_vn, image) values
+('innova-hanoi', 'innova-hanoi', 'hanoi', 7, 'automatic', 95, 'Innova, Hanoi', 'Innova, Hà Nội', 'Seven seats, airport or city pickup, English-speaking driver.', 'Bảy chỗ, đón sân bay hoặc phố, tài xế tiếng Anh.', '/media/car-innova.jpg'),
+('sedan-hanoi', 'sedan-hanoi', 'hanoi', 3, 'automatic', 72, 'City sedan, Hanoi', 'Sedan phố, Hà Nội', 'Three passengers, met at Noi Bai or your hotel.', 'Ba khách, đón Nội Bài hoặc khách sạn.', '/media/car-innova.jpg'),
+('suv-danang', 'suv-da-nang', 'hoian', 6, 'automatic', 110, 'Coastal SUV, Da Nang / Hoi An', 'SUV biển, Đà Nẵng / Hội An', 'For Hai Van, My Son, or a coast day with luggage.', 'Hải Vân, Mỹ Sơn, hoặc ngày biển có hành lý.', '/media/car-innova.jpg'),
+('van-hanoi', 'van-hanoi', 'hanoi', 16, 'manual', 145, 'Group van, Hanoi', 'Xe van nhóm, Hà Nội', 'Sixteen seats for families or small groups to Ha Long or Ninh Binh.', 'Mười sáu chỗ, nhóm đi Hạ Long hoặc Ninh Bình.', '/media/car-innova.jpg');
+
+insert into tour_departures (id, tour_id, start_date, price, max_people) values
+('junk-1', 'junk-halong', '2026-10-12', 890, 12),
+('junk-2', 'junk-halong', '2026-11-02', 920, 12),
+('junk-3', 'junk-halong', '2026-12-14', 980, 10),
+('hue-1', 'hue-hoian', '2026-10-18', 1680, 10),
+('hue-2', 'hue-hoian', '2026-11-15', 1680, 10),
+('hue-3', 'hue-hoian', '2027-01-10', 1740, 8),
+('angkor-1', 'angkor-dawn', '2026-10-20', 1420, 8),
+('angkor-2', 'angkor-dawn', '2026-11-24', 1420, 8),
+('angkor-3', 'angkor-dawn', '2026-12-22', 1580, 8),
+('hanoi-1', 'hanoi-heritage', '2026-10-08', 640, 8),
+('hanoi-2', 'hanoi-heritage', '2026-11-05', 640, 8),
+('hanoi-3', 'hanoi-heritage', '2026-12-03', 680, 8),
+('sapa-1', 'sapa-terraces', '2026-10-11', 2140, 8),
+('sapa-2', 'sapa-terraces', '2026-11-08', 2140, 8),
+('sapa-3', 'sapa-terraces', '2027-03-15', 2280, 8),
+('mekong-1', 'mekong-slow', '2026-10-16', 1320, 8),
+('mekong-2', 'mekong-slow', '2026-12-04', 1380, 8),
+('puluong-1', 'puluong', '2026-10-09', 980, 8),
+('puluong-2', 'puluong', '2026-11-20', 980, 8),
+('phu-1', 'phuquoc-drift', '2026-10-25', 1890, 8),
+('phu-2', 'phuquoc-drift', '2026-12-18', 2100, 8),
+('coast-1', 'central-coast', '2026-11-01', 1960, 8),
+('coast-2', 'central-coast', '2027-01-08', 2040, 8);
