@@ -186,19 +186,31 @@ export const listMyBookings = createServerFn({ method: "GET" })
   });
 
 const contactInput = z.object({
-  name: z.string().min(1).max(80),
-  email: z.string().email(),
-  message: z.string().min(8).max(2000),
+  name: z.string().trim().min(1).max(80),
+  email: z.string().trim().email().max(320),
+  message: z.string().trim().min(8).max(2000),
+  website: z.string().max(200).optional(),
 });
 
 export const sendContact = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
   .validator((raw: unknown) => contactInput.parse(raw))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ data }) => {
     const sql = await getSql();
+    if (data.website?.trim()) return { ok: true as const };
+
+    const recent = await sql<{ count: number }>`
+      select count(*)::int as count
+      from contact_messages
+      where lower(email) = lower(${data.email})
+        and created_at > now() - interval '1 hour'
+    `;
+    if (num(recent[0]?.count ?? 0) >= 5) {
+      throw new Error("Too many messages. Please try again later.");
+    }
+
     await sql`
       insert into contact_messages (id, user_id, name, email, message)
-      values (${crypto.randomUUID()}, ${context.userId}, ${data.name}, ${data.email}, ${data.message})
+      values (${crypto.randomUUID()}, null, ${data.name}, ${data.email}, ${data.message})
     `;
     return { ok: true as const };
   });
