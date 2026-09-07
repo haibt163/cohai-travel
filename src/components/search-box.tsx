@@ -20,14 +20,18 @@ export function SearchBox({ variant = "hero" }: { variant?: "hero" | "page" }) {
       className={
         variant === "hero"
           ? "mt-8 flex max-w-xl flex-col gap-2 sm:flex-row"
-          : "flex gap-2"
+          : "flex flex-col gap-2 sm:flex-row"
       }
     >
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={t("searchPlaceholder")}
-        className="min-h-11 flex-1 rounded-md bg-paper px-3 text-ink outline-none"
+        className={
+          variant === "hero"
+            ? "min-h-11 flex-1 rounded-md bg-paper px-3 text-ink outline-none"
+            : "min-h-11 flex-1 rounded-md bg-surface px-3 text-ink shadow-border outline-none"
+        }
       />
       <Button type="submit">{variant === "hero" ? t("searchCta") : t("search")}</Button>
     </form>

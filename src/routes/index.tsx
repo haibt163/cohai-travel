@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { listTours } from "@/lib/catalog";
 import { useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
-import { TourCard } from "@/components/tour-card";
 import { SearchBox } from "@/components/search-box";
+import { TourCard } from "@/components/tour-card";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
@@ -48,7 +48,7 @@ function Home() {
               key={ch.key}
               to="/tours"
               search={{ chapter: ch.key }}
-              className="group relative block aspect-[4/5] overflow-hidden rounded-xl"
+              className="group relative block aspect-portrait overflow-hidden rounded-xl"
             >
               <Cover
                 src={ch.image}

@@ -19,7 +19,7 @@ function DestinationDetail() {
   const { locale, t } = useI18n();
   return (
     <article>
-      <div className="relative h-cover min-h-64 overflow-hidden">
+      <div className="relative h-cover overflow-hidden">
         <Cover src={destination.image} alt={field(destination, locale, "title")} priority />
         <div className="absolute inset-0 bg-ink/35" />
         <div className="absolute bottom-0 mx-auto w-full max-w-6xl px-4 pb-8 text-paper">

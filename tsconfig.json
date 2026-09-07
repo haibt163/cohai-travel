@@ -1,22 +1,36 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
     "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
     "isolatedModules": true,
-    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    // `src/lib/db.ts` imports scripts/migration-plan.mjs; checkJs types the
+    // implementation itself instead of a hand-written declaration beside it.
     "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node"],
+    "checkJs": true,
+    "noEmit": true,
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "allowImportingTsExtensions": true
   },
-  "include": ["src", "vite.config.ts", "scripts"]
+  "include": [
+    "src",
+    "server"
+  ]
 }

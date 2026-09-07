@@ -20,7 +20,7 @@ function TourDetail() {
 
   return (
     <article>
-      <div className="relative h-cover min-h-72 overflow-hidden">
+      <div className="relative h-cover overflow-hidden">
         <Cover src={tour.image} alt={field(tour, locale, "title")} priority />
         <div className="absolute inset-0 bg-ink/35" />
         <div className="absolute bottom-0 left-0 right-0 mx-auto max-w-6xl px-4 pb-8 text-paper">

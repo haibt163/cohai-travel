@@ -9,21 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ToursIndexRouteImport } from './routes/tours/index'
-import { Route as ToursSlugRouteImport } from './routes/tours/$slug'
+import { Route as CarsIndexRouteImport } from './routes/cars/index'
+import { Route as CarsSlugRouteImport } from './routes/cars/$slug'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations/index'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations/$slug'
 import { Route as StaysIndexRouteImport } from './routes/stays/index'
 import { Route as StaysSlugRouteImport } from './routes/stays/$slug'
-import { Route as CarsIndexRouteImport } from './routes/cars/index'
-import { Route as CarsSlugRouteImport } from './routes/cars/$slug'
+import { Route as ToursIndexRouteImport } from './routes/tours/index'
+import { Route as ToursSlugRouteImport } from './routes/tours/$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -44,19 +49,14 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CarsIndexRoute = CarsIndexRouteImport.update({
+  id: '/cars/',
+  path: '/cars/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToursIndexRoute = ToursIndexRouteImport.update({
-  id: '/tours/',
-  path: '/tours/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ToursSlugRoute = ToursSlugRouteImport.update({
-  id: '/tours/$slug',
-  path: '/tours/$slug',
+const CarsSlugRoute = CarsSlugRouteImport.update({
+  id: '/cars/$slug',
+  path: '/cars/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
@@ -79,14 +79,14 @@ const StaysSlugRoute = StaysSlugRouteImport.update({
   path: '/stays/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CarsIndexRoute = CarsIndexRouteImport.update({
-  id: '/cars/',
-  path: '/cars/',
+const ToursIndexRoute = ToursIndexRouteImport.update({
+  id: '/tours/',
+  path: '/tours/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CarsSlugRoute = CarsSlugRouteImport.update({
-  id: '/cars/$slug',
-  path: '/cars/$slug',
+const ToursSlugRoute = ToursSlugRouteImport.update({
+  id: '/tours/$slug',
+  path: '/tours/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -101,14 +101,14 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
-  '/tours/': typeof ToursIndexRoute
-  '/tours/$slug': typeof ToursSlugRoute
-  '/destinations/': typeof DestinationsIndexRoute
-  '/destinations/$slug': typeof DestinationsSlugRoute
-  '/stays/': typeof StaysIndexRoute
-  '/stays/$slug': typeof StaysSlugRoute
-  '/cars/': typeof CarsIndexRoute
   '/cars/$slug': typeof CarsSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
+  '/tours/$slug': typeof ToursSlugRoute
+  '/cars/': typeof CarsIndexRoute
+  '/destinations/': typeof DestinationsIndexRoute
+  '/stays/': typeof StaysIndexRoute
+  '/tours/': typeof ToursIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -117,14 +117,14 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
-  '/tours': typeof ToursIndexRoute
-  '/tours/$slug': typeof ToursSlugRoute
-  '/destinations': typeof DestinationsIndexRoute
-  '/destinations/$slug': typeof DestinationsSlugRoute
-  '/stays': typeof StaysIndexRoute
-  '/stays/$slug': typeof StaysSlugRoute
-  '/cars': typeof CarsIndexRoute
   '/cars/$slug': typeof CarsSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
+  '/tours/$slug': typeof ToursSlugRoute
+  '/cars': typeof CarsIndexRoute
+  '/destinations': typeof DestinationsIndexRoute
+  '/stays': typeof StaysIndexRoute
+  '/tours': typeof ToursIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -134,14 +134,14 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
-  '/tours/': typeof ToursIndexRoute
-  '/tours/$slug': typeof ToursSlugRoute
-  '/destinations/': typeof DestinationsIndexRoute
-  '/destinations/$slug': typeof DestinationsSlugRoute
-  '/stays/': typeof StaysIndexRoute
-  '/stays/$slug': typeof StaysSlugRoute
-  '/cars/': typeof CarsIndexRoute
   '/cars/$slug': typeof CarsSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
+  '/tours/$slug': typeof ToursSlugRoute
+  '/cars/': typeof CarsIndexRoute
+  '/destinations/': typeof DestinationsIndexRoute
+  '/stays/': typeof StaysIndexRoute
+  '/tours/': typeof ToursIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -152,14 +152,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
-    | '/tours/'
-    | '/tours/$slug'
-    | '/destinations/'
-    | '/destinations/$slug'
-    | '/stays/'
-    | '/stays/$slug'
-    | '/cars/'
     | '/cars/$slug'
+    | '/destinations/$slug'
+    | '/stays/$slug'
+    | '/tours/$slug'
+    | '/cars/'
+    | '/destinations/'
+    | '/stays/'
+    | '/tours/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -168,14 +168,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
-    | '/tours'
-    | '/tours/$slug'
-    | '/destinations'
-    | '/destinations/$slug'
-    | '/stays'
-    | '/stays/$slug'
-    | '/cars'
     | '/cars/$slug'
+    | '/destinations/$slug'
+    | '/stays/$slug'
+    | '/tours/$slug'
+    | '/cars'
+    | '/destinations'
+    | '/stays'
+    | '/tours'
     | '/api/auth/$'
   id:
     | '__root__'
@@ -184,14 +184,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
-    | '/tours/'
-    | '/tours/$slug'
-    | '/destinations/'
-    | '/destinations/$slug'
-    | '/stays/'
-    | '/stays/$slug'
-    | '/cars/'
     | '/cars/$slug'
+    | '/destinations/$slug'
+    | '/stays/$slug'
+    | '/tours/$slug'
+    | '/cars/'
+    | '/destinations/'
+    | '/stays/'
+    | '/tours/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -201,14 +201,14 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   SearchRoute: typeof SearchRoute
-  ToursIndexRoute: typeof ToursIndexRoute
-  ToursSlugRoute: typeof ToursSlugRoute
-  DestinationsIndexRoute: typeof DestinationsIndexRoute
-  DestinationsSlugRoute: typeof DestinationsSlugRoute
-  StaysIndexRoute: typeof StaysIndexRoute
-  StaysSlugRoute: typeof StaysSlugRoute
-  CarsIndexRoute: typeof CarsIndexRoute
   CarsSlugRoute: typeof CarsSlugRoute
+  DestinationsSlugRoute: typeof DestinationsSlugRoute
+  StaysSlugRoute: typeof StaysSlugRoute
+  ToursSlugRoute: typeof ToursSlugRoute
+  CarsIndexRoute: typeof CarsIndexRoute
+  DestinationsIndexRoute: typeof DestinationsIndexRoute
+  StaysIndexRoute: typeof StaysIndexRoute
+  ToursIndexRoute: typeof ToursIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -249,23 +249,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tours/': {
-      id: '/tours/'
-      path: '/tours/'
-      fullPath: '/tours/'
-      preLoaderRoute: typeof ToursIndexRouteImport
+    '/cars/': {
+      id: '/cars/'
+      path: '/cars'
+      fullPath: '/cars/'
+      preLoaderRoute: typeof CarsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tours/$slug': {
-      id: '/tours/$slug'
-      path: '/tours/$slug'
-      fullPath: '/tours/$slug'
-      preLoaderRoute: typeof ToursSlugRouteImport
+    '/cars/$slug': {
+      id: '/cars/$slug'
+      path: '/cars/$slug'
+      fullPath: '/cars/$slug'
+      preLoaderRoute: typeof CarsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/destinations/': {
       id: '/destinations/'
-      path: '/destinations/'
+      path: '/destinations'
       fullPath: '/destinations/'
       preLoaderRoute: typeof DestinationsIndexRouteImport
       parentRoute: typeof rootRouteImport
@@ -279,7 +279,7 @@ declare module '@tanstack/react-router' {
     }
     '/stays/': {
       id: '/stays/'
-      path: '/stays/'
+      path: '/stays'
       fullPath: '/stays/'
       preLoaderRoute: typeof StaysIndexRouteImport
       parentRoute: typeof rootRouteImport
@@ -291,18 +291,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaysSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cars/': {
-      id: '/cars/'
-      path: '/cars/'
-      fullPath: '/cars/'
-      preLoaderRoute: typeof CarsIndexRouteImport
+    '/tours/': {
+      id: '/tours/'
+      path: '/tours'
+      fullPath: '/tours/'
+      preLoaderRoute: typeof ToursIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cars/$slug': {
-      id: '/cars/$slug'
-      path: '/cars/$slug'
-      fullPath: '/cars/$slug'
-      preLoaderRoute: typeof CarsSlugRouteImport
+    '/tours/$slug': {
+      id: '/tours/$slug'
+      path: '/tours/$slug'
+      fullPath: '/tours/$slug'
+      preLoaderRoute: typeof ToursSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -316,22 +316,21 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute,
-  AccountRoute,
-  ContactRoute,
-  LoginRoute,
-  SearchRoute,
-  ToursIndexRoute,
-  ToursSlugRoute,
-  DestinationsIndexRoute,
-  DestinationsSlugRoute,
-  StaysIndexRoute,
-  StaysSlugRoute,
-  CarsIndexRoute,
-  CarsSlugRoute,
-  ApiAuthSplatRoute,
+  IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
+  SearchRoute: SearchRoute,
+  CarsSlugRoute: CarsSlugRoute,
+  DestinationsSlugRoute: DestinationsSlugRoute,
+  StaysSlugRoute: StaysSlugRoute,
+  ToursSlugRoute: ToursSlugRoute,
+  CarsIndexRoute: CarsIndexRoute,
+  DestinationsIndexRoute: DestinationsIndexRoute,
+  StaysIndexRoute: StaysIndexRoute,
+  ToursIndexRoute: ToursIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
-
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

@@ -51,11 +51,11 @@ function ContactPage() {
               <form className="space-y-3" onSubmit={onSubmit}>
                 <div>
                   <Label htmlFor="name">{t("name")}</Label>
-                  <Input id="name" name="name" required />
+                  <Input id="name" name="name" required autoComplete="name" />
                 </div>
                 <div>
                   <Label htmlFor="email">{t("email")}</Label>
-                  <Input id="email" name="email" type="email" required />
+                  <Input id="email" name="email" type="email" required autoComplete="email" />
                 </div>
                 <div>
                   <Label htmlFor="message">{t("message")}</Label>

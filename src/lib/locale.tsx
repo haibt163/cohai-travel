@@ -52,9 +52,9 @@ const copy: Dictionary = {
   },
   guests: { en: "Guests", vn: "Khách" },
   nights: { en: "Nights", vn: "Đêm" },
+  name: { en: "Name", vn: "Tên" },
   firstName: { en: "First name", vn: "Tên" },
   lastName: { en: "Last name", vn: "Họ" },
-  name: { en: "Name", vn: "Tên" },
   email: { en: "Email", vn: "Email" },
   phone: { en: "Phone", vn: "Điện thoại" },
   notes: { en: "Notes for the desk", vn: "Ghi chú cho bàn" },
@@ -94,13 +94,15 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const saved = window.localStorage.getItem("cohai-locale");
     if (saved === "en" || saved === "vn") setLocaleState(saved);
-    document.documentElement.lang = saved === "vn" ? "vi" : "en";
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "vn" ? "vi" : "en";
+  }, [locale]);
 
   const setLocale = (l: Locale) => {
     setLocaleState(l);
     window.localStorage.setItem("cohai-locale", l);
-    document.documentElement.lang = l === "vn" ? "vi" : "en";
   };
 
   const value = useMemo<Ctx>(

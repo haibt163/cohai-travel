@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { searchCatalog } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
-import { EmptyNote, PageHead } from "@/components/shell";
 import { SearchBox } from "@/components/search-box";
+import { EmptyNote, PageHead } from "@/components/shell";
 
 type Search = { q?: string; chapter?: string };
 

@@ -32,7 +32,9 @@ export function BookingForm({
   const dep = departures?.find((d) => d.id === departureId);
   const left = dep ? dep.max_people - dep.booked : 99;
   const price =
-    kind === "tour" ? (dep?.price ?? 0) * guests : (unitPrice ?? 0) * nights;
+    kind === "tour"
+      ? (dep?.price ?? 0) * guests
+      : (unitPrice ?? 0) * nights;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,7 +69,9 @@ export function BookingForm({
       <h2 className="font-display text-2xl">
         {kind === "tour" ? t("book") : kind === "stay" ? t("bookStay") : t("bookCar")}
       </h2>
-      <p className="mt-1 text-sm text-muted tabular-nums">{price > 0 ? aud(price) : "—"}</p>
+      <p className="mt-1 text-sm text-muted tabular-nums">
+        {price > 0 ? aud(price) : "—"}
+      </p>
 
       <SignedOut>
         <p className="mt-4 text-sm">{t("needSignIn")}</p>

@@ -22,7 +22,11 @@ function AccountPage() {
   }, [user]);
 
   if (isPending) {
-    return <div className="mx-auto max-w-3xl px-4 py-16 text-muted">…</div>;
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16">
+        <div className="h-24 animate-pulse rounded-xl bg-paper-2" />
+      </div>
+    );
   }
   if (!user) return <RedirectToSignIn />;
 

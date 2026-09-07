@@ -29,7 +29,7 @@ function StaysPage() {
             </div>
             <div className="space-y-1 p-4">
               <p className="text-xs uppercase tracking-wide text-muted">
-                {field(s, locale, "dest_title")} · {s.star_count}-star
+                {field(s, locale, "dest_title")} · {s.star_count}★
               </p>
               <h2 className="font-display text-2xl">{field(s, locale, "title")}</h2>
               <p className="text-sm text-muted">{field(s, locale, "excerpt")}</p>

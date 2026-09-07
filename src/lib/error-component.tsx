@@ -18,19 +18,30 @@ export function AppErrorComponent({ error }: ErrorComponentProps) {
       </span>
       <h1 className="font-display text-3xl">Something went wrong</h1>
       <p className="max-w-md text-sm break-words text-muted">{errorMessage(error)}</p>
+      <Link to="/" className="mt-4 text-sm text-accent">
+        Back to CoHai Travel
+      </Link>
     </main>
   );
 }
 
-export function NotFound() {
+export function NotFoundComponent() {
   return (
-    <main className="mx-auto max-w-xl px-4 py-24 text-center">
-      <p className="text-xs uppercase tracking-caps text-accent">CoHai Travel</p>
+    <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+      <p className="text-xs uppercase tracking-caps text-accent">404</p>
       <h1 className="mt-2 font-display text-4xl">That page is not on the atlas.</h1>
-      <p className="mt-4 text-muted">The journey may have moved, or the link is old.</p>
-      <Link to="/" className="mt-8 inline-flex min-h-11 items-center text-accent">
-        Back to the desk
+      <p className="mt-3 text-muted">Try journeys, places, or the search desk.</p>
+      <Link to="/" className="mt-6 inline-flex min-h-11 items-center text-accent">
+        Home
       </Link>
     </main>
+  );
+}
+
+export function PendingComponent() {
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-16">
+      <div className="h-72 animate-pulse rounded-xl bg-paper-2" />
+    </div>
   );
 }

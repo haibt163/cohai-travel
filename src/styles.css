@@ -28,8 +28,8 @@
   --duration-250: 250ms;
   --tracking-caps: 0.18em;
   --min-height-hero: 72vh;
-  --min-height-cover: 42vh;
   --height-cover: 48vh;
+  --aspect-ratio-portrait: 4 / 5;
   --aspect-ratio-photo: 3 / 2;
   --scale-lift: 1.03;
 }
