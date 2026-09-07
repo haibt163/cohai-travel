@@ -1,62 +1,115 @@
 # Content archaeology and migration map
 
+Last reviewed: 8 September 2026.
+
+## Purpose
+
+This document is the source-fidelity ledger for reconstructing the legacy VietAus WordPress site without silently inventing or losing content. It records source-derived findings and the migration rules. It does **not** claim that the legacy records have already been migrated.
+
 ## Source of truth reviewed
 
-The legacy source repository is `haibt163/travel`. Its root contains a WordPress/MySQL dump named `data_vietaustravel`; the dump is a 5.5-era MySQL export of the old `vietaustravel` site. The legacy configuration identifies the Book Your Travel theme and the site-specific `vietaustravel` settings.
+The legacy source repository is `haibt163/travel`. Its root contains the `data_vietaustravel` MySQL/content dump and the old `vietaustravel` WordPress tree. The rebuild repository is `haibt163/cohai-travel`; the legacy repository remains frozen.
 
-This document records source-derived findings only. It is intentionally not a claim that every legacy record has already been migrated.
+## Legacy domain model found
 
-## Legacy domain model found in the dump
-
-| Legacy structure | Observed meaning | Current model | Migration decision |
+| Legacy structure | Observed meaning | Current model | Migration status |
 | --- | --- | --- | --- |
-| `wp_posts` (`post_type=location`) | destination/location content | `destinations` | Map published location records to canonical destinations after editorial review. |
-| `wp_posts` (`post_type=tour`) | tour/content records | `tours` | Map published tour records to canonical tours; preserve slug where safe. |
-| `wp_byt_tour_schedule` | scheduled tour departures, price, duration, capacity | `tour_departures` | Direct conceptual mapping; current model should retain date, price and max people. |
-| `wp_byt_tour_booking` | tour bookings linked to schedule | `bookings` with `kind='tour'` | Normalize into one booking table; preserve departure relationship. |
-| `wp_byt_bookings` | accommodation-style bookings; includes `room_count` | `bookings` with `kind='stay'` | Current `inventory_units` is the normalized successor of the legacy room-count concept. |
-| `wp_byt_vacancies` | per-day accommodation vacancy with `room_count` | stay inventory model | Legacy evidence supports date-based room inventory; current implementation uses finite inventory plus overlap checks. |
-| `wp_byt_vacancy_bookings` | rooms consumed by a booking/vacancy | `bookings.inventory_units` | Normalize into the booking row rather than retaining a separate junction table. |
-| `wp_byt_car_rental_bookings` | car rental booking | `bookings` with `kind='car'` | Normalize into the shared booking table. |
-| `wp_byt_car_rental_booking_days` | individual booked rental dates | stay/car date-range semantics | Current car overlap checks replace the legacy day rows for availability enforcement. |
-| `wp_byt_currencies` | currency catalogue | current AUD presentation | Do not blindly migrate all currencies; retain only currencies intentionally supported by the rebuilt product. |
-| WordPress `postmeta` / theme options | relationships, images, display settings, custom fields | normalized catalog schema + UI | Treat as evidence for migration mapping, not as runtime application configuration. |
+| `wp_posts` (`post_type=location`) | destination/location content | `destinations` | Mapping rule established; row-by-row migration outstanding. |
+| `wp_posts` (`post_type=tour`) | tour/content records | `tours` | Mapping rule established; row-by-row migration outstanding. |
+| `wp_byt_tour_schedule` | scheduled departures, price, duration, capacity | `tour_departures` | Conceptual mapping established; source reconciliation outstanding. |
+| `wp_byt_tour_booking` | tour bookings linked to schedule | shared `bookings` | Conceptual mapping established; historical booking migration not yet performed. |
+| `wp_byt_bookings` | accommodation bookings; includes `room_count` | stay bookings + `inventory_units` | Inventory semantics implemented; historical records not migrated. |
+| `wp_byt_vacancies` | per-day accommodation vacancy with `room_count` | finite stay inventory | Date-range enforcement implemented; source-by-source migration outstanding. |
+| `wp_byt_vacancy_bookings` | rooms consumed by a booking/vacancy | booking inventory | Normalized successor implemented; historical mapping outstanding. |
+| `wp_byt_car_rental_bookings` | car rental booking | shared `bookings`, `kind='car'` | Conceptual mapping established; historical migration outstanding. |
+| `wp_byt_car_rental_booking_days` | individual rental days | car date-range semantics | Current enforcement implemented; historical mapping outstanding. |
+| currency tables | supported currency catalogue | AUD presentation | Product decision is AUD; full legacy currency catalogue is not being blindly imported. |
+| WordPress `postmeta` / theme options | custom fields, relationships, images and display settings | normalized schema + UI | Evidence captured; complete extraction/classification outstanding. |
 
-## Important legacy inventory evidence
+## Inventory evidence
 
-The legacy booking table explicitly contains `room_count`, and the vacancy tables model `room_count` by day. This is stronger evidence for finite accommodation inventory than the current UI alone provides. The rebuilt model therefore uses `inventory_unit_count` on stays and `inventory_units` on bookings rather than treating every stay as infinitely available.
+The legacy accommodation structures explicitly contain `room_count`, including in vacancy records. This is the strongest structured evidence for finite, date-based room inventory. The rebuild therefore uses `inventory_unit_count` on stays and `inventory_units` on bookings, with half-open date ranges and transactional locking.
 
-The legacy car model also stores booking days separately. The rebuilt model intentionally collapses this into a date-range overlap check because the new booking domain uses `start_date + nights`.
+The legacy car model stores booking days separately. The rebuild intentionally uses date-range overlap semantics instead of retaining one row per day.
+
+Current conservative defaults where the source does not establish an authoritative quantity:
+
+- Angkor Garden: 1 unit.
+- Cars: 1 concurrently bookable vehicle per car listing.
+
+The guest UI does not yet expose multiple-room/multiple-unit quantity selection. That remains a product-completion item in the engineering roadmap.
 
 ## Legacy URL and taxonomy evidence
 
-The dump contains WordPress rewrite rules for:
+The dump contains rewrite/navigation evidence for:
 
 - `/locations/...`
 - `/tours/...`
 - `/hotels/...`
 - facility/taxonomy routes
 - category/tag/search routes
+- navigation groupings including Southern Tours, Northern Tours, Mekong Tours, Cruise tours and special regional tours
 
-It also contains navigation entries such as Southern Tours, Northern Tours, Mekong Tours, Cruise tours, and special Thailand/Cambodia/Lao/Singapore tours. These are evidence that the old site had more editorial/navigation taxonomy than the current normalized catalog necessarily exposes.
-
-The rebuilt site must therefore treat route preservation as a migration decision, not merely a UI routing exercise.
+**Migration status: outstanding.** Equivalent UI routes in the rebuild are not sufficient evidence that legacy URL equity has been preserved. The final migration must produce an explicit legacy URL → canonical URL/redirect decision.
 
 ## Known legacy content examples
 
-The dump contains published location records including Hanoi, Saigon, Sapa, Ha Long Bay, Tuần Châu, Đồng Hới and Hoi An–Da Nang, as well as many older/general-purpose records. It also contains later tour records such as Nha Trang Beaches, Mui Ne Beach–Phan Thiet, Phu Quoc Beaches, Cua Dai Beach–Hoi An, My Khe Beach–Da Nang, Con Dao Beach and multiple UNESCO/nature entries.
+The dump includes genuine destination records such as Hanoi, Saigon, Sapa, Ha Long Bay, Tuần Châu, Đồng Hới and Hoi An–Da Nang, as well as later tour records such as Nha Trang Beaches, Mui Ne Beach–Phan Thiet, Phu Quoc Beaches, Cua Dai Beach–Hoi An, My Khe Beach–Da Nang, Con Dao Beach and multiple UNESCO/nature entries.
 
-Some legacy records are clearly generic/demo/template material, while others are genuine Vietnamese destination content. They must not be bulk-imported without editorial classification.
+It also contains generic/demo/template material. Nothing should be bulk-imported solely because it exists in `wp_posts`.
 
-## Fidelity rules going forward
+## Required migration artifacts — still outstanding
+
+### 1. Machine-readable source inventory
+
+Extract, at minimum:
+
+- published posts and post types;
+- titles, slugs, dates and status;
+- `postmeta` relevant to customer-facing content and booking fields;
+- taxonomies and term relationships;
+- media/attachment references and URLs;
+- destination/tour/stay/car relationships;
+- structured booking/departure/inventory records;
+- legacy IDs for every retained source record.
+
+### 2. Migration decision matrix
+
+Every relevant legacy record must receive one explicit disposition:
+
+- `migrate` — preserve substantially as canonical content;
+- `rewrite` — retain subject/content intent but rewrite editorially;
+- `merge` — combine with another canonical record;
+- `archive` — retain for historical/reference purposes but do not publish;
+- `discard` — intentionally exclude, with a reason.
+
+### 3. URL mapping
+
+For each important legacy URL, record the canonical replacement, redirect target, or intentional retirement. Pay particular attention to locations, tours, accommodation and taxonomy routes.
+
+### 4. Media mapping
+
+For each retained image/media reference, record its source, licensing/ownership status, target asset and alt-text requirement. Provisional SVG/stock imagery in the rebuild must not be mistaken for historical media fidelity.
+
+### 5. Fidelity report
+
+The completed pass must quantify and explain what was preserved, rewritten, merged, archived and discarded, including any gaps where the source is ambiguous.
+
+## Fidelity rules
 
 1. Preserve original slug/title/content/media references before rewriting.
-2. Separate `migrate`, `rewrite`, `merge`, `archive`, and `discard` decisions.
+2. Separate `migrate`, `rewrite`, `merge`, `archive` and `discard` decisions.
 3. Never infer a booking/inventory rule from prose when the legacy database contains a structured field.
-4. Keep legacy IDs in the migration mapping even when the new canonical IDs are different.
-5. Do not treat WordPress plugin/theme settings as product requirements unless they correspond to an observed customer-facing behavior.
-6. Record every intentional omission so the rebuilt site can be audited against the original.
+4. Keep legacy IDs in the migration mapping even when canonical IDs change.
+5. Treat theme/plugin settings as evidence, not automatic product requirements.
+6. Record every intentional omission.
+7. Do not expose legacy credentials or production secrets in the rebuild.
+8. Do not call the synthetic seed a completed migration.
 
 ## Current status
 
-The inventory and booking work now reflects the strongest structured legacy evidence: finite rooms, date-based availability, scheduled tours and capacity. A complete content-by-content fidelity matrix still requires parsing all published `wp_posts`, `wp_postmeta`, taxonomy relationships and media references into a machine-readable migration report. That remains a separate content migration pass rather than an assumption hidden inside the UI rebuild.
+**Archaeology foundation: complete. Content migration/fidelity pass: not complete.**
+
+The dump has established the legacy domain model, inventory evidence, major URL/taxonomy families and representative content. The next substantive pass is the actual machine-readable extraction and migration matrix. That work should occur before declaring content parity or SEO URL preservation complete.
+
+See `ProjectStatus.md` for the engineering/product execution order.
