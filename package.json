@@ -3,9 +3,6 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
-  "overrides": {
-    "nf3": "0.3.17"
-  },
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
