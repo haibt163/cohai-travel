@@ -9,9 +9,11 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { LocaleProvider } from "@/lib/locale";
 import { Shell } from "@/components/shell";
+import { absoluteUrl } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "CoHai Travel";
+const APP_DESCRIPTION = "Private journeys in Vietnam, Cambodia and Thailand. Booked in AUD.";
 
 const fetchSessionUser = createServerFn({ method: "GET" }).handler(async () => {
   const { getSessionUser } = await import("@/lib/auth/verify.server");
@@ -26,10 +28,16 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: APP_NAME },
-      { name: "description", content: "Private journeys in Vietnam, Cambodia and Thailand. Booked in AUD." },
+      { name: "description", content: APP_DESCRIPTION },
       { name: "theme-color", content: "#1c1914" },
+      { property: "og:title", content: APP_NAME },
+      { property: "og:description", content: APP_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: absoluteUrl("/") },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [
+      { rel: "canonical", href: absoluteUrl("/") },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
