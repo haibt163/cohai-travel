@@ -41,56 +41,59 @@ export const createBooking = createServerFn({ method: "POST" })
   .validator((raw: unknown) => bookingInput.parse(raw))
   .handler(async ({ context, data }) => {
     const sql = await getSql();
-    let total = 0;
-    let startDate = data.startDate;
 
-    if (data.kind === "tour") {
-      if (!data.departureId) throw new Error("Choose a departure");
-      const deps = await sql<{
-        id: string;
-        start_date: string;
-        price: string | number;
-        max_people: number;
-        booked: number;
-      }>`
-        select td.id, td.start_date, td.price, td.max_people,
-          coalesce((select sum(guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
-        from tour_departures td
-        where td.id = ${data.departureId} and td.tour_id = ${data.itemId}
-        limit 1
-      `;
-      const dep = deps[0];
-      if (!dep) throw new Error("Departure not found");
-      const left = dep.max_people - num(dep.booked);
-      if (data.guests > left) throw new Error("Not enough seats on that departure");
-      total = num(dep.price) * data.guests;
-      startDate = dep.start_date;
-    } else if (data.kind === "stay") {
-      const stays = await sql<{ price_per_night: string | number }>`
-        select price_per_night from stays where id = ${data.itemId} limit 1
-      `;
-      if (!stays[0]) throw new Error("Stay not found");
-      total = num(stays[0].price_per_night) * data.nights;
-    } else {
-      const cars = await sql<{ price_per_day: string | number }>`
-        select price_per_day from cars where id = ${data.itemId} limit 1
-      `;
-      if (!cars[0]) throw new Error("Car not found");
-      total = num(cars[0].price_per_day) * data.nights;
-    }
+    return sql.transaction(async (tx) => {
+      let total = 0;
+      let startDate = data.startDate;
 
-    const id = crypto.randomUUID();
-    await sql`
-      insert into bookings (
-        id, user_id, kind, item_id, departure_id, start_date, guests, nights,
-        first_name, last_name, email, phone, notes, total_price, status
-      ) values (
-        ${id}, ${context.userId}, ${data.kind}, ${data.itemId}, ${data.departureId ?? null},
-        ${startDate}, ${data.guests}, ${data.nights}, ${data.firstName}, ${data.lastName},
-        ${data.email}, ${data.phone ?? null}, ${data.notes ?? null}, ${total}, 'confirmed'
-      )
-    `;
-    return { id, total };
+      if (data.kind === "tour") {
+        if (!data.departureId) throw new Error("Choose a departure");
+        const deps = await tx<{
+          id: string;
+          start_date: string;
+          price: string | number;
+          max_people: number;
+          booked: number;
+        }>`
+          select td.id, td.start_date, td.price, td.max_people,
+            coalesce((select sum(guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
+          from tour_departures td
+          where td.id = ${data.departureId} and td.tour_id = ${data.itemId}
+          for update
+        `;
+        const dep = deps[0];
+        if (!dep) throw new Error("Departure not found");
+        const left = dep.max_people - num(dep.booked);
+        if (data.guests > left) throw new Error("Not enough seats on that departure");
+        total = num(dep.price) * data.guests;
+        startDate = dep.start_date;
+      } else if (data.kind === "stay") {
+        const stays = await tx<{ price_per_night: string | number }>`
+          select price_per_night from stays where id = ${data.itemId} limit 1
+        `;
+        if (!stays[0]) throw new Error("Stay not found");
+        total = num(stays[0].price_per_night) * data.nights;
+      } else {
+        const cars = await tx<{ price_per_day: string | number }>`
+          select price_per_day from cars where id = ${data.itemId} limit 1
+        `;
+        if (!cars[0]) throw new Error("Car not found");
+        total = num(cars[0].price_per_day) * data.nights;
+      }
+
+      const id = crypto.randomUUID();
+      await tx`
+        insert into bookings (
+          id, user_id, kind, item_id, departure_id, start_date, guests, nights,
+          first_name, last_name, email, phone, notes, total_price, status
+        ) values (
+          ${id}, ${context.userId}, ${data.kind}, ${data.itemId}, ${data.departureId ?? null},
+          ${startDate}, ${data.guests}, ${data.nights}, ${data.firstName}, ${data.lastName},
+          ${data.email}, ${data.phone ?? null}, ${data.notes ?? null}, ${total}, 'confirmed'
+        )
+      `;
+      return { id, total };
+    });
   });
 
 export const listMyBookings = createServerFn({ method: "GET" })
