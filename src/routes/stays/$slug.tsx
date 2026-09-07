@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getStay } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
 import { aud } from "@/lib/utils";
+import { seoHead } from "@/lib/seo";
 import { BookingForm } from "@/components/booking-form";
 import { Cover } from "@/components/cover";
 
@@ -11,6 +12,15 @@ export const Route = createFileRoute("/stays/$slug")({
     if (!stay) throw notFound();
     return { stay };
   },
+  head: ({ loaderData }) =>
+    loaderData
+      ? seoHead({
+          title: `${loaderData.stay.title} | CoHai Travel`,
+          description: loaderData.stay.excerpt,
+          pathname: `/stays/${loaderData.stay.slug}`,
+          image: loaderData.stay.image,
+        })
+      : {},
   component: StayDetail,
 });
 
