@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { inventoryAvailable } from "@/lib/booking-rules";
 import { num } from "@/lib/utils";
 
 const bookingInput = z.object({
@@ -90,7 +91,7 @@ export const createBooking = createServerFn({ method: "POST" })
             and (start_date + nights) > ${startDate}::date
         `;
         const bookedUnits = num(conflicts[0]?.booked_units ?? 0);
-        if (bookedUnits + inventoryUnits > stay.inventory_unit_count) {
+        if (!inventoryAvailable(stay.inventory_unit_count, bookedUnits, inventoryUnits)) {
           throw new Error("Not enough rooms for those dates");
         }
         total = num(stay.price_per_night) * data.nights;
@@ -112,7 +113,7 @@ export const createBooking = createServerFn({ method: "POST" })
             and start_date < (${startDate}::date + ${data.nights})
             and (start_date + nights) > ${startDate}::date
         `;
-        if (num(conflicts[0]?.booked_units ?? 0) + inventoryUnits > car.inventory_unit_count) {
+        if (!inventoryAvailable(car.inventory_unit_count, num(conflicts[0]?.booked_units ?? 0), inventoryUnits)) {
           throw new Error("Car is unavailable for those dates");
         }
         total = num(car.price_per_day) * data.nights;
