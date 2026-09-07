@@ -1,10 +1,10 @@
 # CoHai Travel — project status
 
-Last updated: 7 September 2026 (UI source landed on `main`).
+Last updated: 7 September 2026 (standalone TanStack Start scaffold on `main`).
 
 ## One-line status
 
-v1 of the **CoHai Travel** booking site is running as a React app: editorial atlas, live tour departures in AUD, EN/VN chrome, stays and cars on day one, sign-in required to hold a seat.
+v1 of the **CoHai Travel** booking site is a bootable React app: editorial atlas, live tour departures in AUD, EN/VN chrome, stays and cars on day one, sign-in required to hold a seat. `npm run dev` works outside the App Builder once `.env` points at Neon.
 
 ## Product choices (locked for v1)
 
@@ -35,11 +35,10 @@ A future move onto Next.js is a packaging change. Do not start a second app fold
 
 ```
 React 19
-TanStack Start / Router / Query
-Vite 8
+TanStack Start / Router
+Vite 7+
 Tailwind CSS v4
-Better Auth (Google, X) + Grok broker
-Postgres — Neon on deploy, PGLite in preview
+Better Auth (Google, X) + Neon Postgres
 Zod
 Lucide icons
 ```
@@ -50,102 +49,74 @@ Auth is **on** because bookings and contact messages store PII and must be scope
 
 ### Schema (`migrations/`)
 
-- `0001_auth.sql` — Better Auth identity tables (copied up so sign-in applies)
-- `0002_catalog.sql` — `destinations`, `tours`, `tour_departures`, `stays`, `cars`, `bookings`, `contact_messages`
+- `0001_auth.sql` — Better Auth `user` / `session` / `account` / `verification`
+- `0002_catalog.sql` — destinations, tours, departures, stays, cars, bookings, contact
 - `0003_seed.sql` — 10 places, 9 tours, 6 stays, 4 cars, 23 departures
+
+Apply with `npm run db:migrate`.
 
 ### Server functions
 
-- `src/lib/catalog.ts` — list/get/search for public inventory; remaining seats computed from confirmed bookings
+- `src/lib/catalog.ts` — list/get/search; remaining seats from confirmed bookings
 - `src/lib/bookings.ts` — `createBooking`, `listMyBookings`, `sendContact` behind `authMiddleware`
 
-### Surfaces now in this repo
+### Surfaces
 
-- Home with Ha Long hero, chapter tiles (Nature / Coast / UNESCO), featured journeys, neighbour gates (Angkor, Bangkok)
-- Tour index with chapter chips; tour detail with itinerary + departure picker
-- Destination, stay, and car indexes + details
-- Search across tours, stays, cars, places
-- Contact form (signed-in)
-- Login (Google / X) and My trips
+- Home with Ha Long hero, chapter tiles, featured journeys, neighbour gates
+- Tour / destination / stay / car indexes and details
+- Search, contact, login (Google / X), My trips
 - EN/VN toggle persisted in `localStorage`
-- Tokens, shell, cards, booking form, locale dictionary
 
-Auth adapters under `src/lib/auth/` stand in for the preview host. A standalone checkout still needs `package.json` / Vite Start config, `routeTree.gen.ts`, Better Auth wiring, and `public/media/` photography — those were not part of this UI source drop.
+### Standalone boot (this drop)
 
-### Design
-
-- Tokens in `src/styles.css`
-- Shell: currency + language + auth slot, sticky nav, ink footer
-- Generated destination photography under `public/media/` (preview only until copied)
-- Brand card `public/og.jpg`, mark `public/favicon.svg`
-
-### Quality bar that already passed in the builder
-
-- `npm run typecheck`
-- `npm run build`
-- Desktop + mobile browser smoke, no console errors, no horizontal overflow
-- Production build rendered the same homepage copy as dev
+- `package.json`, `vite.config.ts`, `tsconfig.json`, generated `src/routeTree.gen.ts`
+- Wired Better Auth (`src/lib/auth/server.ts`) with a `pg` pool + `tanstackStartCookies`
+- Client session via `better-auth/react` (`authClient.useSession`)
+- `.env.example` for Neon + Google + X
+- `scripts/migrate.mjs` and `scripts/fetch-media.mjs`
+- Editorial SVG plates in `public/media/` (Cover falls back from `.jpg` → `.svg`)
 
 ## What is not in v1
 
 | Gap | Notes |
 | --- | --- |
-| Operator / desk admin | “Thin admin” was the CMS decision, not a shipped UI. My trips is guest-facing only |
-| Parse of `data_vietaustravel` | Seed invented to the old IA instead of importing 845 KB of posts |
-| Payments | Hold is a confirmed row in Postgres, not a card charge |
+| Operator / desk admin | My trips is guest-facing only |
+| Parse of `data_vietaustravel` | Seed invented to the old IA |
+| Payments | Hold is a confirmed row, not a card charge |
 | Email / WhatsApp tickets | Confirmation is on-site only |
-| Reviews, room types, two-location car dropoff | Flattened or omitted |
-| URL-prefixed locales (`/vn/...`) | Client toggle only |
+| Licensed operator photography | SVG plates + optional Unsplash fetch until Phase 2 |
 | Standalone Next.js repo | This React app *is* the rebuild |
-| App scaffold (`package.json`, Vite config, generated route tree) | Not in this drop |
 
 ## Implementation plan
 
 ### Phase 0 — done
 
-Brand, stack, IA, schema, seed, chrome, public catalog, authenticated booking + contact. Preview UI source is on `main`.
+Brand, stack, IA, schema, seed, chrome, public catalog, authenticated booking + contact. Preview UI source and the Vite / Start scaffold are on `main`.
 
 ### Phase 1 — desk
 
 - Signed-in operator view of bookings and contact messages
 - Status changes (`confirmed` / `cancelled`) that free departure seats
-- Optional CSV / email of a booking
 
 ### Phase 2 — dump fidelity
 
-- Map `data_vietaustravel` posts onto `destinations` / `tours` / `stays`
-- Keep AUD prices; do not import vacancy rows blindly
-- Replace generated photos with licensed operator photography where it exists
+- Map `data_vietaustravel` posts onto catalog tables
+- Replace plates with licensed operator photography
 
 ### Phase 3 — commerce depth
 
-- Payment hold (Stripe in AUD) before `confirmed`
+- Stripe hold in AUD before `confirmed`
 - Waitlist when a departure is full
-- Room-level stay inventory if the desk needs it
-- Driver-assigned cars
 
 ### Phase 4 — packaging (optional)
 
-- If the public site should live on Vercel as a conventional Next.js app, port routes 1:1
-- Keep Postgres + Better Auth (or the same session issuer)
-- Do not reopen WordPress
+- Port routes 1:1 to Next.js only if hosting requires it
+- Keep Postgres + Better Auth. Do not reopen WordPress.
 
 ## Repo vs preview
 
 | Surface | Role |
 | --- | --- |
-| This GitHub repo (`haibt163/cohai-travel`) | Source of record: docs, catalog seed, and the preview UI (`src/routes`, `src/components`, `src/lib`) |
-| Grok App Builder preview | Running v1 with platform auth + PGLite/Neon. Auth host files here are adapters so the UI compiles outside the sandbox. |
+| `haibt163/cohai-travel` | Source of record |
+| Grok App Builder preview | Running v1 with platform auth + PGLite/Neon |
 | `haibt163/travel` | Frozen WordPress dump — do not overwrite |
-
-## How to extend the catalog
-
-Add a new ordered migration. Example:
-
-```sql
--- migrations/0004_more_departures.sql
-insert into tour_departures (id, tour_id, start_date, price, max_people)
-values ('junk-4', 'junk-halong', '2027-02-08', 990, 12);
-```
-
-Then add EN/VN copy in `src/lib/locale.tsx` only if new chrome strings are required. Catalog copy lives in the row, not the dictionary.

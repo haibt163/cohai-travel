@@ -26,9 +26,9 @@ The preview environment is **not Next.js App Router**. The shipped app is:
 | --- | --- |
 | UI | React 19 |
 | Router / SSR | TanStack Start + TanStack Router (file routes under `src/routes/`) |
-| Bundler | Vite 8 |
+| Bundler | Vite 7+ |
 | Styles | Tailwind CSS v4, tokens in `src/styles.css` `@theme` |
-| Auth | Better Auth via the Grok broker (Google + X). Email/password stays off. |
+| Auth | Better Auth (Google + X). Email/password stays off. |
 | Data | Postgres (Neon when deployed, PGLite in the sandbox preview) |
 | Validation | Zod on booking and contact writes |
 | i18n | `LocaleProvider` in `src/lib/locale.tsx` — not `next-intl` |
@@ -67,6 +67,7 @@ Tokens live in `src/styles.css`. Compose from them.
 /contact              signed-in message to the desk
 /login                Google / X
 /account              My trips
+/api/auth/$           Better Auth handler
 ```
 
 ## What not to do
@@ -75,14 +76,18 @@ Tokens live in `src/styles.css`. Compose from them.
 - Do not revive BookYourTravel vacancy tables as the source of truth.
 - Do not add a second CMS (Sanity, WP REST) beside Postgres unless the product decision changes in writing.
 - Do not hide “Created with Grok” chrome in the sandbox preview — that is a platform setting, not an app change.
+- Do not commit `.env`. Keep secrets in Neon / the host.
 
-## Working on this repo later
+## Working on this repo
 
 ```bash
+cp .env.example .env
 npm install
-npm run dev      # sandbox: wrapped Vite on 0.0.0.0:8080
+npm run db:migrate
+npm run media        # optional
+npm run dev          # Vite on :3000
 npm run typecheck
 npm run build
 ```
 
-A standalone checkout outside the App Builder sandbox will need `DATABASE_URL` (Neon) and Better Auth credentials. The sandbox injects those; do not commit `.env` files.
+Standalone checkout needs `DATABASE_URL` (Neon), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, and Google / X OAuth credentials for live sign-in.
