@@ -16,7 +16,6 @@ pglite-debug.log
 .project_id
 .node_modules.lock
 public/__grok/
-server/
 src/lib/multiplayer/
 src/lib/app-data/
 startup.sh
