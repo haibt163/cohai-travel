@@ -49,6 +49,18 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "TravelAgency",
+          name: APP_NAME,
+          description: APP_DESCRIPTION,
+          url: absoluteUrl("/"),
+        }),
+      },
+    ],
   }),
   component: Root,
 });
