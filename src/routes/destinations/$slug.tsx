@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getDestination, toursForDestination } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
+import { seoHead } from "@/lib/seo";
 import { Cover } from "@/components/cover";
 import { TourCard } from "@/components/tour-card";
 
@@ -11,6 +12,15 @@ export const Route = createFileRoute("/destinations/$slug")({
     const tours = await toursForDestination({ data: destination.id });
     return { destination, tours };
   },
+  head: ({ loaderData }) =>
+    loaderData
+      ? seoHead({
+          title: `${loaderData.destination.title} | CoHai Travel`,
+          description: loaderData.destination.excerpt,
+          pathname: `/destinations/${loaderData.destination.slug}`,
+          image: loaderData.destination.image,
+        })
+      : {},
   component: DestinationDetail,
 });
 
