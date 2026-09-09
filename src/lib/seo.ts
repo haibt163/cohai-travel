@@ -1,6 +1,8 @@
 const DEFAULT_SITE_URL = "http://localhost:3000";
 export type SeoLocale = "en" | "vn";
 
+type SeoLink = { rel: string; href: string; hrefLang?: string };
+
 export function getSiteUrl(): string {
   const configured = import.meta.env.VITE_SITE_URL?.trim();
   return (configured || DEFAULT_SITE_URL).replace(/\/$/, "");
@@ -10,14 +12,7 @@ export function absoluteUrl(pathname: string): string {
   return new URL(pathname, `${getSiteUrl()}/`).toString();
 }
 
-export function seoHead({
-  title,
-  description,
-  pathname,
-  alternatePathname,
-  image,
-  locale,
-}: {
+export function seoHead({ title, description, pathname, alternatePathname, image, locale }: {
   title: string;
   description?: string;
   pathname?: string;
@@ -27,14 +22,12 @@ export function seoHead({
 }) {
   const canonical = pathname ? absoluteUrl(pathname) : getSiteUrl();
   const imageUrl = image ? absoluteUrl(image) : undefined;
-  const links = [{ rel: "canonical", href: canonical }];
+  const links: SeoLink[] = [{ rel: "canonical", href: canonical }];
   if (alternatePathname && locale) {
-    const other: SeoLocale = locale === "en" ? "vn" : "en";
-    links.push({ rel: "alternate", hrefLang: locale === "en" ? "en" : "vi", href: canonical });
-    links.push({ rel: "alternate", hrefLang: other === "en" ? "en" : "vi", href: absoluteUrl(alternatePathname(other)) });
+    links.push({ rel: "alternate", hrefLang: "en", href: absoluteUrl(alternatePathname("en")) });
+    links.push({ rel: "alternate", hrefLang: "vi", href: absoluteUrl(alternatePathname("vn")) });
     links.push({ rel: "alternate", hrefLang: "x-default", href: absoluteUrl(alternatePathname("en")) });
   }
-
   return {
     meta: [
       { title },
