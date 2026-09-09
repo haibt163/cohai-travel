@@ -15,8 +15,8 @@ export const Route = createFileRoute("/destinations/$slug")({
   head: ({ loaderData }) =>
     loaderData
       ? seoHead({
-          title: `${loaderData.destination.title} | CoHai Travel`,
-          description: loaderData.destination.excerpt,
+          title: `${loaderData.destination.title_en} | CoHai Travel`,
+          description: loaderData.destination.excerpt_en,
           pathname: `/destinations/${loaderData.destination.slug}`,
           image: loaderData.destination.image,
         })
@@ -48,9 +48,7 @@ function DestinationDetail() {
         <div className="mx-auto max-w-6xl px-4 pb-16">
           <h2 className="mb-6 font-display text-3xl">{t("journeys")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {tours.map((tour) => (
-              <TourCard key={tour.id} tour={tour} />
-            ))}
+            {tours.map((tour) => <TourCard key={tour.id} tour={tour} />)}
           </div>
         </div>
       ) : null}
