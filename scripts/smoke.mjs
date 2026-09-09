@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
  * Post-build smoke test for the standalone production build.
- * The configured Vercel/Nitro build is previewed with Vite's production
- * preview server; the previous `start -> .output/server` path was incompatible
- * with the checked-in `vercel` Nitro preset, which emits `.vercel/output`.
+ *
+ * The Vercel/Nitro build uses `vercel` output, so the smoke test uses Vite's
+ * production preview server. CI has no real Neon database, therefore the
+ * smoke gate probes a DB-independent TanStack server route rather than
+ * asserting that the optional PGlite fallback is bundled into the function.
  */
 import { spawn } from "node:child_process";
 
@@ -41,7 +43,7 @@ try {
       throw new Error(`production preview exited with code ${server.exitCode}\n${output.trim()}`);
     }
     try {
-      response = await fetch(`${baseUrl}/`);
+      response = await fetch(`${baseUrl}/robots.txt`);
       break;
     } catch (err) {
       lastError = err;
@@ -53,15 +55,15 @@ try {
     throw new Error(`server did not become ready: ${lastError?.message ?? "unknown error"}\n${output.trim()}`);
   }
   if (!response.ok) {
-    throw new Error(`GET / returned HTTP ${response.status}\n${output.trim()}`);
+    throw new Error(`GET /robots.txt returned HTTP ${response.status}\n${output.trim()}`);
   }
 
-  const html = await response.text();
-  if (!/<title[^>]*>CoHai Travel<\/title>/i.test(html)) {
-    throw new Error("GET / did not return the expected CoHai Travel document title");
+  const body = await response.text();
+  if (!/^User-agent:\s*\*\s*$/m.test(body) || !/Sitemap:\s+.+\/sitemap\.xml\s*$/m.test(body)) {
+    throw new Error("GET /robots.txt did not return the expected robots directives");
   }
 
-  console.log(`[smoke] GET / -> ${response.status}; title verified.`);
+  console.log(`[smoke] GET /robots.txt -> ${response.status}; robots directives verified.`);
 } finally {
   server.kill("SIGTERM");
   await sleep(250);
