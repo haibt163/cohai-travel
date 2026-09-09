@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as RobotsTxtRouteImport } from './routes/robots[.]txt'
-import { Route as SitemapXmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as LocaleAccountRouteImport } from './routes/$locale/account'
+import { Route as LocaleContactRouteImport } from './routes/$locale/contact'
+import { Route as LocaleLoginRouteImport } from './routes/$locale/login'
+import { Route as LocaleSearchRouteImport } from './routes/$locale/search'
 import { Route as CarsIndexRouteImport } from './routes/cars/index'
 import { Route as CarsSlugRouteImport } from './routes/cars/$slug'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations/index'
@@ -24,11 +30,24 @@ import { Route as StaysIndexRouteImport } from './routes/stays/index'
 import { Route as StaysSlugRouteImport } from './routes/stays/$slug'
 import { Route as ToursIndexRouteImport } from './routes/tours/index'
 import { Route as ToursSlugRouteImport } from './routes/tours/$slug'
+import { Route as LocaleCarsIndexRouteImport } from './routes/$locale/cars/index'
+import { Route as LocaleCarsSlugRouteImport } from './routes/$locale/cars/$slug'
+import { Route as LocaleDestinationsIndexRouteImport } from './routes/$locale/destinations/index'
+import { Route as LocaleDestinationsSlugRouteImport } from './routes/$locale/destinations/$slug'
+import { Route as LocaleStaysIndexRouteImport } from './routes/$locale/stays/index'
+import { Route as LocaleStaysSlugRouteImport } from './routes/$locale/stays/$slug'
+import { Route as LocaleToursIndexRouteImport } from './routes/$locale/tours/index'
+import { Route as LocaleToursSlugRouteImport } from './routes/$locale/tours/$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleRouteRoute = LocaleRouteRouteImport.update({
+  id: '/$locale',
+  path: '/$locale',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -46,20 +65,45 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RobotsTxtRoute = RobotsTxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapXmlRoute = SitemapXmlRouteImport.update({
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleIndexRoute = LocaleIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleAccountRoute = LocaleAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleContactRoute = LocaleContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleLoginRoute = LocaleLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleSearchRoute = LocaleSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => LocaleRouteRoute,
 } as any)
 const CarsIndexRoute = CarsIndexRouteImport.update({
   id: '/cars/',
@@ -101,6 +145,46 @@ const ToursSlugRoute = ToursSlugRouteImport.update({
   path: '/tours/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocaleCarsIndexRoute = LocaleCarsIndexRouteImport.update({
+  id: '/cars/',
+  path: '/cars/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleCarsSlugRoute = LocaleCarsSlugRouteImport.update({
+  id: '/cars/$slug',
+  path: '/cars/$slug',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleDestinationsIndexRoute = LocaleDestinationsIndexRouteImport.update({
+  id: '/destinations/',
+  path: '/destinations/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleDestinationsSlugRoute = LocaleDestinationsSlugRouteImport.update({
+  id: '/destinations/$slug',
+  path: '/destinations/$slug',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleStaysIndexRoute = LocaleStaysIndexRouteImport.update({
+  id: '/stays/',
+  path: '/stays/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleStaysSlugRoute = LocaleStaysSlugRouteImport.update({
+  id: '/stays/$slug',
+  path: '/stays/$slug',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleToursIndexRoute = LocaleToursIndexRouteImport.update({
+  id: '/tours/',
+  path: '/tours/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleToursSlugRoute = LocaleToursSlugRouteImport.update({
+  id: '/tours/$slug',
+  path: '/tours/$slug',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -109,124 +193,207 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$locale': typeof LocaleRouteRouteWithChildren
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
-  '/robots.txt': typeof RobotsTxtRoute
-  '/sitemap.xml': typeof SitemapXmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/$locale/account': typeof LocaleAccountRoute
+  '/$locale/contact': typeof LocaleContactRoute
+  '/$locale/login': typeof LocaleLoginRoute
+  '/$locale/search': typeof LocaleSearchRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
   '/tours/$slug': typeof ToursSlugRoute
+  '/$locale/': typeof LocaleIndexRoute
   '/cars/': typeof CarsIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/stays/': typeof StaysIndexRoute
   '/tours/': typeof ToursIndexRoute
+  '/$locale/cars/$slug': typeof LocaleCarsSlugRoute
+  '/$locale/destinations/$slug': typeof LocaleDestinationsSlugRoute
+  '/$locale/stays/$slug': typeof LocaleStaysSlugRoute
+  '/$locale/tours/$slug': typeof LocaleToursSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/$locale/cars/': typeof LocaleCarsIndexRoute
+  '/$locale/destinations/': typeof LocaleDestinationsIndexRoute
+  '/$locale/stays/': typeof LocaleStaysIndexRoute
+  '/$locale/tours/': typeof LocaleToursIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
-  '/robots.txt': typeof RobotsTxtRoute
-  '/sitemap.xml': typeof SitemapXmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/$locale/account': typeof LocaleAccountRoute
+  '/$locale/contact': typeof LocaleContactRoute
+  '/$locale/login': typeof LocaleLoginRoute
+  '/$locale/search': typeof LocaleSearchRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
   '/tours/$slug': typeof ToursSlugRoute
+  '/$locale': typeof LocaleIndexRoute
   '/cars': typeof CarsIndexRoute
   '/destinations': typeof DestinationsIndexRoute
   '/stays': typeof StaysIndexRoute
   '/tours': typeof ToursIndexRoute
+  '/$locale/cars/$slug': typeof LocaleCarsSlugRoute
+  '/$locale/destinations/$slug': typeof LocaleDestinationsSlugRoute
+  '/$locale/stays/$slug': typeof LocaleStaysSlugRoute
+  '/$locale/tours/$slug': typeof LocaleToursSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/$locale/cars': typeof LocaleCarsIndexRoute
+  '/$locale/destinations': typeof LocaleDestinationsIndexRoute
+  '/$locale/stays': typeof LocaleStaysIndexRoute
+  '/$locale/tours': typeof LocaleToursIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$locale': typeof LocaleRouteRouteWithChildren
   '/account': typeof AccountRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/search': typeof SearchRoute
-  '/robots.txt': typeof RobotsTxtRoute
-  '/sitemap.xml': typeof SitemapXmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/$locale/account': typeof LocaleAccountRoute
+  '/$locale/contact': typeof LocaleContactRoute
+  '/$locale/login': typeof LocaleLoginRoute
+  '/$locale/search': typeof LocaleSearchRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
   '/tours/$slug': typeof ToursSlugRoute
+  '/$locale/': typeof LocaleIndexRoute
   '/cars/': typeof CarsIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/stays/': typeof StaysIndexRoute
   '/tours/': typeof ToursIndexRoute
+  '/$locale/cars/$slug': typeof LocaleCarsSlugRoute
+  '/$locale/destinations/$slug': typeof LocaleDestinationsSlugRoute
+  '/$locale/stays/$slug': typeof LocaleStaysSlugRoute
+  '/$locale/tours/$slug': typeof LocaleToursSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/$locale/cars/': typeof LocaleCarsIndexRoute
+  '/$locale/destinations/': typeof LocaleDestinationsIndexRoute
+  '/$locale/stays/': typeof LocaleStaysIndexRoute
+  '/$locale/tours/': typeof LocaleToursIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$locale'
     | '/account'
     | '/contact'
     | '/login'
-    | '/search'
     | '/robots.txt'
+    | '/search'
     | '/sitemap.xml'
+    | '/$locale/account'
+    | '/$locale/contact'
+    | '/$locale/login'
+    | '/$locale/search'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
     | '/tours/$slug'
+    | '/$locale/'
     | '/cars/'
     | '/destinations/'
     | '/stays/'
     | '/tours/'
+    | '/$locale/cars/$slug'
+    | '/$locale/destinations/$slug'
+    | '/$locale/stays/$slug'
+    | '/$locale/tours/$slug'
     | '/api/auth/$'
+    | '/$locale/cars/'
+    | '/$locale/destinations/'
+    | '/$locale/stays/'
+    | '/$locale/tours/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account'
     | '/contact'
     | '/login'
-    | '/search'
     | '/robots.txt'
+    | '/search'
     | '/sitemap.xml'
+    | '/$locale/account'
+    | '/$locale/contact'
+    | '/$locale/login'
+    | '/$locale/search'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
     | '/tours/$slug'
+    | '/$locale'
     | '/cars'
     | '/destinations'
     | '/stays'
     | '/tours'
+    | '/$locale/cars/$slug'
+    | '/$locale/destinations/$slug'
+    | '/$locale/stays/$slug'
+    | '/$locale/tours/$slug'
     | '/api/auth/$'
+    | '/$locale/cars'
+    | '/$locale/destinations'
+    | '/$locale/stays'
+    | '/$locale/tours'
   id:
     | '__root__'
     | '/'
+    | '/$locale'
     | '/account'
     | '/contact'
     | '/login'
-    | '/search'
     | '/robots.txt'
+    | '/search'
     | '/sitemap.xml'
+    | '/$locale/account'
+    | '/$locale/contact'
+    | '/$locale/login'
+    | '/$locale/search'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
     | '/tours/$slug'
+    | '/$locale/'
     | '/cars/'
     | '/destinations/'
     | '/stays/'
     | '/tours/'
+    | '/$locale/cars/$slug'
+    | '/$locale/destinations/$slug'
+    | '/$locale/stays/$slug'
+    | '/$locale/tours/$slug'
     | '/api/auth/$'
+    | '/$locale/cars/'
+    | '/$locale/destinations/'
+    | '/$locale/stays/'
+    | '/$locale/tours/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   AccountRoute: typeof AccountRoute
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SearchRoute: typeof SearchRoute
-  RobotsTxtRoute: typeof RobotsTxtRoute
-  SitemapXmlRoute: typeof SitemapXmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CarsSlugRoute: typeof CarsSlugRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
   StaysSlugRoute: typeof StaysSlugRoute
@@ -245,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale': {
+      id: '/$locale'
+      path: '/$locale'
+      fullPath: '/$locale'
+      preLoaderRoute: typeof LocaleRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -268,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -275,19 +456,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsTxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapXmlRouteImport
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$locale/': {
+      id: '/$locale/'
+      path: '/'
+      fullPath: '/$locale/'
+      preLoaderRoute: typeof LocaleIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/account': {
+      id: '/$locale/account'
+      path: '/account'
+      fullPath: '/$locale/account'
+      preLoaderRoute: typeof LocaleAccountRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/contact': {
+      id: '/$locale/contact'
+      path: '/contact'
+      fullPath: '/$locale/contact'
+      preLoaderRoute: typeof LocaleContactRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/login': {
+      id: '/$locale/login'
+      path: '/login'
+      fullPath: '/$locale/login'
+      preLoaderRoute: typeof LocaleLoginRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/search': {
+      id: '/$locale/search'
+      path: '/search'
+      fullPath: '/$locale/search'
+      preLoaderRoute: typeof LocaleSearchRouteImport
+      parentRoute: typeof LocaleRouteRoute
     }
     '/cars/': {
       id: '/cars/'
@@ -345,6 +554,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToursSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$locale/cars/': {
+      id: '/$locale/cars/'
+      path: '/cars'
+      fullPath: '/$locale/cars/'
+      preLoaderRoute: typeof LocaleCarsIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/cars/$slug': {
+      id: '/$locale/cars/$slug'
+      path: '/cars/$slug'
+      fullPath: '/$locale/cars/$slug'
+      preLoaderRoute: typeof LocaleCarsSlugRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/destinations/': {
+      id: '/$locale/destinations/'
+      path: '/destinations'
+      fullPath: '/$locale/destinations/'
+      preLoaderRoute: typeof LocaleDestinationsIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/destinations/$slug': {
+      id: '/$locale/destinations/$slug'
+      path: '/destinations/$slug'
+      fullPath: '/$locale/destinations/$slug'
+      preLoaderRoute: typeof LocaleDestinationsSlugRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/stays/': {
+      id: '/$locale/stays/'
+      path: '/stays'
+      fullPath: '/$locale/stays/'
+      preLoaderRoute: typeof LocaleStaysIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/stays/$slug': {
+      id: '/$locale/stays/$slug'
+      path: '/stays/$slug'
+      fullPath: '/$locale/stays/$slug'
+      preLoaderRoute: typeof LocaleStaysSlugRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/tours/': {
+      id: '/$locale/tours/'
+      path: '/tours'
+      fullPath: '/$locale/tours/'
+      preLoaderRoute: typeof LocaleToursIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/tours/$slug': {
+      id: '/$locale/tours/$slug'
+      path: '/tours/$slug'
+      fullPath: '/$locale/tours/$slug'
+      preLoaderRoute: typeof LocaleToursSlugRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -355,14 +620,51 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface LocaleRouteRouteChildren {
+  LocaleAccountRoute: typeof LocaleAccountRoute
+  LocaleContactRoute: typeof LocaleContactRoute
+  LocaleLoginRoute: typeof LocaleLoginRoute
+  LocaleSearchRoute: typeof LocaleSearchRoute
+  LocaleIndexRoute: typeof LocaleIndexRoute
+  LocaleCarsSlugRoute: typeof LocaleCarsSlugRoute
+  LocaleDestinationsSlugRoute: typeof LocaleDestinationsSlugRoute
+  LocaleStaysSlugRoute: typeof LocaleStaysSlugRoute
+  LocaleToursSlugRoute: typeof LocaleToursSlugRoute
+  LocaleCarsIndexRoute: typeof LocaleCarsIndexRoute
+  LocaleDestinationsIndexRoute: typeof LocaleDestinationsIndexRoute
+  LocaleStaysIndexRoute: typeof LocaleStaysIndexRoute
+  LocaleToursIndexRoute: typeof LocaleToursIndexRoute
+}
+
+const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
+  LocaleAccountRoute: LocaleAccountRoute,
+  LocaleContactRoute: LocaleContactRoute,
+  LocaleLoginRoute: LocaleLoginRoute,
+  LocaleSearchRoute: LocaleSearchRoute,
+  LocaleIndexRoute: LocaleIndexRoute,
+  LocaleCarsSlugRoute: LocaleCarsSlugRoute,
+  LocaleDestinationsSlugRoute: LocaleDestinationsSlugRoute,
+  LocaleStaysSlugRoute: LocaleStaysSlugRoute,
+  LocaleToursSlugRoute: LocaleToursSlugRoute,
+  LocaleCarsIndexRoute: LocaleCarsIndexRoute,
+  LocaleDestinationsIndexRoute: LocaleDestinationsIndexRoute,
+  LocaleStaysIndexRoute: LocaleStaysIndexRoute,
+  LocaleToursIndexRoute: LocaleToursIndexRoute,
+}
+
+const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
+  LocaleRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LocaleRouteRoute: LocaleRouteRouteWithChildren,
   AccountRoute: AccountRoute,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SearchRoute: SearchRoute,
-  RobotsTxtRoute: RobotsTxtRoute,
-  SitemapXmlRoute: SitemapXmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   CarsSlugRoute: CarsSlugRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
   StaysSlugRoute: StaysSlugRoute,
