@@ -88,29 +88,26 @@ type Ctx = {
 
 const LocaleContext = createContext<Ctx | null>(null);
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+export function LocaleProvider({ children, initialLocale = "en" }: { children: ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("cohai-locale");
-    if (saved === "en" || saved === "vn") setLocaleState(saved);
-  }, []);
+    setLocaleState(initialLocale);
+  }, [initialLocale]);
 
   useEffect(() => {
     document.documentElement.lang = locale === "vn" ? "vi" : "en";
+    try {
+      window.localStorage.setItem("cohai-locale", locale);
+    } catch {
+      /* storage unavailable */
+    }
   }, [locale]);
 
-  const setLocale = (l: Locale) => {
-    setLocaleState(l);
-    window.localStorage.setItem("cohai-locale", l);
-  };
+  const setLocale = (l: Locale) => setLocaleState(l);
 
   const value = useMemo<Ctx>(
-    () => ({
-      locale,
-      setLocale,
-      t: (key) => copy[key][locale],
-    }),
+    () => ({ locale, setLocale, t: (key) => copy[key][locale] }),
     [locale],
   );
 
@@ -123,11 +120,7 @@ export function useI18n() {
   return ctx;
 }
 
-export function field<T extends Record<string, unknown>>(
-  row: T,
-  locale: Locale,
-  base: string,
-): string {
+export function field<T extends Record<string, unknown>>(row: T, locale: Locale, base: string): string {
   const key = locale === "vn" ? `${base}_vn` : `${base}_en`;
   const value = row[key];
   return typeof value === "string" ? value : "";
