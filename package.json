@@ -11,7 +11,7 @@
     "db:migrate": "node scripts/migrate.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test:domain": "node --test scripts/booking-rules.test.mjs scripts/booking-concurrency.test.mjs",
+    "test:domain": "node --test scripts/booking-rules.test.mjs scripts/booking-concurrency.test.mjs scripts/booking-concurrency.integration.mjs",
     "test:smoke": "node scripts/smoke.mjs",
     "format": "prettier --write ."
   },
