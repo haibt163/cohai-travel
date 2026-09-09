@@ -22,12 +22,12 @@ function switchLocale(pathname: string, search: string, hash: string, locale: Lo
 export function Shell({ children }: { children: ReactNode }) {
   const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
-  const location = useRouterState({ select: (s) => s.location });
+  const location = useRouterState({ select: (s) => ({ pathname: s.location.pathname, searchStr: s.location.searchStr, hash: s.location.hash }) });
   const pathname = location.pathname;
 
   const goLocale = () => {
     const next = locale === "en" ? "vn" : "en";
-    window.location.assign(switchLocale(pathname, location.search, location.hash, next));
+    window.location.assign(switchLocale(pathname, location.searchStr, location.hash, next));
   };
 
   return (
