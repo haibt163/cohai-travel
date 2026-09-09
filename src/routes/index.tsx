@@ -4,18 +4,27 @@ import { useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
 import { SearchBox } from "@/components/search-box";
 import { TourCard } from "@/components/tour-card";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
     const tours = await listTours({ data: {} });
     return { tours };
   },
+  head: () =>
+    seoHead({
+      title: "CoHai Travel | Private journeys in Vietnam, Cambodia and Thailand",
+      description:
+        "Private journeys through Vietnam and its neighbours, booked in Australian dollars with live departures.",
+      pathname: "/",
+      image: "/media/hero-halong.jpg",
+    }),
   component: Home,
 });
 
 function Home() {
   const { tours } = Route.useLoaderData();
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const chapters = [
     { key: "nature" as const, image: "/media/nature-sapa.jpg" },
     { key: "beach" as const, image: "/media/beach-phuquoc.jpg" },
@@ -73,46 +82,10 @@ function Home() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {tours
-            .filter((x) => x.featured)
-            .slice(0, 6)
-            .map((tour) => (
-              <TourCard key={tour.id} tour={tour} />
-            ))}
+          {tours.filter((x) => x.featured).slice(0, 6).map((tour) => (
+            <TourCard key={tour.id} tour={tour} />
+          ))}
         </div>
-      </section>
-
-      <section className="mx-auto grid max-w-6xl gap-4 px-4 pb-16 md:grid-cols-2">
-        <Link
-          to="/destinations/$slug"
-          params={{ slug: "siem-reap" }}
-          className="relative block min-h-64 overflow-hidden rounded-xl"
-        >
-          <Cover src="/media/dest-angkor.jpg" alt="Angkor" />
-          <div className="absolute inset-0 bg-ink/40" />
-          <div className="absolute bottom-0 p-5 text-paper">
-            <p className="text-xs uppercase tracking-caps">{t("partners")}</p>
-            <h2 className="font-display text-3xl">{locale === "vn" ? "Campuchia" : "Cambodia"}</h2>
-            <p className="text-sm text-paper-2">
-              {locale === "vn" ? "Angkor lúc rạng đông, rồi hồ." : "Angkor at first light, then the lake."}
-            </p>
-          </div>
-        </Link>
-        <Link
-          to="/destinations/$slug"
-          params={{ slug: "bangkok" }}
-          className="relative block min-h-64 overflow-hidden rounded-xl"
-        >
-          <Cover src="/media/dest-bangkok.jpg" alt="Bangkok" />
-          <div className="absolute inset-0 bg-ink/40" />
-          <div className="absolute bottom-0 p-5 text-paper">
-            <p className="text-xs uppercase tracking-caps">{t("partners")}</p>
-            <h2 className="font-display text-3xl">Bangkok</h2>
-            <p className="text-sm text-paper-2">
-              {locale === "vn" ? "Thành phố sông làm cổng phía nam." : "A river city as the southern gate."}
-            </p>
-          </div>
-        </Link>
       </section>
     </div>
   );
