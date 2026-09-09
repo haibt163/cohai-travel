@@ -36,10 +36,10 @@ The parity gate is satisfied only when a clean checkout can:
 
 ## Current remediation
 
-- Missing `app-data/types.ts` was restored because `src/lib/preview-host-bridge.ts` imports it.
-- Missing migration/sign-out helper modules were restored because tracked application code imports them.
-- Sitemap and robots are being moved from unsupported Nitro-style standalone handlers into TanStack Start server routes, matching the framework's documented `createFileRoute(...).server.handlers` contract.
-- Route metadata fields were corrected to use the typed `_en` fields instead of stale `title` / `excerpt` properties.
+- `src/lib/app-data/types.ts` is tracked because `src/lib/preview-host-bridge.ts` imports it.
+- `scripts/migration-plan.mjs` and `scripts/sign-out-plan.mjs` are tracked because production TypeScript compilation imports them.
+- Sitemap and robots are being moved from unsupported standalone Nitro-style handlers into TanStack Start server routes, matching the framework's documented `createFileRoute(...).server.handlers` contract.
+- Route metadata fields were corrected to use typed `*_en` values rather than stale `title` / `excerpt` properties.
 - Root-level duplicate social/canonical tags are being reduced so route metadata can own URL-specific SEO.
 
 ## Outstanding parity tasks
