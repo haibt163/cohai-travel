@@ -1,3 +1,11 @@
+/**
+ * @param {{
+ *   livePreview: boolean,
+ *   hasBearer: boolean,
+ *   requestSignOut: () => Promise<void>,
+ *   clearToken: () => void,
+ * }} options
+ */
 export async function runPreSignInSignOut({
   livePreview,
   hasBearer,
@@ -12,6 +20,15 @@ export async function runPreSignInSignOut({
   }
 }
 
+/**
+ * @param {{
+ *   livePreview: boolean,
+ *   hasBearer: boolean,
+ *   requestSignOut: () => Promise<void>,
+ *   clearToken: () => void,
+ *   redirect: () => void,
+ * }} options
+ */
 export async function runSignOut({
   livePreview,
   hasBearer,
