@@ -10,13 +10,14 @@ GitHub is the source of record. Parity closes only when a clean checkout can ins
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Application source | 🟢 | Core `src/` routes and server functions are tracked. |
-| Imported helper source | 🟡 | Imported helper modules that had been hidden by `.gitignore` are being restored/tracked. |
-| SEO server routes | 🟡 | Sitemap/robots use TanStack Start server-route patterns under `src/routes`. Final runtime certification remains pending. |
-| Dependencies | 🟡 | `npm ci` has passed; the temporary peer-resolution bridge is still present. |
-| Typecheck | 🟡 | Source repairs are in progress; no fresh green CI certification yet. |
-| Lint/build/smoke | 🔴 | Blocked from certification until typecheck passes in a fresh run. |
-| Preview ↔ production parity | 🟡 | Source parity is substantially improved; closure requires a fresh green CI run and production smoke evidence. |
+| Core application source | 🟢 | Route tree and server functions are tracked. |
+| Imported helper source | 🟡 | Helper modules previously hidden by `.gitignore` are being restored/tracked. |
+| SEO server routes | 🟡 | Sitemap/robots are now authored as TanStack Start server routes under `src/routes`; fresh runtime certification still required. |
+| Dependencies | 🟡 | `npm ci` has passed historically with the temporary peer-resolution bridge; lockfile normalization remains. |
+| Domain tests | 🟢 | Existing inventory/date tests plus pure concurrency invariants are covered. |
+| Typecheck | 🟡 | Current source repair is aimed at clearing the prior failure set. |
+| Lint/build/smoke | 🔴 | Must be freshly certified after typecheck. |
+| Preview ↔ production parity | 🟡 | Source parity materially improved; runtime closure depends on a green CI run from GitHub. |
 
 ## Clean-checkout closure test
 
@@ -26,20 +27,11 @@ GitHub is the source of record. Parity closes only when a clean checkout can ins
 4. `npm run lint`
 5. `npm run build`
 6. `npm run test:smoke`
-7. Verify SEO endpoints and auth routes through the same tracked source tree.
+7. Verify `/robots.txt`, `/sitemap.xml`, auth routes and catalog routes from the same build.
 
-## Ignore-list rule
+## Booking parity
 
-`.gitignore` must not hide application/runtime files imported by tracked source or required by the build/deployed server. Platform-generated assets may remain ignored only when their contract is explicitly documented.
-
-## Current remediation
-
-- Fixed stale catalog detail metadata field usage.
-- Added TanStack Start sitemap/robots server routes.
-- Removed the obsolete standalone sitemap implementation.
-- Restored helper modules required by tracked imports.
-- Added homepage metadata foundation.
-- Added pure booking concurrency invariants and a documented DB-backed integration-test target.
+Tour seat allocation is transactional. Stay/car availability is finite and date-overlap based. The current product deliberately consumes one stay/car inventory unit per booking; the old WordPress `room_count` field remains migration evidence rather than an unsupported UI promise.
 
 ## Closure rule
 
