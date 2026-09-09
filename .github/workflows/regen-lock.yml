@@ -1,0 +1,34 @@
+name: Regenerate lockfile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/regen-lock.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Regenerate package lock with npm
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Commit normalized lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- package-lock.json package.json; then
+            echo "Lockfile already normalized."
+            exit 0
+          fi
+          git add package-lock.json package.json
+          git commit -m "Normalize npm lockfile peer resolution"
+          git push
