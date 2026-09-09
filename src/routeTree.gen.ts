@@ -14,6 +14,8 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RobotsTxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapXmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as CarsIndexRouteImport } from './routes/cars/index'
 import { Route as CarsSlugRouteImport } from './routes/cars/$slug'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations/index'
@@ -47,6 +49,16 @@ const LoginRoute = LoginRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsTxtRoute = RobotsTxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapXmlRoute = SitemapXmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CarsIndexRoute = CarsIndexRouteImport.update({
@@ -101,6 +113,8 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
+  '/robots.txt': typeof RobotsTxtRoute
+  '/sitemap.xml': typeof SitemapXmlRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -117,6 +131,8 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
+  '/robots.txt': typeof RobotsTxtRoute
+  '/sitemap.xml': typeof SitemapXmlRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -134,6 +150,8 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
+  '/robots.txt': typeof RobotsTxtRoute
+  '/sitemap.xml': typeof SitemapXmlRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -152,6 +170,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -168,6 +188,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -184,6 +206,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/login'
     | '/search'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -201,6 +225,8 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   SearchRoute: typeof SearchRoute
+  RobotsTxtRoute: typeof RobotsTxtRoute
+  SitemapXmlRoute: typeof SitemapXmlRoute
   CarsSlugRoute: typeof CarsSlugRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
   StaysSlugRoute: typeof StaysSlugRoute
@@ -247,6 +273,20 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsTxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapXmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cars/': {
@@ -321,6 +361,8 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   SearchRoute: SearchRoute,
+  RobotsTxtRoute: RobotsTxtRoute,
+  SitemapXmlRoute: SitemapXmlRoute,
   CarsSlugRoute: CarsSlugRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
   StaysSlugRoute: StaysSlugRoute,
