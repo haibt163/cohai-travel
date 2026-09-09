@@ -12,7 +12,7 @@ Last reviewed: 9 September 2026.
 
 ## Automated coverage
 
-`npm run test:domain` includes the existing date-range/finite-inventory tests plus pure concurrency-admission invariants. The pure tests deliberately require no database or credentials so every clean checkout can run them.
+`npm run test:domain` now runs the existing date-range/finite-inventory suite plus pure concurrency-admission invariants. These tests intentionally require no database credentials.
 
 ## Remaining integration coverage
 
@@ -22,8 +22,8 @@ The production booking functions still need database-backed integration tests fo
 2. two concurrent stay requests competing for the final inventory unit(s);
 3. two concurrent car requests over the same date range;
 4. cancellation freeing the previously consumed inventory;
-5. PGLite/Neon result-shape parity for date, count and numeric values.
+5. PGLite/Neon result-shape parity for dates, counts and numerics.
 
 ## Completion rule
 
-Pure arithmetic tests do not prove transaction locking. The booking hardening item closes only after at least one DB-backed concurrency test exercises the same transaction code used by production.
+Pure arithmetic tests do not prove row locking. The booking hardening item closes only after at least one DB-backed concurrency test exercises the actual transaction path used by production.
