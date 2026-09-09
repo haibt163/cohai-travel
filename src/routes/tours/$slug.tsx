@@ -15,8 +15,8 @@ export const Route = createFileRoute("/tours/$slug")({
   head: ({ loaderData }) =>
     loaderData
       ? seoHead({
-          title: `${loaderData.tour.title} | CoHai Travel`,
-          description: loaderData.tour.excerpt,
+          title: `${loaderData.tour.title_en} | CoHai Travel`,
+          description: loaderData.tour.excerpt_en,
           pathname: `/tours/${loaderData.tour.slug}`,
           image: loaderData.tour.image,
         })
@@ -43,7 +43,7 @@ function TourDetail() {
           <h1 className="mt-2 font-display text-4xl md:text-5xl">{field(tour, locale, "title")}</h1>
           {tour.from_price > 0 ? (
             <p className="mt-2 tabular-nums">
-              {t("from")} {aud(tour.from_price)} {t("perPerson")}
+              {t("from")} {aud(tour.from_price)}
             </p>
           ) : null}
         </div>
@@ -51,10 +51,15 @@ function TourDetail() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <p className="text-lg text-muted">{field(tour, locale, "excerpt")}</p>
-          <div className="mt-6 space-y-4 whitespace-pre-line text-ink">{field(tour, locale, "body")}</div>
+          <p className="mt-4 whitespace-pre-line">{field(tour, locale, "body")}</p>
         </div>
         <div className="lg:col-span-2">
-          <BookingForm kind="tour" itemId={tour.id} departures={departures} />
+          <BookingForm
+            kind="tour"
+            itemId={tour.id}
+            departures={departures}
+            unitPrice={tour.from_price}
+          />
         </div>
       </div>
     </article>
