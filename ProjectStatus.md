@@ -30,10 +30,6 @@ The rebuild is in active engineering-hardening and reconstruction. Core booking 
 | P2.17 Seed reconciliation | 🔴 | Reconcile synthetic seed against verified legacy content. |
 | P2.18 Fidelity report | 🔴 | Produce final preservation/change/discard report. |
 
-## Current CI/runtime blocker
-
-The previous verified CI run failed at TypeScript after `npm ci` and all four domain tests passed. The affected areas were unsupported standalone Nitro sitemap/robots handlers, missing helper modules that were hidden by `.gitignore`, and stale `title`/`excerpt` route metadata references. Those source discrepancies are being repaired directly in the repository.
-
 ## P0 execution order
 
 1. Repair TypeScript/runtime-source parity.
@@ -45,19 +41,11 @@ The previous verified CI run failed at TypeScript after `npm ci` and all four do
 
 ## P1 execution order
 
-After P0 is green:
-
-1. URL-based EN/VN architecture.
-2. Locale-aware canonical metadata + hreflang.
-3. Locale-aware sitemap/robots.
-4. Production media/licensing pass.
-5. Operator/admin surfaces.
-6. Notification policy and delivery.
-7. Payments and temporary holds only after inventory/state semantics are stable.
+After P0 is green: URL-based EN/VN architecture; locale-aware canonical metadata + hreflang; locale-aware sitemap/robots; production media/licensing; operator/admin; notification policy/delivery; payments and temporary holds only after inventory/state semantics are stable.
 
 ## P2 execution order
 
-After the production foundation is stable, perform the actual WordPress reconstruction: full dump extraction, migration matrix, URL map, seed reconciliation, and final fidelity report. The current seeded catalog must not be described as a historical migration.
+After the production foundation is stable, perform the actual WordPress reconstruction: full dump extraction, migration matrix, URL map, seed reconciliation, and final fidelity report. The current seeded catalog is an application fixture, not a historical migration.
 
 ## Locked product decisions
 
