@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /**
- * Post-build smoke test for the standalone production server.
- * No external services are required: the app falls back to PGLite when
- * DATABASE_URL is absent, so CI can exercise the real server bundle safely.
+ * Post-build smoke test for the standalone production build.
+ * The configured Vercel/Nitro build is previewed with Vite's production
+ * preview server; the previous `start -> .output/server` path was incompatible
+ * with the checked-in `vercel` Nitro preset, which emits `.vercel/output`.
  */
 import { spawn } from "node:child_process";
 
 const port = Number(process.env.SMOKE_PORT ?? 3000);
 const baseUrl = `http://127.0.0.1:${port}`;
 const command = process.platform === "win32" ? "npm.cmd" : "npm";
-
-const server = spawn(command, ["run", "start"], {
+const server = spawn(command, ["run", "preview", "--", "--host", "127.0.0.1", "--port", String(port)], {
   env: {
     ...process.env,
     DATABASE_URL: "",
@@ -38,7 +38,7 @@ try {
   let lastError;
   for (let attempt = 0; attempt < 30; attempt += 1) {
     if (server.exitCode !== null) {
-      throw new Error(`production server exited with code ${server.exitCode}`);
+      throw new Error(`production preview exited with code ${server.exitCode}\n${output.trim()}`);
     }
     try {
       response = await fetch(`${baseUrl}/`);
@@ -50,10 +50,10 @@ try {
   }
 
   if (!response) {
-    throw new Error(`server did not become ready: ${lastError?.message ?? "unknown error"}`);
+    throw new Error(`server did not become ready: ${lastError?.message ?? "unknown error"}\n${output.trim()}`);
   }
   if (!response.ok) {
-    throw new Error(`GET / returned HTTP ${response.status}`);
+    throw new Error(`GET / returned HTTP ${response.status}\n${output.trim()}`);
   }
 
   const html = await response.text();
