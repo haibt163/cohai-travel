@@ -45,13 +45,13 @@ export const Route = createFileRoute("/sitemap.xml")({
 });
 
 function escapeXml(value: string): string {
-  return value.replace(/[<>&'\"]/g, (character) => {
+  return value.replace(/[<>&'"]/g, (character) => {
     const entities: Record<string, string> = {
       "<": "&lt;",
       ">": "&gt;",
       "&": "&amp;",
       "'": "&apos;",
-      '\"': "&quot;",
+      '"': "&quot;",
     };
     return entities[character] ?? character;
   });
