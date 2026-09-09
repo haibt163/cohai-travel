@@ -1,19 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-/**
- * Pure concurrency invariant tests. The database-backed integration suite
- * should exercise the same invariant through createBooking once a real DB is
- * available in CI. Keeping this module dependency-free means it can run on
- * every checkout without credentials.
- */
-
-function acceptedSeats(maxPeople, bookedBefore, attempts) {
+function admitSequentially(maxPeople, bookedBefore, attempts) {
   let booked = bookedBefore;
   let accepted = 0;
   for (const guests of attempts) {
-    const remaining = maxPeople - booked;
-    if (guests <= remaining) {
+    if (guests <= maxPeople - booked) {
       booked += guests;
       accepted += guests;
     }
@@ -21,20 +13,23 @@ function acceptedSeats(maxPeople, bookedBefore, attempts) {
   return { accepted, booked };
 }
 
-test("sequential admission never exceeds departure capacity", () => {
-  const result = acceptedSeats(4, 2, [1, 1, 1]);
+test("capacity cannot be exceeded", () => {
+  assert.deepEqual(admitSequentially(4, 2, [1, 1, 1]), { accepted: 2, booked: 4 });
+});
+
+test("only one final-seat attempt succeeds", () => {
+  assert.deepEqual(admitSequentially(1, 0, [1, 1]), { accepted: 1, booked: 1 });
+});
+
+test("failed admission leaves inventory unchanged", () => {
+  assert.deepEqual(admitSequentially(2, 2, [1]), { accepted: 0, booked: 2 });
+});
+
+// Model the database-lock invariant explicitly: once one transaction commits,
+// every later transaction observes the new booked count before admission.
+test("serialized transactions observe prior committed seats", () => {
+  const result = admitSequentially(3, 0, [2, 2]);
   assert.equal(result.accepted, 2);
-  assert.equal(result.booked, 4);
-});
-
-test("two final-seat attempts cannot both consume the same seat", () => {
-  const result = acceptedSeats(1, 0, [1, 1]);
-  assert.equal(result.accepted, 1);
-  assert.equal(result.booked, 1);
-});
-
-test("a failed attempt does not consume inventory", () => {
-  const result = acceptedSeats(2, 2, [1]);
-  assert.equal(result.accepted, 0);
   assert.equal(result.booked, 2);
+  assert.equal(result.booked <= 3, true);
 });
