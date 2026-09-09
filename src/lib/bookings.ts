@@ -46,7 +46,7 @@ export const createBooking = createServerFn({ method: "POST" })
     return sql.transaction(async (tx) => {
       let total = 0;
       let startDate = data.startDate;
-      let inventoryUnits = 1;
+      const inventoryUnits = 1;
 
       if (data.kind === "tour") {
         if (!data.departureId) throw new Error("Choose a departure");
