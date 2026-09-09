@@ -15,8 +15,8 @@ export const Route = createFileRoute("/cars/$slug")({
   head: ({ loaderData }) =>
     loaderData
       ? seoHead({
-          title: `${loaderData.car.title} | CoHai Travel`,
-          description: loaderData.car.excerpt,
+          title: `${loaderData.car.title_en} | CoHai Travel`,
+          description: loaderData.car.excerpt_en,
           pathname: `/cars/${loaderData.car.slug}`,
           image: loaderData.car.image,
         })
