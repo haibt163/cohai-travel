@@ -1,11 +1,13 @@
 # Documentation index
 
-`ProjectStatus.md` is the active implementation ledger.
+`ProjectStatus.md` — active implementation ledger and ordered audit matrix.
 
-`docs/PARITY_AUDIT.md` is the repository-versus-preview reproducibility gate.
+`docs/PARITY_AUDIT.md` — GitHub/source versus preview reproducibility gate.
 
-`docs/CI_POLICY.md` defines the mandatory CI sequence and dependency policy.
+`docs/CI_POLICY.md` — mandatory CI chain and dependency reproducibility policy.
 
-`docs/CONTENT_ARCHAEOLOGY.md` defines the WordPress reconstruction and fidelity rules.
+`docs/BOOKING_TEST_STRATEGY.md` — booking invariants and remaining DB-backed concurrency coverage.
 
-`OriginalWordPress.md` records the legacy site's observed architecture and the deliberate reconstruction boundary.
+`docs/CONTENT_ARCHAEOLOGY.md` — WordPress reconstruction, migration decisions and fidelity rules.
+
+`OriginalWordPress.md` — observed legacy architecture and deliberate reconstruction boundary.
