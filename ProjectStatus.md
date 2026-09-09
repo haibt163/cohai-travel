@@ -80,3 +80,5 @@ Auth: account-scoped booking data; public catalog; public contact.
 Booking states: confirmed/cancelled in the current phase.
 
 Legacy WordPress: source material only, not runtime CMS.
+
+CI trigger note: the latest API-created main update corrected the invalid Radix Tooltip dependency range to the lockfile-compatible range; the next GitHub Actions run must revalidate the full dependency chain.
