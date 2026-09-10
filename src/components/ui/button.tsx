@@ -3,23 +3,19 @@ import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-opacity duration-150 disabled:pointer-events-none disabled:opacity-40",
+  "shine-button inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-[transform,box-shadow,opacity] duration-200 disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 active:translate-y-0",
   {
     variants: {
       variant: {
-        primary: "bg-accent text-accent-fg hover:opacity-90 min-h-11 px-5",
+        primary: "bg-ink text-paper shadow-soft hover:shadow-lift min-h-12 px-6",
         ghost: "text-ink hover:bg-paper-2 min-h-11 px-4",
-        outline: "shadow-border bg-surface text-ink hover:bg-paper-2 min-h-11 px-5",
+        outline: "border border-border bg-surface text-ink shadow-border hover:bg-paper-2 min-h-12 px-6",
       },
     },
     defaultVariants: { variant: "primary" },
   },
 );
 
-export function Button({
-  className,
-  variant,
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
+export function Button({ className, variant, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
   return <button className={cn(buttonVariants({ variant }), className)} {...props} />;
 }
