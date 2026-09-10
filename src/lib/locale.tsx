@@ -14,114 +14,28 @@ type Dictionary = Record<string, { en: string; vn: string }>;
 const copy: Dictionary = {
   brand: { en: "CoHai Travel", vn: "CoHai Travel" },
   tagline: { en: "Vietnam, Cambodia, Thailand — paced properly.", vn: "Việt Nam, Campuchia, Thái Lan — đúng nhịp." },
-  journeys: { en: "Journeys", vn: "Hành trình" },
-  places: { en: "Places", vn: "Điểm đến" },
-  stays: { en: "Stays", vn: "Lưu trú" },
-  cars: { en: "Cars", vn: "Xe" },
-  contact: { en: "Contact", vn: "Liên hệ" },
-  search: { en: "Search", vn: "Tìm" },
-  account: { en: "My trips", vn: "Chuyến của tôi" },
-  signIn: { en: "Sign in", vn: "Đăng nhập" },
-  currency: { en: "AUD", vn: "AUD" },
-  from: { en: "From", vn: "Từ" },
-  perPerson: { en: "per person", vn: "mỗi khách" },
-  perNight: { en: "per night", vn: "mỗi đêm" },
-  perDay: { en: "per day", vn: "mỗi ngày" },
-  days: { en: "days", vn: "ngày" },
-  book: { en: "Book this departure", vn: "Đặt chuyến này" },
-  bookStay: { en: "Book this stay", vn: "Đặt phòng" },
-  bookCar: { en: "Book this car", vn: "Đặt xe" },
-  more: { en: "Read the itinerary", vn: "Xem lịch trình" },
-  nature: { en: "Nature", vn: "Thiên nhiên" },
-  beach: { en: "Coast", vn: "Biển" },
-  unesco: { en: "UNESCO", vn: "UNESCO" },
-  allJourneys: { en: "All journeys", vn: "Mọi hành trình" },
-  heroKicker: { en: "Private departures from Australia", vn: "Chuyến riêng từ Úc" },
+  journeys: { en: "Journeys", vn: "Hành trình" }, places: { en: "Places", vn: "Điểm đến" }, stays: { en: "Stays", vn: "Lưu trú" }, cars: { en: "Cars", vn: "Xe" }, contact: { en: "Contact", vn: "Liên hệ" }, search: { en: "Search", vn: "Tìm" }, account: { en: "My trips", vn: "Chuyến của tôi" }, signIn: { en: "Sign in", vn: "Đăng nhập" }, currency: { en: "AUD", vn: "AUD" }, from: { en: "From", vn: "Từ" }, perPerson: { en: "per person", vn: "mỗi khách" }, perNight: { en: "per night", vn: "mỗi đêm" }, perDay: { en: "per day", vn: "mỗi ngày" }, days: { en: "days", vn: "ngày" },
+  book: { en: "Book this departure", vn: "Đặt chuyến này" }, bookStay: { en: "Book this stay", vn: "Đặt phòng" }, bookCar: { en: "Book this car", vn: "Đặt xe" }, more: { en: "Read the itinerary", vn: "Xem lịch trình" }, nature: { en: "Nature", vn: "Thiên nhiên" }, beach: { en: "Coast", vn: "Biển" }, unesco: { en: "UNESCO", vn: "UNESCO" }, allJourneys: { en: "All journeys", vn: "Mọi hành trình" }, heroKicker: { en: "Private departures from Australia", vn: "Chuyến riêng từ Úc" },
   heroTitle: { en: "An atlas of the east, written slowly.", vn: "Một tập bản đồ phía đông, viết chậm." },
-  heroBody: {
-    en: "CoHai plans small journeys through Vietnam and its neighbours. Karst nights, terrace walks, lantern towns — booked in Australian dollars, with live seats.",
-    vn: "CoHai sắp những chuyến nhỏ qua Việt Nam và lân bang. Đêm đá vôi, đi ruộng, phố đèn lồng — giá AUD, còn chỗ thật.",
-  },
-  searchCta: { en: "Look up a date", vn: "Tìm ngày" },
-  chaptersKicker: { en: "Three chapters", vn: "Ba chương" },
-  partners: { en: "Also the neighbours", vn: "Cả lân bang" },
-  operator: { en: "A house in Hanoi, a desk in Melbourne.", vn: "Một nhà ở Hà Nội, một bàn ở Melbourne." },
-  footerNote: {
-    en: "CoHai Travel. Journeys in AUD. Live departures, no mystery inventory.",
-    vn: "CoHai Travel. Hành trình tính AUD. Ngày khởi hành thật.",
-  },
-  guests: { en: "Guests", vn: "Khách" },
-  nights: { en: "Nights", vn: "Đêm" },
-  name: { en: "Name", vn: "Tên" },
-  firstName: { en: "First name", vn: "Tên" },
-  lastName: { en: "Last name", vn: "Họ" },
-  email: { en: "Email", vn: "Email" },
-  phone: { en: "Phone", vn: "Điện thoại" },
-  notes: { en: "Notes for the desk", vn: "Ghi chú cho bàn" },
-  confirm: { en: "Confirm booking", vn: "Xác nhận đặt" },
-  needSignIn: { en: "Sign in to hold a seat.", vn: "Đăng nhập để giữ chỗ." },
-  seatsLeft: { en: "seats left", vn: "chỗ còn" },
-  soldOut: { en: "Hold is full", vn: "Hết chỗ" },
-  departure: { en: "Departure", vn: "Khởi hành" },
-  send: { en: "Send to the desk", vn: "Gửi bàn" },
-  message: { en: "Message", vn: "Tin nhắn" },
-  contactLead: {
-    en: "A human reads this. Tell us dates, pace, and who is travelling.",
-    vn: "Người thật đọc. Nói ngày, nhịp, và ai đi.",
-  },
-  thanks: { en: "Received. We will write back.", vn: "Đã nhận. Chúng tôi sẽ viết lại." },
-  booked: { en: "Held. A confirmation sits in My trips.", vn: "Đã giữ. Xem trong Chuyến của tôi." },
-  emptyTrips: { en: "No bookings yet.", vn: "Chưa có đặt chỗ." },
-  searchPlaceholder: { en: "Place, journey, stay…", vn: "Điểm đến, hành trình…" },
-  noResults: { en: "Nothing on that line. Try another word or chapter.", vn: "Không khớp. Thử từ khác." },
-  seats: { en: "seats", vn: "chỗ" },
-  pickup: { en: "Pickup", vn: "Đón" },
-  start: { en: "Start date", vn: "Ngày bắt đầu" },
-  signInLead: { en: "Hold seats, stays, and cars under your name.", vn: "Giữ chỗ, phòng, xe dưới tên bạn." },
+  heroBody: { en: "CoHai plans small journeys through Vietnam and its neighbours. Karst nights, terrace walks, lantern towns — booked in Australian dollars, with live seats.", vn: "CoHai sắp những chuyến nhỏ qua Việt Nam và lân bang. Đêm đá vôi, đi ruộng, phố đèn lồng — giá AUD, còn chỗ thật." },
+  searchCta: { en: "Look up a date", vn: "Tìm ngày" }, chaptersKicker: { en: "Three chapters", vn: "Ba chương" }, partners: { en: "Also the neighbours", vn: "Cả lân bang" }, operator: { en: "A house in Hanoi, a desk in Melbourne.", vn: "Một nhà ở Hà Nội, một bàn ở Melbourne." }, footerNote: { en: "CoHai Travel. Journeys in AUD. Live departures, no mystery inventory.", vn: "CoHai Travel. Hành trình tính AUD. Ngày khởi hành thật." },
+  guests: { en: "Guests", vn: "Khách" }, nights: { en: "Nights", vn: "Đêm" }, name: { en: "Name", vn: "Tên" }, firstName: { en: "First name", vn: "Tên" }, lastName: { en: "Last name", vn: "Họ" }, email: { en: "Email", vn: "Email" }, phone: { en: "Phone", vn: "Điện thoại" }, notes: { en: "Notes for the desk", vn: "Ghi chú cho bàn" }, confirm: { en: "Confirm booking", vn: "Xác nhận đặt" }, needSignIn: { en: "Sign in to hold a seat.", vn: "Đăng nhập để giữ chỗ." }, seatsLeft: { en: "seats left", vn: "chỗ còn" }, soldOut: { en: "Hold is full", vn: "Hết chỗ" }, departure: { en: "Departure", vn: "Khởi hành" }, send: { en: "Send to the desk", vn: "Gửi bàn" }, message: { en: "Message", vn: "Tin nhắn" },
+  contactLead: { en: "A human reads this. Tell us dates, pace, and who is travelling.", vn: "Người thật đọc. Nói ngày, nhịp, và ai đi." }, thanks: { en: "Received. We will write back.", vn: "Đã nhận. Chúng tôi sẽ viết lại." }, booked: { en: "Held. A confirmation sits in My trips.", vn: "Đã giữ. Xem trong Chuyến của tôi." }, emptyTrips: { en: "No bookings yet.", vn: "Chưa có đặt chỗ." }, searchPlaceholder: { en: "Place, journey, stay…", vn: "Điểm đến, hành trình…" }, noResults: { en: "Nothing on that line. Try another word or chapter.", vn: "Không khớp. Thử từ khác." }, seats: { en: "seats", vn: "chỗ" }, pickup: { en: "Pickup", vn: "Đón" }, start: { en: "Start date", vn: "Ngày bắt đầu" }, signInLead: { en: "Hold seats, stays, and cars under your name.", vn: "Giữ chỗ, phòng, xe dưới tên bạn." },
+  homeBadgeVietnam: { en: "Vietnam", vn: "Việt Nam" }, homeBadgeTailored: { en: "Tailored journeys", vn: "Hành trình chọn lọc" }, localPerspective: { en: "Local perspective", vn: "Góc nhìn bản địa" }, handpickedPlaces: { en: "Handpicked places", vn: "Điểm đến tuyển chọn" }, slowLandscapes: { en: "Slow landscapes", vn: "Phong cảnh thong thả" }, coastalEscapes: { en: "Coastal escapes", vn: "Miền biển" }, livingHeritage: { en: "Living heritage", vn: "Di sản sống" }, travelByMood: { en: "Travel by mood.", vn: "Chọn hành trình theo cảm hứng." }, journeysWorthRemembering: { en: "Journeys worth remembering.", vn: "Những hành trình đáng nhớ." }, operations: { en: "Operator desk", vn: "Bàn điều hành" }, recentBookings: { en: "Recent bookings", vn: "Đặt chỗ gần đây" }, recentInquiries: { en: "Recent inquiries", vn: "Yêu cầu gần đây" }, bookingCount: { en: "Bookings", vn: "Đặt chỗ" }, inquiryCount: { en: "Inquiries", vn: "Yêu cầu" }, confirmedCount: { en: "Confirmed", vn: "Đã xác nhận" }, customer: { en: "Customer", vn: "Khách" }, item: { en: "Item", vn: "Mục" }, status: { en: "Status", vn: "Trạng thái" }, total: { en: "Total", vn: "Tổng" }, received: { en: "Received", vn: "Đã nhận" },
+  metaHomeTitle: { en: "CoHai Travel | Thoughtful journeys through Vietnam", vn: "CoHai Travel | Hành trình tinh tế qua Việt Nam" }, metaHomeDescription: { en: "Small-group journeys, stays and private cars across Vietnam and its neighbours, priced in AUD.", vn: "Hành trình nhóm nhỏ, nơi lưu trú và xe riêng tại Việt Nam cùng các nước lân cận, niêm yết bằng AUD." }, metaJourneysTitle: { en: "Journeys | CoHai Travel", vn: "Hành trình | CoHai Travel" }, metaJourneysDescription: { en: "Browse CoHai Travel journeys across Vietnam and its neighbours, with live dated departures.", vn: "Khám phá các hành trình CoHai Travel qua Việt Nam và lân bang, với ngày khởi hành thực tế." }, metaPlacesTitle: { en: "Places | CoHai Travel", vn: "Điểm đến | CoHai Travel" }, metaPlacesDescription: { en: "Explore destinations across Vietnam, Cambodia and Thailand selected for the journey.", vn: "Khám phá các điểm đến tại Việt Nam, Campuchia và Thái Lan được chọn cho hành trình." }, metaStaysTitle: { en: "Stays | CoHai Travel", vn: "Lưu trú | CoHai Travel" }, metaStaysDescription: { en: "Places to stay across the journey, selected for character and location.", vn: "Nơi lưu trú trên hành trình, được chọn bởi vị trí và nét riêng." }, metaCarsTitle: { en: "Cars | CoHai Travel", vn: "Xe | CoHai Travel" }, metaCarsDescription: { en: "Private cars for comfortable transfers across your CoHai journey.", vn: "Xe riêng cho những chặng di chuyển thoải mái trên hành trình CoHai." }, metaSearchTitle: { en: "Search | CoHai Travel", vn: "Tìm kiếm | CoHai Travel" }, metaSearchDescription: { en: "Search CoHai journeys, places, stays and private cars.", vn: "Tìm hành trình, điểm đến, nơi lưu trú và xe riêng của CoHai." }, metaContactTitle: { en: "Contact | CoHai Travel", vn: "Liên hệ | CoHai Travel" }, metaContactDescription: { en: "Tell CoHai Travel your dates, pace and who is travelling.", vn: "Hãy cho CoHai Travel biết ngày đi, nhịp độ và ai sẽ cùng bạn lên đường." }, metaAccountTitle: { en: "My trips | CoHai Travel", vn: "Chuyến của tôi | CoHai Travel" }, metaAccountDescription: { en: "Review your CoHai Travel bookings.", vn: "Xem các đặt chỗ CoHai Travel của bạn." }, metaLoginTitle: { en: "Sign in | CoHai Travel", vn: "Đăng nhập | CoHai Travel" }, metaLoginDescription: { en: "Sign in to hold journeys, stays and cars under your name.", vn: "Đăng nhập để giữ hành trình, phòng và xe dưới tên bạn." },
 };
 
-type Ctx = {
-  locale: Locale;
-  setLocale: (l: Locale) => void;
-  t: (key: keyof typeof copy) => string;
-};
-
+type Ctx = { locale: Locale; setLocale: (l: Locale) => void; t: (key: keyof typeof copy) => string };
 const LocaleContext = createContext<Ctx | null>(null);
 
 export function LocaleProvider({ children, initialLocale = "en" }: { children: ReactNode; initialLocale?: Locale }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
-
-  useEffect(() => {
-    setLocaleState(initialLocale);
-  }, [initialLocale]);
-
-  useEffect(() => {
-    document.documentElement.lang = locale === "vn" ? "vi" : "en";
-    try {
-      window.localStorage.setItem("cohai-locale", locale);
-    } catch {
-      /* storage unavailable */
-    }
-  }, [locale]);
-
+  useEffect(() => { setLocaleState(initialLocale); }, [initialLocale]);
+  useEffect(() => { document.documentElement.lang = locale === "vn" ? "vi" : "en"; try { window.localStorage.setItem("cohai-locale", locale); } catch {} }, [locale]);
   const setLocale = (l: Locale) => setLocaleState(l);
-
-  const value = useMemo<Ctx>(
-    () => ({ locale, setLocale, t: (key) => copy[key][locale] }),
-    [locale],
-  );
-
+  const value = useMemo<Ctx>(() => ({ locale, setLocale, t: (key) => copy[key][locale] }), [locale]);
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
-
-export function useI18n() {
-  const ctx = useContext(LocaleContext);
-  if (!ctx) throw new Error("useI18n must be used within LocaleProvider");
-  return ctx;
-}
-
-export function field<T extends Record<string, unknown>>(row: T, locale: Locale, base: string): string {
-  const key = locale === "vn" ? `${base}_vn` : `${base}_en`;
-  const value = row[key];
-  return typeof value === "string" ? value : "";
-}
+export function useI18n() { const ctx = useContext(LocaleContext); if (!ctx) throw new Error("useI18n must be used within LocaleProvider"); return ctx; }
+export function siteCopy(locale: Locale, key: keyof typeof copy): string { return copy[key][locale]; }
+export function field<T extends Record<string, unknown>>(row: T, locale: Locale, base: string): string { const key = locale === "vn" ? `${base}_vn` : `${base}_en`; const value = row[key]; return typeof value === "string" ? value : ""; }

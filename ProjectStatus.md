@@ -1,84 +1,47 @@
 # CoHai Travel — project status
 
-Last updated: 9 September 2026.
+Last updated: 10 September 2026.
 
 ## Executive status
 
-The rebuild is in active engineering-hardening and reconstruction. Core booking atomicity and finite inventory are implemented. Public contact is intentional. SEO foundations exist. CI dependency installation and domain tests have passed historically, but the full CI gate remains open until a fresh commit passes typecheck, lint, build and production smoke.
+The engineering baseline and full-site visual modernization are green. P1 now includes crawlable bilingual routing, locale-aware metadata, operational visibility for allowlisted staff and a provider-neutral notification contract. P2 migration tooling and source-fidelity rules are in place, but the legacy dump still requires the actual extraction, record decisions, URL map, seed reconciliation and final fidelity review before content parity can be claimed.
 
 ## Audit matrix
 
 | Item | Status | Next action |
 | --- | --- | --- |
-| P0.1 Reproducible checkout | 🟡 | Finish source/ignore parity and remove temporary npm peer workaround after lockfile normalization. |
-| P0.2 Preview/repo parity | 🟡 | Fresh green CI + production smoke from GitHub checkout. |
-| P0.3 Atomic tour booking | 🟢 | Protect with DB-backed concurrency tests. |
-| P0.4 Stay/car finite inventory | 🟡 | Current product is one inventory unit per booking; only add quantity UI if multi-unit booking is explicitly required. |
-| P0.5 CI | 🟡 | Clear source/type issues and obtain full green chain. |
-| P1.6 EN/VN URL architecture | 🔴 | Implement crawlable locale-prefixed routes without duplicating the app. |
-| P1.7 Locale-aware metadata | 🟡 | Extend SEO helper for canonical/hreflang after locale routing. |
-| P1.8 Sitemap/robots | 🟡 | Finish TanStack server routes and include locale variants after routing. |
-| P1.9 Images | 🟡 | Replace provisional media with licensed/authoritative assets. |
-| P1.10 Booking tests | 🟡 | Add DB-backed concurrency/integration coverage; pure invariants now include concurrent admission cases. |
-| P1.11 Booking state | 🟢 | Current phase uses confirmed/cancelled; true payment holds are later. |
-| P1.12 Public contact | 🟢 | Public endpoint with honeypot/rate limit. |
-| P1 operations/admin | 🔴 | Build operator booking/contact workflow. |
-| P1 notifications | 🔴 | Define production email/WhatsApp confirmation. |
-| P2.14 Full dump parse | 🔴 | Extract complete legacy content structures. |
-| P2.15 Migration matrix | 🔴 | Record migrate/rewrite/merge/archive/discard per relevant legacy record. |
-| P2.16 Legacy URL mapping | 🔴 | Map/redirect important historical paths. |
-| P2.17 Seed reconciliation | 🔴 | Reconcile synthetic seed against verified legacy content. |
-| P2.18 Fidelity report | 🔴 | Produce final preservation/change/discard report. |
+| P0.1 Reproducible checkout | 🟢 | Keep the clean GitHub checkout as source of record. |
+| P0.2 Preview/repo parity | 🟢 | Retain fresh CI/runtime evidence on subsequent changes. |
+| P0.3 Atomic tour booking | 🟢 | Preserve DB-backed transaction/locking semantics. |
+| P0.4 Stay/car finite inventory | 🟢 | Keep one-unit booking semantics until multi-unit UX is explicitly required. |
+| P0.5 CI | 🟢 | Required gate remains npm ci → domain tests → typecheck → lint → build → smoke. |
+| P1.6 EN/VN URL architecture | 🟢 | Locale-prefixed application routes are canonical. |
+| P1.7 Locale-aware metadata | 🟢 | Titles/descriptions now use locale-specific copy on public routes. |
+| P1.8 Sitemap/robots | 🟢 | Locale-aware SEO endpoints remain under TanStack Start. |
+| P1.9 Images | 🟡 | Verify provenance/licensing of final customer-facing assets. |
+| P1.10 Booking tests | 🟡 | Add a real DB-backed concurrency/integration harness when production DB test infrastructure is available. |
+| P1.11 Booking state | 🟢 | Current confirmed/cancelled model remains locked. |
+| P1.12 Public contact | 🟢 | Public endpoint with anti-spam/rate-limit protections. |
+| P1 operations/admin | 🟢 | Allowlisted users get an operator desk section in My trips; extend to dedicated workflow only when needed. |
+| P1 notifications | 🟡 | Contract documented; provider credentials, delivery worker and monitoring remain to be configured. |
+| P2.14 Full dump parse | 🟡 | Audit/parser tooling is committed; run against the frozen legacy dump for the authoritative inventory. |
+| P2.15 Migration matrix | 🟡 | Decision template/rules are committed; complete row-level dispositions from extracted source inventory. |
+| P2.16 Legacy URL mapping | 🟡 | Map important legacy paths to canonical replacements or explicit retirement decisions. |
+| P2.17 Seed reconciliation | 🟡 | Compare current synthetic seed against source-backed legacy records. |
+| P2.18 Fidelity report | 🟡 | Produce preservation/rewrite/merge/archive/discard counts and unresolved gaps. |
 
-## Current P0 work
+## Product boundaries
 
-TypeScript/runtime-source parity is the active blocker. The previous CI run failed on unsupported standalone Nitro-style sitemap/robots handlers, missing helper modules hidden by `.gitignore`, and stale route metadata property names. The repository now contains TanStack Start server-route implementations for the SEO endpoints and the affected catalog detail routes use the typed language-specific fields.
+The current catalog seed remains synthetic until P2 is completed. Legacy credentials and historical customer PII must never be copied into the public application or migration fixtures.
 
-The `.gitignore` policy is being tightened so imported build/runtime helpers cannot disappear from a clean GitHub checkout. A parity ledger and CI policy are tracked under `docs/`.
-
-The domain test suite now includes pure concurrency admission invariants. This is necessary but not sufficient; a DB-backed locking test remains required to prove the transaction semantics.
-
-## Locked stay/car quantity decision for the current product phase
-
-Each stay or car booking currently consumes exactly **one inventory unit**. A guest may book multiple guests for a stay/car, but that does not silently multiply inventory units. This keeps the server model honest until a dedicated multi-room/multi-vehicle UX is intentionally added.
-
-That means the old WordPress `room_count` field is preserved as migration evidence, but not falsely represented as supported multi-room guest behavior in the current UI.
+The current stay/car product consumes one inventory unit per booking. The legacy `room_count` evidence is retained for migration mapping but is not represented as unsupported multi-room guest behavior.
 
 ## Ordered execution
 
-### P0 — engineering baseline
-
-1. Green TypeScript.
-2. Green lint/build/smoke.
-3. Clean dependency lockfile and remove temporary peer workaround where feasible.
-4. Close repository↔preview parity with runtime evidence.
-5. Add DB-backed booking concurrency/integration tests.
-6. Keep one-unit stay/car booking semantics unless product requirements change.
-
 ### P1 — production foundation
 
-After P0 is green: URL-based EN/VN routing; locale-aware canonical metadata/hreflang; locale-aware sitemap/robots; production media/licensing; operator/admin; notification delivery; then payments/temporary holds.
+Bilingual canonical routes and metadata are implemented. Operator visibility is now available to an explicit allowlist via `COHAI_OPERATOR_USER_IDS`. Notification behavior is specified but intentionally not faked without a production provider. Media provenance remains the principal P1 content-quality item.
 
 ### P2 — WordPress reconstruction
 
-After the production foundation is stable: full dump extraction, migration matrix, legacy URL map, seed reconciliation, and final fidelity report.
-
-## Locked product decisions
-
-Brand: CoHai Travel.
-
-Runtime: React 19 + TanStack Start/Router + Vite + Tailwind v4.
-
-Commerce: live departure booking plus dated stays/cars.
-
-Currency: AUD.
-
-Languages: English + Vietnamese.
-
-Auth: account-scoped booking data; public catalog; public contact.
-
-Booking states: confirmed/cancelled in the current phase.
-
-Legacy WordPress: source material only, not runtime CMS.
-
-CI trigger note: the latest API-created main update corrected the invalid Radix Tooltip dependency range to the lockfile-compatible range; the next GitHub Actions run must revalidate the full dependency chain.
+Use `scripts/audit-legacy-dump.mjs` to generate a machine-readable source inventory. Then complete `docs/P2_MIGRATION_EXECUTION.md`, the legacy URL map, source-backed seed reconciliation and the fidelity report. The WordPress repository remains source material only, not runtime CMS.

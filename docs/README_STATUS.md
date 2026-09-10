@@ -10,4 +10,10 @@
 
 `docs/CONTENT_ARCHAEOLOGY.md` — WordPress reconstruction, migration decisions and fidelity rules.
 
+`docs/P2_MIGRATION_EXECUTION.md` — executable legacy extraction, decision matrix, URL and media reconciliation rules.
+
+`docs/P1_NOTIFICATIONS.md` — production notification delivery contract.
+
+`docs/visual-modernization.md` — full-site visual modernization record.
+
 `OriginalWordPress.md` — observed legacy architecture and deliberate reconstruction boundary.

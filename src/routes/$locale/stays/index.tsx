@@ -1,7 +1,7 @@
 import { BedDouble, Star } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { listStays } from "@/lib/catalog";
-import { field, useI18n } from "@/lib/locale";
+import { field, siteCopy, useI18n } from "@/lib/locale";
 import { aud } from "@/lib/utils";
 import { Cover } from "@/components/cover";
 import { PageHead } from "@/components/shell";
@@ -9,7 +9,10 @@ import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/$locale/stays/")({
   loader: async () => ({ stays: await listStays() }),
-  head: ({ params }) => seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: "Stays | CoHai Travel", description: "Places to stay across the journey.", pathname: `/${params.locale}/stays`, alternatePathname: (l) => `/${l}/stays` }),
+  head: ({ params }) => {
+    const locale = params.locale === "vn" ? "vn" : "en";
+    return seoHead({ locale, title: siteCopy(locale, "metaStaysTitle"), description: siteCopy(locale, "metaStaysDescription"), pathname: `/${params.locale}/stays`, alternatePathname: (l) => `/${l}/stays` });
+  },
   component: StaysPage,
 });
 

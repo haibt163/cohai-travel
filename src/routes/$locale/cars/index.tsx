@@ -1,7 +1,7 @@
 import { ArrowUpRight, CarFront } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { listCars } from "@/lib/catalog";
-import { field, useI18n } from "@/lib/locale";
+import { field, siteCopy, useI18n } from "@/lib/locale";
 import { aud } from "@/lib/utils";
 import { Cover } from "@/components/cover";
 import { PageHead } from "@/components/shell";
@@ -9,7 +9,10 @@ import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/$locale/cars/")({
   loader: async () => ({ cars: await listCars() }),
-  head: ({ params }) => seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: "Cars | CoHai Travel", description: "Private cars for your journey.", pathname: `/${params.locale}/cars`, alternatePathname: (l) => `/${l}/cars` }),
+  head: ({ params }) => {
+    const locale = params.locale === "vn" ? "vn" : "en";
+    return seoHead({ locale, title: siteCopy(locale, "metaCarsTitle"), description: siteCopy(locale, "metaCarsDescription"), pathname: `/${params.locale}/cars`, alternatePathname: (l) => `/${l}/cars` });
+  },
   component: CarsPage,
 });
 
