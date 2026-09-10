@@ -1,25 +1,22 @@
+import { ArrowRight } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-opacity duration-150 disabled:pointer-events-none disabled:opacity-40",
+  "inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-[transform,box-shadow,background-color,opacity] duration-250 disabled:pointer-events-none disabled:opacity-40",
   {
     variants: {
       variant: {
-        primary: "bg-accent text-accent-fg hover:opacity-90 min-h-11 px-5",
+        primary: "shine-button bg-accent text-accent-fg shadow-soft hover:-translate-y-0.5 hover:shadow-lift min-h-11 px-5",
         ghost: "text-ink hover:bg-paper-2 min-h-11 px-4",
-        outline: "shadow-border bg-surface text-ink hover:bg-paper-2 min-h-11 px-5",
+        outline: "bg-surface text-ink shadow-border hover:-translate-y-0.5 hover:bg-paper-2 min-h-11 px-5",
       },
     },
     defaultVariants: { variant: "primary" },
   },
 );
 
-export function Button({
-  className,
-  variant,
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
-  return <button className={cn(buttonVariants({ variant }), className)} {...props} />;
+export function Button({ className, variant, children, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
+  return <button className={cn(buttonVariants({ variant }), className)} {...props}>{children}<ArrowRight className="size-4" aria-hidden="true" /></button>;
 }
