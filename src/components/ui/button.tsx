@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
@@ -17,6 +16,6 @@ const buttonVariants = cva(
   },
 );
 
-export function Button({ className, variant, children, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
-  return <button className={cn(buttonVariants({ variant }), className)} {...props}>{children}<ArrowRight className="size-4" aria-hidden="true" /></button>;
+export function Button({ className, variant, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>) {
+  return <button className={cn(buttonVariants({ variant }), className)} {...props} />;
 }
