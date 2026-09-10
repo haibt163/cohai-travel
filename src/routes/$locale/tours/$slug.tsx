@@ -1,4 +1,4 @@
-import { ArrowDown, CalendarDays, Check, Clock3, MapPinned } from "lucide-react";
+import { CalendarDays, Check, Clock3, MapPinned } from "lucide-react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getTour } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
@@ -30,7 +30,7 @@ function TourDetail() {
           <div className="max-w-3xl text-paper">
             <Link to="/$locale/destinations/$slug" params={{ locale, slug: tour.dest_slug }} className="inline-flex items-center gap-2 rounded-full border border-paper/25 bg-paper/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-caps backdrop-blur-sm hover:bg-paper/15"><MapPinned className="size-3.5" />{field(tour, locale, "dest_title")}</Link>
             <h1 className="mt-5 text-5xl md:text-7xl">{title}</h1>
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-paper-2"><span className="inline-flex items-center gap-2"><Clock3 className="size-4" />{tour.duration_days} {t("days")}</span><span className="size-1 rounded-full bg-paper/40" /><span className="inline-flex items-center gap-2"><CalendarDays className="size-4" />{departures.length} {t("departure")}s</span></div>
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-paper-2"><span className="inline-flex items-center gap-2"><Clock3 className="size-4" />{tour.duration_days} {t("days")}</span><span className="size-1 rounded-full bg-paper/40" /><span className="inline-flex items-center gap-2"><CalendarDays className="size-4" />{departures.length} {t("departure")}</span></div>
           </div>
         </div>
       </section>
@@ -38,11 +38,11 @@ function TourDetail() {
         <div>
           <p className="max-w-3xl text-xl leading-8 text-muted">{field(tour, locale, "excerpt")}</p>
           <div className="my-9 editorial-divider" />
-          <div className="prose prose-lg max-w-none whitespace-pre-line leading-8 text-ink">{field(tour, locale, "body")}</div>
+          <div className="max-w-none whitespace-pre-line leading-8 text-ink">{field(tour, locale, "body")}</div>
           <div className="mt-10 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("seatsLeft")}</p></div><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("currency")}</p></div><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("operator")}</p></div></div>
         </div>
         <div>
-          <div className="mb-4 flex items-center justify-between gap-3"><div><p className="eyebrow text-accent">{t("book")}</p><p className="mt-1 text-sm text-muted">{tour.from_price > 0 ? `${t("from")} ${aud(tour.from_price)} ${t("perPerson")}` : ""}</p></div><ArrowDown className="hidden size-4 text-muted md:block" /></div>
+          <div className="mb-4 flex items-center justify-between gap-3"><div><p className="eyebrow text-accent">{t("book")}</p><p className="mt-1 text-sm text-muted">{tour.from_price > 0 ? `${t("from")} ${aud(tour.from_price)} ${t("perPerson")}` : ""}</p></div></div>
           <BookingForm kind="tour" itemId={tour.id} departures={departures} unitPrice={tour.from_price} />
         </div>
       </section>
