@@ -1,3 +1,4 @@
+import { ArrowUpRight, MapPinned } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { listDestinations } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
@@ -17,14 +18,16 @@ function DestinationsPage() {
   return (
     <div>
       <PageHead kicker={t("places")} title={t("places")} body={t("operator")} />
-      <div className="mx-auto grid max-w-6xl gap-5 px-4 pb-16 sm:grid-cols-2 lg:grid-cols-3">
-        {destinations.map((d) => (
-          <Link key={d.id} to="/$locale/destinations/$slug" params={{ locale, slug: d.slug }} className="group overflow-hidden rounded-xl bg-surface shadow-border">
-            <div className="aspect-photo overflow-hidden"><Cover src={d.image} alt={field(d, locale, "title")} className="transition-transform duration-250 group-hover:scale-lift" /></div>
-            <div className="p-4"><p className="text-xs uppercase tracking-wide text-muted">{d.country}</p><h2 className="font-display text-2xl">{field(d, locale, "title")}</h2><p className="mt-1 text-sm text-muted">{field(d, locale, "excerpt")}</p></div>
-          </Link>
-        ))}
-      </div>
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 md:pb-24">
+        <div className="mb-8 flex items-center gap-3 rounded-3xl bg-surface/80 p-5 shadow-border"><span className="grid size-11 place-items-center rounded-2xl bg-surface-2 text-accent"><MapPinned className="size-5" /></span><div><p className="text-sm font-semibold">{t("places")}</p><p className="text-sm text-muted">{t("operator")}</p></div></div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {destinations.map((d) => (
+            <Link key={d.id} to="/$locale/destinations/$slug" params={{ locale, slug: d.slug }} className="group overflow-hidden rounded-3xl bg-surface shadow-border transition-[transform,box-shadow] duration-250 hover:-translate-y-1 hover:shadow-lift">
+              <div className="relative aspect-[4/5] overflow-hidden bg-ink"><Cover src={d.image} alt={field(d, locale, "title")} className="h-full w-full transition-transform duration-350 group-hover:scale-[1.05]" /><div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_38%,rgba(9,24,23,.72))]" /><div className="absolute inset-x-0 top-0 flex items-center justify-between p-4"><span className="rounded-full border border-paper/25 bg-ink/40 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-caps text-paper backdrop-blur-sm">{d.country}</span><span className="grid size-9 place-items-center rounded-full bg-paper/90 text-ink transition-transform group-hover:rotate-6"><ArrowUpRight className="size-4" /></span></div><div className="absolute inset-x-0 bottom-0 p-5 text-paper"><h2 className="text-3xl">{field(d, locale, "title")}</h2><p className="mt-2 line-clamp-2 text-sm leading-6 text-paper-2">{field(d, locale, "excerpt")}</p></div></div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
