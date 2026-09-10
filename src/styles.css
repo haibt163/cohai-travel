@@ -1,84 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f3eee4;
-  --color-paper-2: #e8e0d2;
-  --color-ink: #1c1914;
-  --color-muted: #6f6a62;
-  --color-accent: #1f6f6d;
-  --color-accent-fg: #f3eee4;
-  --color-surface: #fbf8f1;
-  --color-border: color-mix(in oklab, #1c1914 12%, transparent);
+  --color-paper: #f5f1e8;
+  --color-paper-2: #e9e3d6;
+  --color-ink: #13201f;
+  --color-muted: #66716e;
+  --color-accent: #176f6b;
+  --color-accent-fg: #f5f1e8;
+  --color-surface: #fffdf8;
+  --color-surface-2: #eef5f2;
+  --color-warm: #c76b45;
   --color-danger: #8a3a2a;
-
+  --color-border: color-mix(in oklab, #13201f 11%, transparent);
   --font-display: "Fraunces", "Times New Roman", serif;
   --font-sans: "IBM Plex Sans", "Helvetica Neue", sans-serif;
-
-  --radius-xs: 0.25rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-
-  --shadow-border:
-    0 0 0 1px color-mix(in oklab, #1c1914 8%, transparent),
-    0 1px 2px -1px color-mix(in oklab, #1c1914 8%, transparent),
-    0 2px 8px color-mix(in oklab, #1c1914 5%, transparent);
-
+  --radius-xs: 0.35rem;
+  --radius-sm: 0.65rem;
+  --radius-md: 0.9rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.65rem;
+  --radius-2xl: 2.25rem;
+  --shadow-border: 0 0 0 1px color-mix(in oklab, #13201f 8%, transparent), 0 8px 30px color-mix(in oklab, #13201f 7%, transparent);
+  --shadow-soft: 0 18px 55px color-mix(in oklab, #13201f 10%, transparent);
+  --shadow-lift: 0 24px 65px color-mix(in oklab, #13201f 15%, transparent);
   --duration-250: 250ms;
+  --duration-350: 350ms;
   --tracking-caps: 0.18em;
-  --min-height-hero: 72vh;
-  --height-cover: 48vh;
+  --min-height-hero: 80vh;
+  --height-cover: 52vh;
   --aspect-ratio-portrait: 4 / 5;
   --aspect-ratio-photo: 3 / 2;
-  --scale-lift: 1.03;
+  --scale-lift: 1.04;
 }
 
 @layer base {
-  html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: var(--color-paper);
-    color: var(--color-ink);
-  }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: var(--color-paper); color: var(--color-ink); scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); background: radial-gradient(circle at 12% 8%, color-mix(in oklab, var(--color-accent) 8%, transparent), transparent 28rem), radial-gradient(circle at 88% 18%, color-mix(in oklab, var(--color-warm) 7%, transparent), transparent 24rem), var(--color-paper); color: var(--color-ink); line-height: 1.55; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.035em; line-height: 1.08; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+  img { display: block; outline: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent); outline-offset: -1px; }
+  ::selection { background: color-mix(in oklab, var(--color-accent) 22%, transparent); }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+}
 
-  body {
-    font-family: var(--font-sans);
-    background: var(--color-paper);
-    color: var(--color-ink);
-    line-height: 1.55;
-  }
-
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1.12;
-    text-wrap: balance;
-  }
-
-  p {
-    text-wrap: pretty;
-  }
-
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
-  }
-
-  img {
-    outline: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent);
-    outline-offset: -1px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
+@layer components {
+  .surface-glass { background: color-mix(in oklab, var(--color-surface) 84%, transparent); border: 1px solid color-mix(in oklab, white 35%, transparent); box-shadow: var(--shadow-soft); backdrop-filter: blur(18px); }
+  .eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+  .shine-button { position: relative; overflow: hidden; }
+  .shine-button::after { position: absolute; inset: 0 auto 0 -120%; width: 65%; content: ""; transform: skewX(-18deg); background: linear-gradient(90deg, transparent, color-mix(in oklab, white 22%, transparent), transparent); transition: transform 700ms ease; }
+  .shine-button:hover::after, .shine-button:focus-visible::after { transform: translateX(360%) skewX(-18deg); }
 }
