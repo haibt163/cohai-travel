@@ -47,11 +47,10 @@ function parseScalar(token) {
 function readSchemas(sql) {
   const schemas = new Map(); const marker = /CREATE TABLE(?: IF NOT EXISTS)?\s+`?([A-Za-z0-9_]+)`?\s*\(/gi;
   for (const match of sql.matchAll(marker)) {
-    const bodyStart = marker.lastIndex; const end = findStatementEnd(sql, bodyStart); if (end < 0) continue;
+    const bodyStart = (match.index ?? 0) + match[0].length; const end = findStatementEnd(sql, bodyStart); if (end < 0) continue;
     const body = sql.slice(bodyStart, end); const columns = [];
     for (const line of body.split(/\r?\n/)) { const m = line.match(/^\s*`([^`]+)`\s+/); if (m) columns.push(m[1]); }
     schemas.set(match[1], columns);
-    marker.lastIndex = end + 1;
   }
   return schemas;
 }
@@ -59,11 +58,11 @@ function readSchemas(sql) {
 function readInserts(sql, schemas) {
   const tables = new Map(); const marker = /INSERT INTO\s+`?([A-Za-z0-9_]+)`?(?:\s*\(([^)]*)\))?\s+VALUES\s*/gi;
   for (const match of sql.matchAll(marker)) {
-    const end = findStatementEnd(sql, marker.lastIndex); if (end < 0) continue;
+    const valuesStart = (match.index ?? 0) + match[0].length; const end = findStatementEnd(sql, valuesStart); if (end < 0) continue;
     const columns = match[2] ? splitTopLevel(match[2]).map((x) => x.replace(/`/g, "").trim()) : schemas.get(match[1]) ?? [];
-    const tuples = parseTuples(sql.slice(marker.lastIndex, end)); const rows = tables.get(match[1]) ?? [];
+    const tuples = parseTuples(sql.slice(valuesStart, end)); const rows = tables.get(match[1]) ?? [];
     for (const tuple of tuples) { const values = tuple.map(parseScalar); const row = {}; for (let i = 0; i < columns.length; i += 1) row[columns[i]] = values[i]; rows.push(row); }
-    tables.set(match[1], rows); marker.lastIndex = end + 1;
+    tables.set(match[1], rows);
   }
   return tables;
 }
@@ -74,21 +73,8 @@ export function auditLegacyDump(sql) {
   const schemas = readSchemas(sql); const tables = readInserts(sql, schemas); const rowCounts = {};
   for (const [name, rows] of tables) rowCounts[name] = rows.length;
   const posts = tables.get("wp_posts") ?? []; const postmeta = tables.get("wp_postmeta") ?? [];
-  return {
-    generatedAt: new Date().toISOString(), source: "haibt163/travel:data_vietaustravel",
-    safety: { rawRecordSamples: false, piiExported: false, credentialsImported: false },
-    tables: Object.fromEntries([...schemas.keys()].sort().map((name) => [name, { columns: schemas.get(name)?.length ?? 0, rows: rowCounts[name] ?? 0 }])),
-    populatedTables: Object.fromEntries(Object.entries(rowCounts).filter(([, count]) => count > 0).sort(([a], [b]) => a.localeCompare(b))),
-    wpPosts: { rows: posts.length, byPostType: histogram(posts, "post_type"), byStatus: histogram(posts, "post_status") },
-    wpPostmeta: { rows: postmeta.length, byKey: histogram(postmeta, "meta_key") },
-    structured: Object.fromEntries(["wp_byt_tour_schedule", "wp_byt_vacancies", "wp_byt_vacancy_bookings", "wp_byt_tour_booking", "wp_byt_bookings", "wp_byt_car_rental_bookings", "wp_byt_car_rental_booking_days"].map((name) => [name, rowCounts[name] ?? 0])),
-  };
+  return { generatedAt: new Date().toISOString(), source: "haibt163/travel:data_vietaustravel", safety: { rawRecordSamples: false, piiExported: false, credentialsImported: false }, tables: Object.fromEntries([...schemas.keys()].sort().map((name) => [name, { columns: schemas.get(name)?.length ?? 0, rows: rowCounts[name] ?? 0 }])), populatedTables: Object.fromEntries(Object.entries(rowCounts).filter(([, count]) => count > 0).sort(([a], [b]) => a.localeCompare(b))), wpPosts: { rows: posts.length, byPostType: histogram(posts, "post_type"), byStatus: histogram(posts, "post_status") }, wpPostmeta: { rows: postmeta.length, byKey: histogram(postmeta, "meta_key") }, structured: Object.fromEntries(["wp_byt_tour_schedule", "wp_byt_vacancies", "wp_byt_vacancy_bookings", "wp_byt_tour_booking", "wp_byt_bookings", "wp_byt_car_rental_bookings", "wp_byt_car_rental_booking_days"].map((name) => [name, rowCounts[name] ?? 0])) };
 }
 
 function usage() { console.error("Usage: node scripts/audit-legacy-dump.mjs --input /path/to/data_vietaustravel [--output report.json]"); process.exit(2); }
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const args = process.argv.slice(2); const idx = args.indexOf("--input"); if (idx < 0 || !args[idx + 1]) usage();
-  const input = path.resolve(args[idx + 1]); const outputIdx = args.indexOf("--output"); const output = outputIdx >= 0 && args[outputIdx + 1] ? path.resolve(args[outputIdx + 1]) : null;
-  const sql = fs.readFileSync(input, "utf8"); const report = auditLegacyDump(sql); const text = `${JSON.stringify(report, null, 2)}\n`;
-  if (output) { fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, text); } else process.stdout.write(text);
-}
+if (import.meta.url === `file://${process.argv[1]}`) { const args = process.argv.slice(2); const idx = args.indexOf("--input"); if (idx < 0 || !args[idx + 1]) usage(); const input = path.resolve(args[idx + 1]); const outputIdx = args.indexOf("--output"); const output = outputIdx >= 0 && args[outputIdx + 1] ? path.resolve(args[outputIdx + 1]) : null; const report = auditLegacyDump(fs.readFileSync(input, "utf8")); const text = `${JSON.stringify(report, null, 2)}\n`; if (output) { fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, text); } else process.stdout.write(text); }
