@@ -13,6 +13,7 @@ export const Route = createFileRoute("/$locale/")({
 function Home() {
   const { tours } = Route.useLoaderData();
   const { t } = useI18n();
+  const { locale } = Route.useParams();
   const chapters = [
     { key: "nature" as const, image: "/media/nature-sapa.jpg" },
     { key: "beach" as const, image: "/media/beach-phuquoc.jpg" },
@@ -35,7 +36,7 @@ function Home() {
         <p className="text-xs uppercase tracking-caps text-accent">{t("chaptersKicker")}</p>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {chapters.map((ch) => (
-            <Link key={ch.key} to="/$locale/tours" params={{ locale: Route.useParams().locale }} search={{ chapter: ch.key }} className="group relative block aspect-portrait overflow-hidden rounded-xl">
+            <Link key={ch.key} to="/$locale/tours" params={{ locale }} search={{ chapter: ch.key }} className="group relative block aspect-portrait overflow-hidden rounded-xl">
               <Cover src={ch.image} alt={t(ch.key)} className="transition-transform duration-250 group-hover:scale-lift" />
               <div className="absolute inset-0 bg-ink/35" />
               <div className="absolute inset-x-0 bottom-0 p-5 text-paper">
@@ -49,7 +50,7 @@ function Home() {
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-3xl">{t("journeys")}</h2>
-          <Link to="/$locale/tours" params={{ locale: Route.useParams().locale }} className="text-sm text-accent">{t("allJourneys")}</Link>
+          <Link to="/$locale/tours" params={{ locale }} className="text-sm text-accent">{t("allJourneys")}</Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {tours.filter((x) => x.featured).slice(0, 6).map((tour) => <TourCard key={tour.id} tour={tour} />)}

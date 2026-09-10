@@ -17,13 +17,14 @@ function ToursPage() {
   const { tours } = Route.useLoaderData();
   const { chapter } = Route.useSearch();
   const { t } = useI18n();
+  const { locale } = Route.useParams();
   const filters = ["all", "nature", "beach", "unesco"] as const;
   return (
     <div>
       <PageHead kicker={t("journeys")} title={t("heroTitle")} body={t("heroBody")} />
       <div className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pb-8">
         {filters.map((f) => (
-          <Link key={f} to="/$locale/tours" params={{ locale: Route.useParams().locale }} search={f === "all" ? {} : { chapter: f }} className={(chapter ?? "all") === f ? "inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm text-paper" : "inline-flex min-h-11 items-center rounded-full bg-surface px-4 text-sm text-muted shadow-border"}>
+          <Link key={f} to="/$locale/tours" params={{ locale }} search={f === "all" ? {} : { chapter: f }} className={(chapter ?? "all") === f ? "inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm text-paper" : "inline-flex min-h-11 items-center rounded-full bg-surface px-4 text-sm text-muted shadow-border"}>
             {f === "all" ? t("allJourneys") : t(f)}
           </Link>
         ))}
