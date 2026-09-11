@@ -36,8 +36,16 @@ async function main() {
     console.log("[migrate] no migrations/ directory — nothing to do.");
     return;
   }
+
+  // `readdir()` returns bare filenames, while the shared migration planner uses
+  // repository-relative paths. Normalize once so deploy and PGLite use exactly
+  // the same migration ordering/filtering rules.
+  const migrationPaths = entries.map(
+    (entry) => `migrations/${entry.replaceAll("\\", "/")}`,
+  );
+
   // An app with no schema of its own must not pay for a database connection.
-  if (pendingMigrations(entries, []).length === 0) {
+  if (pendingMigrations(migrationPaths, []).length === 0) {
     console.log("[migrate] no migrations — nothing to do.");
     return;
   }
@@ -53,7 +61,7 @@ async function main() {
     );
 
     let count = 0;
-    for (const { name } of pendingMigrations(entries, applied)) {
+    for (const { name } of pendingMigrations(migrationPaths, applied)) {
       const text = await readFile(join(migrationsDir, name), "utf8");
       try {
         await client.query("BEGIN");
@@ -73,7 +81,11 @@ async function main() {
       console.log(`[migrate] applied ${name}`);
       count += 1;
     }
-    console.log(count ? `[migrate] done — ${count} migration(s) applied.` : "[migrate] up to date.");
+    console.log(
+      count
+        ? `[migrate] done — ${count} migration(s) applied.`
+        : "[migrate] up to date.",
+    );
   } finally {
     client.release();
     await pool.end();
