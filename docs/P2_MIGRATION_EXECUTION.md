@@ -75,6 +75,21 @@ Because the current GitHub connector is text-oriented, binary media transfer sho
 
 Do not migrate or publish historic customer names, email addresses, phone numbers, addresses, booking notes, passwords, secrets or auth tokens. The old archive may contain such fields as historical artifacts, but they are never product content.
 
+## Runtime migration incident — resolved 11 September 2026
+
+A local Windows runtime surfaced `column t.provenance_state does not exist`. Investigation established the actual path rather than assuming a PGLite-only failure:
+
+- the local application was using the Neon/Postgres path;
+- `_migrations` did not accurately represent the already-populated catalog;
+- the bootstrap attempted to replay `0003_seed.sql` against existing `destinations`, causing a duplicate `hanoi` primary-key error;
+- the migration system was then changed to adopt an existing catalog without reseeding it, use deterministic bundled migrations, apply idempotent schema repairs, and verify the required provenance columns after bootstrap.
+
+Final local evidence supplied on 11 September shows `npm run dev` starting successfully and the bootstrap logging adoption of existing catalog data followed by successful application of migrations `0004_inventory`, `0005_booking_status`, `0005_public_contact`, `0006_provenance`, `0007_fact_checked_destinations`, `0008_fact_checked_coastal_destinations`, `0009_fact_checked_source_backed_journeys` and `0010_repair_provenance_schema`. The user confirmed the original blocking browser error was gone.
+
+GitHub Actions run #251 on commit `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` also passed the complete quality gate — domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+
+This incident is now recorded as **FIXED / VERIFIED** under the project's execution-evidence policy. No manual SQL or database deletion was required from the user.
+
 ## Implementation order
 
 1. Legacy Product Archaeology — explicit original product/business/UX intent.
@@ -88,4 +103,4 @@ Do not migrate or publish historic customer names, email addresses, phone number
 
 ## Verification gate
 
-Every implementation batch must pass the repository CI chain before being marked verified. No model reasoning may substitute for execution evidence. Use the engineering workflow's stop rule: diagnose until evidence is sufficient, make the smallest safe change, verify, then stop rather than entering a redundant diagnostic loop.
+Every implementation batch must pass the repository CI chain before being marked verified. No model reasoning may substitute for execution evidence. A change may be called **fixed** only after the relevant execution evidence exists; for interactive defects, include user-observed confirmation when direct local access is unavailable to the assistant. Use the engineering workflow's stop rule: diagnose until evidence is sufficient, make the smallest safe change, verify, then stop rather than entering a redundant diagnostic loop.
