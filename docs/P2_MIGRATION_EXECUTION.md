@@ -1,14 +1,18 @@
-# P2 migration execution
+# P2 — legacy product archaeology and reconstruction
 
 Last reviewed: 11 September 2026.
 
 ## Objective
 
-Turn the legacy `haibt163/travel` WordPress archive into a traceable migration dataset without treating the current synthetic seed as source truth. The source archive is the frozen `data_vietaustravel` MySQL dump plus the legacy WordPress tree.
+Recover the useful product, business and UX intent from the 15+ year-old `haibt163/travel` WordPress archive and use it to build a modern CoHai Travel product. The archive is **not** treated as a production customer-data migration target. Historical customer/booking data remains source-only and is never migrated.
+
+The working model is now:
+
+`legacy archive → product/content archaeology → explicit KEEP / MODERNIZE / RETIRE decisions → source-backed canonical reconstruction → 2026 verification`
 
 ## Source audit — completed
 
-The P2 audit is reproducible through `.github/workflows/p2-legacy-audit.yml`. It downloads the frozen legacy dump in the CI runner, generates a sanitized aggregate audit and a sanitized source inventory, validates that raw samples/PII/credentials are not exported, and stores the generated artifacts temporarily in GitHub Actions.
+The P2 audit is reproducible through `.github/workflows/p2-legacy-audit.yml`. It downloads the frozen legacy dump in the CI runner, generates sanitized aggregate/source-inventory artifacts, validates that raw samples/PII/credentials are not exported, and stores the generated artifacts temporarily in GitHub Actions.
 
 Current source evidence:
 
@@ -19,53 +23,69 @@ Current source evidence:
 - 48 taxonomy rows and 294 relationships.
 - 4 tour schedules.
 - 47 currency rows.
-- 2 historical tour-booking rows exist in the source; they contain customer PII and are not exported or migrated.
+- Historical booking fields exist in the source but are excluded from migration fixtures because they contain customer data.
 
-The frozen dump contains a production-era database password and customer booking fields. They remain source-only evidence and must never enter rebuild fixtures.
+## Product archaeology interpretation
+
+The owner has clarified that the legacy site was an old template-based project built more than 15 years ago around their own travel-product ideas, not a live customer-data system. Therefore, the archive's greatest value is its **original product intent, travel subject matter, information architecture, taxonomy, workflow concepts, and media references**.
+
+`docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` is the primary bridge between that historical intent and the 2026 implementation.
+
+## Evidence of original UX/business intent
+
+The legacy theme shows a destination list, tour/accommodation/car search, date/location/guest/room filtering, pricing/rating filters, account/login/register, AUD display, English/Vietnamese switching, site search, and a homepage organized around Nature, Beach and UNESCO sections. These are treated as historical product signals, not as instructions to reproduce the old WordPress UI.
 
 ## Canonical mapping
 
 | Legacy source | Canonical target | Rule |
 | --- | --- | --- |
-| `wp_posts` with `post_type=location` | `destinations` | Preserve legacy id, slug/title/content/media references; resolve destination taxonomy. |
-| `wp_posts` with `post_type=tour` | `tours` | Preserve subject and source relationships; classify into the current Nature/Coast/UNESCO taxonomy only when supported by evidence. |
-| `wp_byt_tour_schedule` | `tour_departures` | Preserve source schedule id, start date, price and capacity; never infer capacity from prose. |
-| `wp_byt_bookings` + vacancy tables | current stay booking/inventory model | Preserve historical linkage as migration evidence; do not invent multi-room UI semantics. |
-| `wp_byt_car_rental_bookings` + booking days | current car booking model | Normalize day rows into date-range semantics. |
-| `postmeta` / theme options | normalized fields + media map | Classify each customer-facing field; keep raw evidence outside published content. |
+| `wp_posts` with `post_type=location` | `destinations` | Preserve useful subject matter, source id, slug/title/content/media references; reconstruct current facts/editorial copy. |
+| `wp_posts` with `post_type=tour` | `tours` | Preserve useful travel concepts and supporting source relationships; rewrite contaminated/dated fields. |
+| `wp_byt_tour_schedule` | `tour_departures` | Preserve source schedule id, date, price and capacity when intentionally reused; independently verify current commercial validity. |
+| accommodation posts/room data | current stay model | Reuse useful property concepts only after geographic/provenance verification; do not migrate historical customer bookings. |
+| car rental records | current car model | Reuse useful vehicle/product concepts as modern content only when commercially appropriate; current booking model remains authoritative. |
+| `postmeta` / theme options | normalized fields + archaeology ledger | Use as evidence of product/content intent; never copy secrets or old runtime configuration blindly. |
+| legacy media attachments | `public/media` or future media store | Preserve source asset when useful and legally usable; optimize and remap rather than automatically replacing everything. |
 
-## Decision matrix — completed working pass
+## Decision vocabulary
 
-Every relevant published legacy record has a working disposition in `docs/P2_MIGRATION_MATRIX.md`:
+### Product intent
 
-- `migrate` — substantially preserve source content.
-- `rewrite` — preserve intent while replacing obsolete/copy-poor language.
-- `merge` — combine duplicates into one canonical record and retain source ids.
-- `archive` — keep source evidence but do not publish.
-- `discard` — exclude with a recorded reason.
+- `KEEP` — the underlying idea remains valuable in 2026.
+- `MODERNIZE` — the idea remains valuable but implementation/UX must be redesigned.
+- `RETIRE` — the old implementation or idea should not influence the modern product.
 
-Current working counts: 47 `rewrite`, 4 `merge`, 13 `archive`, 12 `discard`, 0 direct `migrate` decisions. The absence of direct `migrate` decisions is deliberate because none of the source records has yet cleared every publication-quality gate.
+### Content records
 
-## URL preservation — completed working ledger
+Continue using the precise record dispositions in `docs/P2_MIGRATION_MATRIX.md`:
 
-`docs/P2_LEGACY_URL_MAP.md` records the identified `/locations/...`, `/tours/...` and `/hotels/...` mappings and intentionally leaves unverified car/room/review route families without invented redirects. Canonical targets use locale-prefixed routes where the target is established.
+- `migrate` — preserve substantially after factual/editorial approval.
+- `rewrite` — preserve subject/intent but rewrite the content into the current product voice.
+- `merge` — combine duplicate/locality records into one canonical entity.
+- `archive` — retain as historical evidence but do not publish.
+- `discard` — intentionally exclude with a reason.
 
-## Seed reconciliation — completed working ledger
+## Media policy
 
-`docs/P2_SEED_RECONCILIATION.md` distinguishes direct source-backed subjects, rewrite/replacement candidates and genuinely synthetic records. The existing 10-destination/9-tour/6-stay/4-car/23-departure seed is not called migrated content merely because it resembles the legacy subject matter.
+Legacy media is **eligible for migration**. For each retained asset, preserve source path/attachment id when available, create a target mapping, inspect quality, verify provenance/licensing, optimize dimensions/file size, define alt text, and replace only where quality, legality or relevance requires it. A replacement is not assumed merely because the file is old.
 
-## Fidelity report — completed working baseline
-
-`docs/P2_FIDELITY_REPORT.md` quantifies the source inventory and current disposition coverage and lists the remaining factual, media, URL, schedule and synthetic-product gaps. Historical content parity remains explicitly unclaimed.
-
-## Media
-
-For each customer-facing legacy image, retain source URL/path, attachment id when available, target asset, crop/transformation notes, alt-text requirement and licensing status. Provisional rebuild imagery must remain marked provisional until provenance is verified.
+Because the current GitHub connector is text-oriented, binary media transfer should be handled from the user's local legacy folder or another explicit binary-capable workflow when implementation time arrives. The archaeology ledger should therefore be created before bulk asset copying.
 
 ## Sensitive data
 
-Do not migrate or publish historic customer email addresses, phone numbers, addresses, booking notes, passwords, secrets or auth tokens. The legacy dump contains historical booking data, but the migration map should retain only the non-sensitive linkage necessary to explain disposition.
+Do not migrate or publish historic customer names, email addresses, phone numbers, addresses, booking notes, passwords, secrets or auth tokens. The old archive may contain such fields as historical artifacts, but they are never product content.
 
-## Implementation gate
+## Implementation order
 
-P2 archaeology is complete enough to support implementation. The next implementation batch is source-backed canonical catalog reconstruction, beginning with destinations and tours. Each accepted source record must have an explicit source id/disposition and must pass the repository CI gate before it is considered verified.
+1. Legacy Product Archaeology — explicit original product/business/UX intent.
+2. Source-backed destinations and tours — prioritize historically useful subjects and retain source provenance.
+3. Travel-information/content surfaces — preserve durable subject matter and refresh current facts.
+4. Stays and cars — selectively reconstruct useful historical concepts with current commercial verification.
+5. Departures — map the small source schedule set only when dates/prices/capacity are intentionally current; otherwise preserve historical schedules as evidence.
+6. Legacy media — migrate useful assets, optimize, verify and replace selectively.
+7. Legacy URLs — implement only after canonical targets exist and source routing evidence is sufficient.
+8. Final fidelity report — quantify what was kept, modernized, merged, archived and retired.
+
+## Verification gate
+
+Every implementation batch must pass the repository CI chain before being marked verified. No model reasoning may substitute for execution evidence. Use the engineering workflow's stop rule: diagnose until evidence is sufficient, make the smallest safe change, verify, then stop rather than entering a redundant diagnostic loop.
