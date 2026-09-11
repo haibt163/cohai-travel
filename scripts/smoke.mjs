@@ -3,9 +3,10 @@
  * Post-build smoke test for the standalone production build.
  *
  * The Vercel/Nitro build uses `vercel` output, so the smoke test uses Vite's
- * production preview server. CI has no real Neon database, therefore the
- * smoke gate probes a DB-independent TanStack server route rather than
- * asserting that the optional PGlite fallback is bundled into the function.
+ * production preview server. CI has no real Neon database, so the preview is
+ * intentionally forced onto the PGLite fallback and exercises real catalog
+ * routes. This catches schema/migration regressions that a DB-independent
+ * health check cannot see.
  */
 import { spawn } from "node:child_process";
 
@@ -35,6 +36,18 @@ server.stderr.on("data", (chunk) => {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function get(path) {
+  const response = await fetch(`${baseUrl}${path}`);
+  const body = await response.text();
+  if (!response.ok) {
+    throw new Error(`GET ${path} returned HTTP ${response.status}\n${body.slice(0, 1200)}\n${output.trim()}`);
+  }
+  if (/provenance_state does not exist|Something went wrong/i.test(body)) {
+    throw new Error(`GET ${path} returned an application error page\n${body.slice(0, 1200)}\n${output.trim()}`);
+  }
+  return { response, body };
+}
+
 try {
   let response;
   let lastError;
@@ -61,6 +74,15 @@ try {
   const body = await response.text();
   if (!/^User-agent:\s*\*\s*$/m.test(body) || !/Sitemap:\s+.+\/sitemap\.xml\s*$/m.test(body)) {
     throw new Error("GET /robots.txt did not return the expected robots directives");
+  }
+
+  const checks = ["/en/", "/en/destinations", "/en/contact"];
+  for (const path of checks) {
+    const page = await get(path);
+    if (!/CoHai Travel/i.test(page.body)) {
+      throw new Error(`GET ${path} did not render the CoHai Travel application shell`);
+    }
+    console.log(`[smoke] GET ${path} -> ${page.response.status}; application route verified.`);
   }
 
   console.log(`[smoke] GET /robots.txt -> ${response.status}; robots directives verified.`);
