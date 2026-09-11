@@ -1,10 +1,16 @@
 # P2 migration execution
 
-Last reviewed: 10 September 2026.
+Last reviewed: 11 September 2026.
 
 ## Objective
 
 Turn the legacy `haibt163/travel` WordPress archive into a traceable migration dataset without treating the current synthetic seed as source truth. The source archive is the frozen `data_vietaustravel` MySQL dump plus the legacy WordPress tree.
+
+## Execution discipline
+
+P2 work must follow the repository AI engineering workflow in `docs/AI_ENGINEERING_WORKFLOW.md`. Establish the live repository state before editing; use the frozen legacy dump as source evidence; prefer the smallest traceable change; and do not claim extraction, migration parity, URL coverage, seed reconciliation or fidelity until the relevant artifacts have been actually generated and reviewed.
+
+For each execution step, distinguish `VERIFIED`, `UNVERIFIED` and `FAILED`. Do not generate repeated speculative migration fixes when an actual source artifact, parser output or validation result is available. Diagnose only until the evidence is sufficient to choose a safe action, then execute and verify.
 
 ## Extraction
 
@@ -56,6 +62,10 @@ For each customer-facing legacy image, retain source URL/path, attachment id whe
 ## Seed reconciliation
 
 Compare the current synthetic seed (approximately 10 destinations, 9 journeys, 6 stays, 4 cars and 23 departures) against the extracted legacy inventory. Every seed record must receive `source-backed`, `rewrite`, `replacement`, or `synthetic-pending` status. A seed record is not allowed to masquerade as a migrated legacy record merely because its subject resembles a source row.
+
+## Phase-entry checkpoint
+
+P2 is ready for execution planning but remains paused until the user explicitly authorizes the next phase. The 11 September 2026 repository checkpoint is clean and synchronized with local `main`; `npm run dev` is USER-REPORTED working, while the full CI gate remains UNVERIFIED pending fresh execution evidence. Do not infer content parity or migration completeness from the current synthetic seed.
 
 ## Sensitive data
 
