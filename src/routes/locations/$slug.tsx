@@ -2,8 +2,8 @@ import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 
 const destinationRedirects: Record<string, string> = {
   hanoi: "hanoi",
-  halong-bay: "ha-long",
-  tuan-chau: "ha-long",
+  "halong-bay": "ha-long",
+  "tuan-chau": "ha-long",
   sapa: "sapa",
 };
 
