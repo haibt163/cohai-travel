@@ -14,7 +14,7 @@ The engineering baseline, full-site visual modernization, and repository synchro
 | P0.2 Preview/repo parity | 🟢 | Retain fresh CI/runtime evidence; `npm run dev` remains USER-REPORTED working locally. |
 | P0.3 Atomic tour booking | 🟢 | Preserve DB-backed transaction/locking semantics. |
 | P0.4 Stay/car finite inventory | 🟢 | Keep one-unit booking semantics until multi-unit UX is explicitly required. |
-| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions on commit `ff436a1d79d70b43c4f477c304413684acdee87d` (run #215). |
+| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions on commit `087e6a37f7c203e06c4d9b0c8fee0a476bdd874` (run #223). |
 | P1.6 EN/VN URL architecture | 🟢 | Locale-prefixed application routes are canonical. |
 | P1.7 Locale-aware metadata | 🟢 | Titles/descriptions use locale-specific copy on public routes. |
 | P1.8 Sitemap/robots | 🟢 | Locale-aware SEO endpoints remain under TanStack Start. |
@@ -32,15 +32,16 @@ The engineering baseline, full-site visual modernization, and repository synchro
 | P2.19 Connected destination hub | 🟢 | Destination-scoped journeys/stays/cars and cross-navigation are implemented and full CI verified. |
 | P2.20 Provenance guard | 🟢 | Canonical provenance schema, regression coverage and operator-only reconstruction metrics are implemented and full CI verified. |
 | P2.21 Canonical record plan | 🟢 | Publication-gate checklist and current destination/journey reconstruction set are documented in `docs/P2_CANONICAL_RECORD_PLAN.md`. |
+| P2.22 2026 destination fact refresh | 🟢 | First source-backed destination copy refresh is implemented for Hanoi, Ha Long, Hoi An, Hue and Sapa; source ledger is in `docs/P2_2026_FACT_SOURCES.md`. |
 
 ## Current verified checkpoint — 11 September 2026
 
 - Before P2 writes, local `main` and GitHub `origin/main` matched at `882979e892fd66875d00f0756e4581634e5de20f` and the local working tree was clean after safely resolving the false-positive `src/routeTree.gen.ts` modification.
-- GitHub Actions run #215 passed `npm ci`, domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+- GitHub Actions run #223 passed `npm ci`, domain tests, typecheck, lint, build and production smoke on `087e6a37f7c203e06c4d9b0c8fee0a476bdd874` — **VERIFIED**.
 - The frozen legacy source audit produced 30 tables, 19 populated tables, 207 `wp_posts`, 22 media attachments, 48 taxonomy rows, 294 term relationships, 4 tour schedules, 47 currency rows and 76 domain-relevant published records. Raw customer booking records are not exported.
 - The owner has clarified that the old WordPress project was a template-based project built more than 15 years ago around their own travel ideas, not a live customer-data system. Many destination, tour and travel-information subjects remain broadly relevant and should be treated as valuable source material rather than obsolete by default.
 - Legacy media is now a migration candidate: preserve/inspect/verify/optimize first, replace only when quality, licensing, factual relevance or visual needs justify replacement.
-- `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` defines the surviving 2026 product requirements. `docs/P2_CANONICAL_RECONSTRUCTION.md` records the implementation ledger, and `docs/P2_CANONICAL_RECORD_PLAN.md` now records the controlled destination/journey publication plan.
+- `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` defines the surviving 2026 product requirements. `docs/P2_CANONICAL_RECONSTRUCTION.md` records the implementation ledger, `docs/P2_CANONICAL_RECORD_PLAN.md` records the controlled destination/journey publication plan, and `docs/P2_2026_FACT_SOURCES.md` records current external evidence used for the first fact refresh.
 - The provenance layer distinguishes `source-backed`, `modern-addition` and `synthetic-pending`; its mappings are regression-tested and current coverage is visible only to allowlisted operators.
 - `npm run dev` works locally — **USER-REPORTED**, not assistant-verified.
 - The latest P2 commits update the repository after the earlier local checkpoint; the user should pull once before the next local development checkpoint.
@@ -61,4 +62,4 @@ Bilingual canonical routes and metadata are implemented. Operator visibility is 
 
 ### P2 — Legacy Product Archaeology & Modern Reconstruction
 
-The archaeology and traceability foundation is complete. Connected destination hubs, provenance controls and a canonical record publication plan are now implemented and verified. Next: reconstruct and fact-check the accepted canonical destination/journey records, then build travel-information surfaces, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. The goal is to preserve the strong ideas from the original project while modernizing technology, UX, facts, availability and operations for 2026.
+The archaeology and traceability foundation is complete. Connected destination hubs, provenance controls, canonical publication planning and the first independently fact-checked destination refresh are now implemented and verified. Next: reconstruct the remaining accepted canonical destinations/journeys, build travel-information surfaces, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. The goal is to preserve the strong ideas from the original project while modernizing technology, UX, facts, availability and operations for 2026.
