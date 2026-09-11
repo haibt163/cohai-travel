@@ -31,7 +31,14 @@ const LocaleContext = createContext<Ctx | null>(null);
 export function LocaleProvider({ children, initialLocale = "en" }: { children: ReactNode; initialLocale?: Locale }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
   useEffect(() => { setLocaleState(initialLocale); }, [initialLocale]);
-  useEffect(() => { document.documentElement.lang = locale === "vn" ? "vi" : "en"; try { window.localStorage.setItem("cohai-locale", locale); } catch {} }, [locale]);
+  useEffect(() => {
+    document.documentElement.lang = locale === "vn" ? "vi" : "en";
+    try {
+      window.localStorage.setItem("cohai-locale", locale);
+    } catch {
+      // Local storage can be unavailable in restricted browser contexts.
+    }
+  }, [locale]);
   const setLocale = (l: Locale) => setLocaleState(l);
   const value = useMemo<Ctx>(() => ({ locale, setLocale, t: (key) => copy[key][locale] }), [locale]);
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
