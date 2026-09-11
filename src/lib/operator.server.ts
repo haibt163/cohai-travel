@@ -17,7 +17,7 @@ export const getOperatorSnapshot = createServerFn({ method: "GET" }).handler(asy
   const user = await getSessionUser();
   if (!user || !operatorIds().has(user.id)) return null;
   const sql = await getSql();
-  const bookings = await sql<{ id: string; customer: string; email: string; kind: string; item: string; startDate: string; totalPrice: string | number; status: string }>`
+  const bookings = await sql<{ id: string; customer: string; email: string; kind: string; item: string; startDate: string; totalPrice: string | number; status: string }>
     `select b.id, trim(concat(b.first_name, ' ', b.last_name)) as customer, b.email, b.kind,
       coalesce(t.title_en, s.title_en, c.title_en, d.title_en, b.item_id) as item,
       b.start_date as "startDate", b.total_price as "totalPrice", b.status
