@@ -9,12 +9,11 @@ const expectedSourceBackedTours = ["junk-halong", "hue-hoian", "hanoi-heritage",
 
 test("provenance migration defines the canonical state vocabulary", () => {
   assert.match(sql, /provenance_state text not null default 'synthetic-pending'/);
-  assert.match(sql, /check \(provenance_state in \('source-backed', 'modern-addition', 'synthetic-pending'\)\)/);
+  assert.match(sql, /CHECK \(provenance_state in \('source-backed', 'modern-addition', 'synthetic-pending'\)\)/);
 });
 
 test("every source-backed destination has a source reference", () => {
   for (const id of expectedSourceBackedDestinations) {
-    const pattern = new RegExp(`update destinations set source_ref = '[^']+' ,? provenance_state = 'source-backed' where id = '${id}'`);
     const normalized = new RegExp(`update destinations set source_ref = '[^']+', provenance_state = 'source-backed' where id = '${id}'`);
     assert.match(sql, normalized, `missing source-backed destination mapping for ${id}`);
   }
