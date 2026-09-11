@@ -64,6 +64,18 @@ The first five source-backed destination subjects have refreshed current copy in
 
 This is a factual-copy refresh, not a final commercial or media approval.
 
+## Runtime readiness — fixed / verified 11 September 2026
+
+The development database/bootstrap incident that blocked the landing page and most product routes is now closed.
+
+The underlying issue was migration-state drift on an existing populated Neon database: the application attempted to replay seed data against existing canonical rows and later lacked the expected provenance schema. The runtime migration layer now adopts existing catalog data without reseeding it, bundles local SQL migrations deterministically, applies idempotent schema repairs, and verifies the required provenance columns before serving application traffic.
+
+Final user-supplied Windows runtime evidence shows `npm run dev` starting successfully and the bootstrap logging adoption of existing catalog data followed by successful application of migrations `0004_inventory` through `0010_repair_provenance_schema`. The user confirmed the blocking browser error was resolved.
+
+GitHub Actions run #251 on commit `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed the full repository gate — domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+
+Under the engineering evidence policy, this incident is therefore **FIXED / VERIFIED**. The local browser portion is user-observed confirmation; the repository/runtime path is independently verified by CI.
+
 ## Implementation order
 
 1. Destination-led connected catalog UX — implemented.
@@ -77,4 +89,4 @@ This is a factual-copy refresh, not a final commercial or media approval.
 
 ## Verification rule
 
-Every implementation batch must pass the full repository CI chain. A feature is not considered verified merely because its code looks correct or a local development server starts.
+Every implementation batch must pass the full repository CI chain. A feature is not considered verified merely because its code looks correct or a local development server starts. A change may be called **fixed** only after the relevant execution evidence exists. For interactive defects, user-observed confirmation is required when the assistant cannot directly inspect the user's local browser/runtime.
