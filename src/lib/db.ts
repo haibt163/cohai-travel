@@ -133,7 +133,7 @@ async function createPgliteSql(): Promise<Sql> {
   const pg = await globalRef.__pgliteInstance__;
 
   const migrate = async (): Promise<void> => {
-    const migrations = import.meta.glob("/migrations/*.sql", {
+    const migrations = import.meta.glob("../../migrations/*.sql", {
       query: "?raw",
       import: "default",
       eager: true,
@@ -142,7 +142,11 @@ async function createPgliteSql(): Promise<Sql> {
     const done = doneRows.rows.map((r) => r.name);
     const pending = pendingMigrations(Object.keys(migrations), done);
     if (pending.length) {
-      console.log(`[db] applying ${pending.length} local migration(s): ${pending.map(({ name }) => name).join(", ")}`);
+      console.log(
+        `[db] applying ${pending.length} local migration(s): ${pending
+          .map(({ name }) => name)
+          .join(", ")}`,
+      );
     }
     for (const { name, path } of pending) {
       await pg.transaction(async (tx) => {
@@ -150,6 +154,30 @@ async function createPgliteSql(): Promise<Sql> {
         await tx.query("insert into _migrations (name) values ($1)", [name]);
       });
       console.log(`[db] applied ${name}`);
+    }
+
+    const destinationColumn = await pg.query<{ exists: boolean }>(
+      `select exists (
+         select 1
+         from information_schema.columns
+         where table_schema = 'public'
+           and table_name = 'destinations'
+           and column_name = 'provenance_state'
+       ) as exists`,
+    );
+    const tourColumn = await pg.query<{ exists: boolean }>(
+      `select exists (
+         select 1
+         from information_schema.columns
+         where table_schema = 'public'
+           and table_name = 'tours'
+           and column_name = 'provenance_state'
+       ) as exists`,
+    );
+    if (!destinationColumn.rows[0]?.exists || !tourColumn.rows[0]?.exists) {
+      throw new Error(
+        "[db] PGLite schema verification failed: provenance_state columns are missing after migration",
+      );
     }
   };
   const pass = (globalRef.__pgliteMigrateChain__ ?? Promise.resolve())
