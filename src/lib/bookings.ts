@@ -19,6 +19,13 @@ const bookingInput = z.object({
   notes: z.string().max(800).optional(),
 });
 
+const availabilityInput = z.object({
+  kind: z.enum(["stay", "car"]),
+  itemId: z.string().min(1),
+  startDate: z.string().min(8),
+  nights: z.number().int().min(1).max(30),
+});
+
 export type BookingRow = {
   id: string;
   kind: string;
@@ -36,6 +43,33 @@ export type BookingRow = {
   title_en: string;
   title_vn: string;
 };
+
+export const checkItemAvailability = createServerFn({ method: "GET" })
+  .validator((raw: unknown) => availabilityInput.parse(raw))
+  .handler(async ({ data }) => {
+    const sql = await getSql();
+    const table = data.kind === "stay" ? "stays" : "cars";
+    const rows = data.kind === "stay"
+      ? await sql<{ inventory_unit_count: number }>`select inventory_unit_count from stays where id = ${data.itemId} limit 1`
+      : await sql<{ inventory_unit_count: number }>`select inventory_unit_count from cars where id = ${data.itemId} limit 1`;
+    const item = rows[0];
+    if (!item) return { availableUnits: 0 };
+
+    const conflicts = await sql<{ booked_units: number }>`
+      select coalesce(sum(inventory_units), 0)::int as booked_units
+      from bookings
+      where kind = ${data.kind}
+        and item_id = ${data.itemId}
+        and status = 'confirmed'
+        and start_date < (${data.startDate}::date + ${data.nights})
+        and (start_date + nights) > ${data.startDate}::date
+    `;
+
+    return {
+      availableUnits: Math.max(0, item.inventory_unit_count - num(conflicts[0]?.booked_units ?? 0)),
+      source: table,
+    };
+  });
 
 export const createBooking = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
@@ -58,7 +92,7 @@ export const createBooking = createServerFn({ method: "POST" })
           booked: number;
         }>`
           select td.id, td.start_date, td.price, td.max_people,
-            coalesce((select sum(guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
+            coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
           from tour_departures td
           where td.id = ${data.departureId} and td.tour_id = ${data.itemId}
           for update
