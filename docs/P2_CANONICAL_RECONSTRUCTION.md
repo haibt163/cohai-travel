@@ -20,6 +20,19 @@ This directly modernizes the old site's connected catalog/search concept without
 - Added destination-page cross-navigation for stays and cars while retaining the existing journey grid.
 - Kept the current normalized catalog schema and server-function boundary; no legacy WordPress runtime behavior was copied.
 
+## Provenance contract
+
+Canonical destination and journey records now carry reconstruction provenance in migration `migrations/0006_provenance.sql`.
+
+- `source_ref` records the historical source subject(s) that informed a canonical record.
+- `provenance_state = source-backed` means the record has an explicit historical source reference.
+- `provenance_state = modern-addition` marks intentional 2026 product additions that are not claimed as legacy-derived.
+- `provenance_state = synthetic-pending` is reserved for temporary seed/fixture records that still need a source-backed or intentional-product decision.
+
+The provenance field is traceability metadata, not a publication-readiness claim. Current factual, editorial, media/licensing and commercial verification gates remain separate.
+
+`npm run test:domain` now includes `scripts/provenance.test.mjs`, which guards the state vocabulary, requires explicit source references for the accepted source-backed destination/journey set, and ensures intentional modern additions are not assigned legacy source references.
+
 ## Content strategy
 
 ### Preserve aggressively where appropriate
