@@ -19,6 +19,17 @@ export type OperatorSnapshot = {
   inquiries: Array<{ id: string; name: string; email: string; message: string; received: string }>;
 };
 
+type ProvenanceRow = {
+  destinations: number | string;
+  source_backed_destinations: number | string;
+  modern_addition_destinations: number | string;
+  synthetic_pending_destinations: number | string;
+  tours: number | string;
+  source_backed_tours: number | string;
+  modern_addition_tours: number | string;
+  synthetic_pending_tours: number | string;
+};
+
 function operatorIds(): Set<string> {
   return new Set((process.env.COHAI_OPERATOR_USER_IDS ?? "").split(",").map((id) => id.trim()).filter(Boolean));
 }
@@ -43,25 +54,16 @@ export const getOperatorSnapshot = createServerFn({ method: "GET" }).handler(asy
     `select (select count(*) from bookings)::int as bookings,
             (select count(*) from contact_messages)::int as inquiries,
             (select count(*) from bookings where status = 'confirmed')::int as confirmed`;
-  const provenanceRows = await sql<{
-    destinations: number | string;
-    source_backed_destinations: number | string;
-    modern_addition_destinations: number | string;
-    synthetic_pending_destinations: number | string;
-    tours: number | string;
-    source_backed_tours: number | string;
-    modern_addition_tours: number | string;
-    synthetic_pending_tours: number | string;
-  }>`
-    `select
-       (select count(*) from destinations)::int as destinations,
-       (select count(*) from destinations where provenance_state = 'source-backed')::int as source_backed_destinations,
-       (select count(*) from destinations where provenance_state = 'modern-addition')::int as modern_addition_destinations,
-       (select count(*) from destinations where provenance_state = 'synthetic-pending')::int as synthetic_pending_destinations,
-       (select count(*) from tours)::int as tours,
-       (select count(*) from tours where provenance_state = 'source-backed')::int as source_backed_tours,
-       (select count(*) from tours where provenance_state = 'modern-addition')::int as modern_addition_tours,
-       (select count(*) from tours where provenance_state = 'synthetic-pending')::int as synthetic_pending_tours`;
+  const provenanceRows = await sql<ProvenanceRow>`
+    select
+      (select count(*) from destinations)::int as destinations,
+      (select count(*) from destinations where provenance_state = 'source-backed')::int as source_backed_destinations,
+      (select count(*) from destinations where provenance_state = 'modern-addition')::int as modern_addition_destinations,
+      (select count(*) from destinations where provenance_state = 'synthetic-pending')::int as synthetic_pending_destinations,
+      (select count(*) from tours)::int as tours,
+      (select count(*) from tours where provenance_state = 'source-backed')::int as source_backed_tours,
+      (select count(*) from tours where provenance_state = 'modern-addition')::int as modern_addition_tours,
+      (select count(*) from tours where provenance_state = 'synthetic-pending')::int as synthetic_pending_tours`;
   const counts = countRows[0] ?? { bookings: 0, inquiries: 0, confirmed: 0 };
   const provenance = provenanceRows[0] ?? {
     destinations: 0,
