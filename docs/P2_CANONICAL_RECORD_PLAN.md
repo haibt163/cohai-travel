@@ -37,6 +37,16 @@ This document is a decision ledger, not a claim that every record is already pro
 | `angkor-dawn` | `modern-addition` | No direct legacy journey mapping used in current provenance migration. | Keep as an intentional 2026 addition; independently verify current facts. |
 | `puluong` | `modern-addition` | No direct legacy journey mapping used in current provenance migration. | Keep as an intentional 2026 addition; independently verify current facts. |
 
+## Runtime readiness checkpoint — 11 September 2026
+
+The application migration/bootstrap blocker encountered during local P2 work is now closed. The final runtime behavior is supported by user-observed local execution evidence and independently passing CI.
+
+The local database was an existing populated Neon database. The migration layer now adopts that catalog instead of replaying the seed, continues with the pending schema migrations, and verifies the provenance columns before the application serves traffic. The user's successful local startup logged adoption of existing catalog data and successful application of migrations `0004_inventory` through `0010_repair_provenance_schema`; the user then confirmed the previously blocking `provenance_state` page error was gone.
+
+GitHub Actions run #251 on `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+
+This runtime incident is therefore **FIXED / VERIFIED**. Future fixes must follow the same evidence standard.
+
 ## Record acceptance gates
 
 A record can move from reconstruction to publication only when all applicable gates are satisfied:
@@ -56,3 +66,7 @@ Records that remain `synthetic-pending` are scaffolding, not migrated legacy con
 ## Data-safety boundary
 
 No historical customer PII, booking notes, credentials, passwords, secrets, auth tokens or raw customer booking records belong in canonical reconstruction fixtures or publication artifacts.
+
+## Evidence discipline
+
+A code change may be described as **fixed** only after the relevant execution evidence exists. For an interactive defect, include the relevant runtime/test result and user-observed confirmation when the assistant cannot directly inspect the user's local browser. Do not use model confidence, a plausible patch, or a static code review as a substitute for execution evidence.
