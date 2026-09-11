@@ -35,7 +35,9 @@ export const staysForDestination = createServerFn({ method: "GET" })
       select s.id, s.slug, s.star_count, s.price_per_night, s.title_en, s.title_vn,
         s.excerpt_en, s.excerpt_vn, s.image
       from stays s
+      join destinations d on d.id = s.destination_id
       where s.destination_id = ${id}
+        and d.provenance_state in ('source-backed', 'modern-addition')
       order by s.star_count desc, s.title_en
     `;
     return rows.map((row) => ({ ...row, price_per_night: num(row.price_per_night) }));
@@ -49,7 +51,9 @@ export const carsForDestination = createServerFn({ method: "GET" })
       select c.id, c.slug, c.seats, c.transmission, c.price_per_day, c.title_en, c.title_vn,
         c.excerpt_en, c.excerpt_vn, c.image
       from cars c
+      join destinations d on d.id = c.pickup_id
       where c.pickup_id = ${id}
+        and d.provenance_state in ('source-backed', 'modern-addition')
       order by c.price_per_day, c.title_en
     `;
     return rows.map((row) => ({ ...row, price_per_day: num(row.price_per_day) }));

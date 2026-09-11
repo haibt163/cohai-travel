@@ -207,6 +207,7 @@ export const listStays = createServerFn({ method: "GET" }).handler(async () => {
   const rows = await sql<Stay & { price_per_night: string | number }>`
     select s.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn
     from stays s join destinations d on d.id = s.destination_id
+    where d.provenance_state in ('source-backed', 'modern-addition')
     order by s.title_en
   `;
   return rows.map((r) => ({ ...r, price_per_night: num(r.price_per_night) }));
@@ -219,7 +220,9 @@ export const getStay = createServerFn({ method: "GET" })
     const rows = await sql<Stay & { price_per_night: string | number }>`
       select s.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn
       from stays s join destinations d on d.id = s.destination_id
-      where s.slug = ${slug} limit 1
+      where s.slug = ${slug}
+        and d.provenance_state in ('source-backed', 'modern-addition')
+      limit 1
     `;
     const r = rows[0];
     return r ? { ...r, price_per_night: num(r.price_per_night) } : null;
@@ -230,6 +233,7 @@ export const listCars = createServerFn({ method: "GET" }).handler(async () => {
   const rows = await sql<Car & { price_per_day: string | number }>`
     select c.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn
     from cars c join destinations d on d.id = c.pickup_id
+    where d.provenance_state in ('source-backed', 'modern-addition')
     order by c.price_per_day
   `;
   return rows.map((r) => ({ ...r, price_per_day: num(r.price_per_day) }));
@@ -242,7 +246,9 @@ export const getCar = createServerFn({ method: "GET" })
     const rows = await sql<Car & { price_per_day: string | number }>`
       select c.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn
       from cars c join destinations d on d.id = c.pickup_id
-      where c.slug = ${slug} limit 1
+      where c.slug = ${slug}
+        and d.provenance_state in ('source-backed', 'modern-addition')
+      limit 1
     `;
     const r = rows[0];
     return r ? { ...r, price_per_day: num(r.price_per_day) } : null;
@@ -324,13 +330,15 @@ export const searchCatalog = createServerFn({ method: "GET" })
       const stays = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select s.slug, s.title_en, s.title_vn, s.excerpt_en, s.excerpt_vn, s.image
         from stays s join destinations d on d.id = s.destination_id
-        where ${q} = '' or lower(s.title_en) like ${like} or lower(d.title_en) like ${like} or lower(s.title_vn) like ${like}
+        where d.provenance_state in ('source-backed', 'modern-addition')
+          and (${q} = '' or lower(s.title_en) like ${like} or lower(d.title_en) like ${like} or lower(s.title_vn) like ${like})
       `;
       for (const s of stays) hits.push({ kind: "stay", ...s, meta: "stay" });
       const cars = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select c.slug, c.title_en, c.title_vn, c.excerpt_en, c.excerpt_vn, c.image
         from cars c join destinations d on d.id = c.pickup_id
-        where ${q} = '' or lower(c.title_en) like ${like} or lower(d.title_en) like ${like}
+        where d.provenance_state in ('source-backed', 'modern-addition')
+          and (${q} = '' or lower(c.title_en) like ${like} or lower(d.title_en) like ${like})
       `;
       for (const c of cars) hits.push({ kind: "car", ...c, meta: "car" });
       const places = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
