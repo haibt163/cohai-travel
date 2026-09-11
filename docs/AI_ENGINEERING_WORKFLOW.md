@@ -45,7 +45,9 @@ Every statement about lint, typecheck, tests, build, smoke tests, deployment, or
 - `UNVERIFIED` — reasoned or reviewed but not actually executed.
 - `FAILED` — actual execution evidence shows failure.
 
-Never say or imply that a command "passes", "works", "is fixed", or "is ready" when it is only predicted to work.
+### Fixed means evidence exists
+
+Do not call a change **fixed**, **working**, **passing**, **ready**, or equivalent until the relevant execution evidence exists. For an interactive defect, evidence must include the relevant runtime/test execution and, when the assistant cannot access the user's machine directly, the user's observed confirmation. A code review, successful static inspection, or model confidence alone is never sufficient.
 
 For a bug fix, prefer this loop:
 
@@ -149,8 +151,10 @@ Before asking the user to begin a new phase, ensure the persistent status docume
 
 ## 13. Current CoHai Travel baseline
 
-As of this update, `ProjectStatus.md` records the engineering baseline and full-site visual modernization as green and identifies the P2 WordPress reconstruction as the major unfinished phase. The project's CI gate is already defined as `npm ci → domain tests → typecheck → lint → build → smoke`. Preserve that gate and use its results as execution evidence. 
+The current persistent status checkpoint is `ProjectStatus.md` at commit `8ab0f5af62e7292de528764f5600274f01ccb1bd`. The latest application code checkpoint before the documentation update is `fbd44997d1120f95f6ba116b33cca71cfdc45b6e`.
 
-The user reports that the current local folder and GitHub repository are in sync and that `npm run dev` works locally. This local interactive result is user-reported and is therefore recorded here as `USER-REPORTED`, not assistant-verified.
+GitHub Actions run #251 on `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed the complete repository gate — domain tests, typecheck, lint, build and production smoke — `VERIFIED`.
 
-As of the latest checkpoint, local `main` and `origin/main` were verified to resolve to the same commit `882979e892fd66875d00f0756e4581634e5de20f`, and `git status --short` was clean after resolving a false-positive `src/routeTree.gen.ts` modification. The file's working-tree hash matched the `HEAD` blob hash exactly before the safe `git restore` cleanup. This Git state is user-executed evidence from 11 September 2026, not assistant-executed shell evidence.
+The user-provided Windows runtime evidence shows `npm run dev` started successfully after pulling `fbd44997d1120f95f6ba116b33cca71cfdc45b6e`; the database bootstrap adopted the existing catalog instead of reseeding it and applied migrations `0004_inventory` through `0010_repair_provenance_schema` successfully. The user then confirmed the blocking `provenance_state` runtime defect was resolved.
+
+The repository therefore treats the runtime migration incident as **FIXED / VERIFIED**, with the local browser confirmation being user-observed evidence and the repository behavior independently verified by CI. The remaining PostgreSQL SSL warning is non-blocking and is separate from the resolved schema/migration defect.
