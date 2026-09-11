@@ -4,7 +4,9 @@ Last reviewed: 11 September 2026.
 
 ## Executive result
 
-P2 source archaeology has produced a traceable, sanitized legacy inventory and three working reconciliation ledgers: migration dispositions, legacy URLs, and current seed reconciliation. **Historical content parity is not claimed.** The source contains a mixture of useful Vietnam travel subjects, duplicates, placeholder/test records, scraped lodging copy, and contaminated metadata. The rebuild must preserve source identity and relationships while rewriting or replacing unsafe/unreliable content.
+P2 is now understood as **Legacy Product Archaeology & Modern Reconstruction**, not a blind WordPress migration. The 15+ year-old archive is a valuable source of original product/business/UX intent and durable travel subject matter, while obsolete implementation, contaminated/demo records, historical customer data and time-sensitive commercial values are excluded or independently revalidated.
+
+Historical content parity is therefore **not claimed**. The target is faithful reconstruction of the useful original ideas in a modern 2026 product.
 
 ## Evidence baseline
 
@@ -26,58 +28,64 @@ P2 source archaeology has produced a traceable, sanitized legacy inventory and t
 | Tour schedules | 4 |
 | Currency rows | 47 |
 
-The audit/export pipeline explicitly excludes raw record samples and customer PII from generated artifacts. The frozen dump itself contains historical booking data and must remain source evidence only.
+The audit/export pipeline excludes raw record samples and customer PII from generated artifacts. Historical booking/customer data remains source-only.
 
-## Disposition coverage
+## Product-intent fidelity
 
-The current P2.15 working matrix covers all 76 domain-relevant published posts:
+The archive provides strong evidence for these durable concepts:
 
-| Disposition | Rows |
-| --- | ---: |
-| migrate | 0 |
-| rewrite | 47 |
-| merge | 4 |
-| archive | 13 |
-| discard | 12 |
+- destination-led travel discovery;
+- connected tours, stays and car rental;
+- date/location/guest/room-aware search;
+- price and quality filtering;
+- Nature, Beach/Coast and UNESCO discovery groupings;
+- AUD-facing commerce;
+- English/Vietnamese presentation;
+- account and booking-history flows;
+- Cambodia/Thailand as neighbouring destinations.
 
-Zero `migrate` decisions are intentional: the source evidence is not yet clean enough to claim direct publish-ready parity.
+These should be preserved as **KEEP** concepts or **MODERNIZE** concepts in the 2026 product. The old WordPress implementation itself is **RETIRE**.
 
-## Seed reconciliation
+See `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` for the explicit 2026 requirement set.
 
-### Direct/source-supported or rewrite candidates
+## Content interpretation
 
-Current seed subjects with explicit source support include Hanoi (location 206), Ha Long/Tuần Châu (locations 579/580), Hoi An / Da Nang combined source (223), Sapa (581), Mekong Delta (221), Ha Long overnight (tour 707), Hanoi heritage (713/716), Sapa / northern mountains (570), Phu Quoc beaches (702), and the central/coastal tour set (703–715).
+Many destination, tour and travel-information subjects remain useful because the underlying travel concepts are durable. Old age alone is not a discard rule. The right question is whether the subject remains valuable and can be factually/editorially reconstructed for 2026.
 
-### Synthetic or replacement candidates
-
-The current seed includes subjects that do not have direct matching legacy records in the published source set, including Hue as a destination record, Siem Reap, Bangkok, several current stays, all four current cars, and most of the current 23 departure rows. These remain synthetic/replacement candidates until explicit source-backed records are created or the decision is made to retain them as modern editorial additions.
-
-## URL fidelity
-
-The legacy archive documents `/locations/...`, `/tours/...`, `/hotels/...`, taxonomy/category/tag/search and regional navigation. The P2.16 ledger now maps the identified location/tour/hotel records to locale-prefixed canonical routes where appropriate, while deliberately leaving car/room/review legacy route families unverified rather than inventing redirects.
+Conversely, old prices, dates, property claims, ratings, operating statements and availability are not assumed current. They require verification before publication.
 
 ## Media fidelity
 
-Twenty-two source media attachments were identified. The rebuild's current customer-facing media remains provisional where source provenance/licensing is unresolved. A final media map must record source path/attachment id, target asset, crop/transformation, alt text and licensing status before parity is claimed.
+Twenty-two source media attachments were identified. Legacy media is now a legitimate migration candidate. The preferred policy is `preserve → inspect → verify provenance/licensing → optimize → map alt text → publish when appropriate → replace only when justified`.
+
+The final media map should preserve source attachment/path identity and document any replacement reason. Binary transfer/optimization may require the user's local legacy folder because the GitHub connector is text-oriented.
+
+## Migration dispositions
+
+The current row-level working matrix remains a publication/traceability ledger. `rewrite` does not mean discard; it means preserve the subject while rebuilding content. A source row can move to `migrate` after it clears factual, editorial, media and provenance gates.
+
+## URL fidelity
+
+Legacy `/locations/...`, `/tours/...`, `/hotels/...`, taxonomy/search and regional navigation remain valuable source evidence. Preserve high-value URL intent through explicit canonical mappings only after the corresponding current target exists and is verified.
 
 ## Schedule fidelity
 
-The source contains four tour-schedule records. The current rebuild contains 23 synthetic departures. These must not be conflated. Final reconciliation must map each retained source schedule by source id, tour relationship, date, price and capacity. Capacity must never be inferred from prose.
+The source contains four historical schedule records while the current rebuild seed contains 23 synthetic departures. Historical schedules are useful product evidence but current dates/prices/capacities must be reconstructed intentionally and verified.
 
 ## Historical booking fidelity
 
-The source contains two historical tour-booking rows and sensitive customer data in booking schemas. None of that customer-level content is a migration fixture. The rebuild keeps only non-sensitive linkage necessary to document source disposition.
+Historical booking rows and their customer PII are not migration content. Their existence may explain old business flows, but no customer-level data enters the rebuild.
 
 ## Unresolved gaps
 
-1. Final factual/editorial rewrite of retained locations and tours.
-2. Geographic/source verification for legacy accommodation records.
-3. Media provenance and licensing verification.
-4. Complete high-value legacy URL verification, including route families not yet evidenced by source routing code.
-5. Source schedule reconciliation against the current departure model.
-6. Decision on which synthetic stay/car/departure records remain intentionally modern additions versus replacements.
-7. Final destination normalization where the source combines localities (for example Hoi An - Da Nang).
+1. Convert accepted destination/tour subjects into canonical 2026 records.
+2. Resolve combined/locality subjects such as Hoi An–Da Nang and Ho Chi Minh City/Saigon.
+3. Decide which travel-information subjects deserve dedicated current content surfaces.
+4. Verify current commercial facts for stays/cars and determine which historical concepts are worth reviving.
+5. Reconcile the four historical schedules with any current products intentionally revived from them.
+6. Complete the legacy media map and migrate useful assets where legally and technically suitable.
+7. Complete high-value legacy URL redirects after canonical targets exist.
 
-## Next execution priority
+## Fidelity standard for completion
 
-P2.17/P2.18 now provide the evidence and decision framework. The next implementation step is to build the source-backed canonical catalog from the accepted matrix, starting with destinations and tours, then reconcile stays/cars and finally departures/URLs/media. Each change must pass the repository CI gate before being considered verified.
+P2 is complete when the surviving original product intent has been translated into the current architecture, accepted source-derived content has explicit provenance and disposition, useful media is preserved or intentionally replaced, high-value legacy URLs are mapped, current commercial facts are verified, and all implementation batches pass the repository CI gate.
