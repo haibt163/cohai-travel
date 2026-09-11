@@ -123,7 +123,9 @@ export const listTours = createServerFn({ method: "GET" })
     const chapter = data.chapter && data.chapter !== "all" ? data.chapter : null;
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
+        (select min(td.price) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
         (select min(td.start_date) from tour_departures td
           where td.tour_id = t.id and td.start_date >= current_date
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
@@ -144,7 +146,9 @@ export const getTour = createServerFn({ method: "GET" })
     const sql = await getSql();
     const tours = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
+        (select min(td.price) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
         (select min(td.start_date) from tour_departures td
           where td.tour_id = t.id and td.start_date >= current_date
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
@@ -300,7 +304,9 @@ export const toursForDestination = createServerFn({ method: "GET" })
     const sql = await getSql();
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
+        (select min(td.price) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
         (select min(td.start_date) from tour_departures td
           where td.tour_id = t.id and td.start_date >= current_date
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
