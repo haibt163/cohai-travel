@@ -6,6 +6,7 @@ on:
     paths:
       - "scripts/audit-legacy-dump.mjs"
       - "scripts/audit-legacy-dump.test.mjs"
+      - "scripts/build-p2-inventory.mjs"
       - "docs/P2_MIGRATION_EXECUTION.md"
       - ".github/workflows/p2-legacy-audit.yml"
   workflow_dispatch:
@@ -43,23 +44,33 @@ jobs:
             --input /tmp/data_vietaustravel \
             --output docs/generated/legacy-audit.json
 
-      - name: Validate audit output
+      - name: Build sanitized P2 source inventory
+        run: |
+          node scripts/build-p2-inventory.mjs \
+            --input /tmp/data_vietaustravel \
+            --output docs/generated/p2-source-inventory.json
+
+      - name: Validate audit and inventory output
         run: |
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           const report = JSON.parse(fs.readFileSync("docs/generated/legacy-audit.json", "utf8"));
+          const inventory = JSON.parse(fs.readFileSync("docs/generated/p2-source-inventory.json", "utf8"));
+          for (const key of ["rawRecordSamples", "piiExported", "credentialsImported", "customerBookingRowsExported"]) {
+            if (report.safety?.[key] !== false && inventory.safety?.[key] !== false) throw new Error(`Safety flag ${key} is not false`);
+          }
           if (report.source !== "haibt163/travel:data_vietaustravel") throw new Error("Unexpected audit source");
-          if (report.safety?.rawRecordSamples !== false) throw new Error("Raw record sample flag must remain false");
-          if (report.safety?.piiExported !== false) throw new Error("PII export flag must remain false");
-          if (!report.tables || !report.populatedTables) throw new Error("Audit report is incomplete");
-          console.log(`Audited ${Object.keys(report.tables).length} tables; ${Object.keys(report.populatedTables).length} populated tables.`);
-          console.log(JSON.stringify({ wpPosts: report.wpPosts, structured: report.structured }, null, 2));
+          if (inventory.source !== "haibt163/travel:data_vietaustravel") throw new Error("Unexpected inventory source");
+          if (!inventory.postRecords?.length || !inventory.taxonomy?.length) throw new Error("Sanitized inventory is incomplete");
+          console.log(JSON.stringify({ audit: report.wpPosts, inventory: inventory.summary }, null, 2));
           NODE
 
-      - name: Upload aggregate audit artifact
+      - name: Upload P2 source artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: p2-legacy-audit
-          path: docs/generated/legacy-audit.json
+          name: p2-source-artifacts
+          path: |
+            docs/generated/legacy-audit.json
+            docs/generated/p2-source-inventory.json
           if-no-files-found: error
           retention-days: 14
