@@ -3,6 +3,7 @@ import { getSql } from "@/lib/db";
 import { num } from "@/lib/utils";
 
 export type Chapter = "nature" | "beach" | "unesco";
+export type ProvenanceState = "source-backed" | "modern-addition" | "synthetic-pending";
 
 export type Destination = {
   id: string;
@@ -17,6 +18,8 @@ export type Destination = {
   image: string;
   languages: string | null;
   currency: string | null;
+  source_ref: string | null;
+  provenance_state: ProvenanceState;
 };
 
 export type TourCard = {
@@ -39,6 +42,8 @@ export type TourCard = {
   from_price: number;
   next_departure: string | null;
   available_departures: number;
+  source_ref: string | null;
+  provenance_state: ProvenanceState;
 };
 
 export type Departure = {
@@ -87,12 +92,13 @@ export type Car = {
   dest_title_vn: string;
 };
 
-type TourRow = Omit<TourCard, "from_price" | "featured" | "duration_days" | "next_departure" | "available_departures"> & {
+type TourRow = Omit<TourCard, "from_price" | "featured" | "duration_days" | "next_departure" | "available_departures" | "provenance_state"> & {
   from_price: string | number | null;
   featured: boolean | number;
   duration_days: number;
   next_departure: string | null;
   available_departures: number | string;
+  provenance_state: string;
 };
 
 function mapTour(row: TourRow): TourCard {
@@ -102,6 +108,7 @@ function mapTour(row: TourRow): TourCard {
     featured: Boolean(row.featured),
     from_price: num(row.from_price),
     available_departures: num(row.available_departures),
+    provenance_state: row.provenance_state as ProvenanceState,
   };
 }
 
