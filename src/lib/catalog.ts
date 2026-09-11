@@ -242,12 +242,13 @@ export type SearchHit = {
 };
 
 export const searchCatalog = createServerFn({ method: "GET" })
-  .validator((input: { q?: string; chapter?: string }) => input)
+  .validator((input: { q?: string; chapter?: string; fromDate?: string }) => input)
   .handler(async ({ data }) => {
     const sql = await getSql();
     const q = (data.q ?? "").trim().toLowerCase();
     const like = `%${q}%`;
     const chapter = data.chapter && data.chapter !== "all" ? data.chapter : null;
+    const fromDate = data.fromDate ?? null;
     const hits: SearchHit[] = [];
 
     const tours = await sql<{
@@ -263,10 +264,10 @@ export const searchCatalog = createServerFn({ method: "GET" })
     }>`
       select t.slug, t.title_en, t.title_vn, t.excerpt_en, t.excerpt_vn, t.image, t.chapter,
         (select min(td.start_date) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
+          where td.tour_id = t.id and td.start_date >= coalesce(${fromDate}::date, current_date)
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
         (select count(*) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
+          where td.tour_id = t.id and td.start_date >= coalesce(${fromDate}::date, current_date)
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
@@ -278,12 +279,20 @@ export const searchCatalog = createServerFn({ method: "GET" })
           or lower(d.title_en) like ${like}
           or lower(d.title_vn) like ${like}
         )
+        and (
+          ${fromDate}::date is null
+          or exists (
+            select 1 from tour_departures td
+            where td.tour_id = t.id and td.start_date >= ${fromDate}::date
+              and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)
+          )
+        )
       order by
         (select count(*) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
+          where td.tour_id = t.id and td.start_date >= coalesce(${fromDate}::date, current_date)
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) desc,
         (select min(td.start_date) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
+          where td.tour_id = t.id and td.start_date >= coalesce(${fromDate}::date, current_date)
             and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)),
         t.title_en
     `;
