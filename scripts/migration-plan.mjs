@@ -1,6 +1,6 @@
 /** @param {string} path */
 export function isMigrationFile(path) {
-  return /^migrations\/\d+_[^/]+\.sql$/.test(path);
+  return /^\/?migrations\/\d+_[^/]+\.sql$/.test(path);
 }
 
 /** @param {string} path */
