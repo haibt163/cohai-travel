@@ -1,4 +1,5 @@
-import { CalendarDays, createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CalendarDays } from "lucide-react";
 import { searchCatalog } from "@/lib/catalog";
 import { field, siteCopy, useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
