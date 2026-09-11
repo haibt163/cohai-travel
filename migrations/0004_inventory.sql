@@ -14,9 +14,30 @@ update stays set inventory_unit_count = 4 where id = 'hoian-river';
 update stays set inventory_unit_count = 8 where id = 'sapa-lodge';
 update stays set inventory_unit_count = 4 where id = 'phuquoc-villa';
 
-alter table stays add constraint stays_inventory_unit_count_positive check (inventory_unit_count > 0);
-alter table cars add constraint cars_inventory_unit_count_positive check (inventory_unit_count > 0);
-alter table bookings add constraint bookings_inventory_units_positive check (inventory_units > 0);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'stays_inventory_unit_count_positive'
+  ) THEN
+    ALTER TABLE stays ADD CONSTRAINT stays_inventory_unit_count_positive
+      CHECK (inventory_unit_count > 0);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'cars_inventory_unit_count_positive'
+  ) THEN
+    ALTER TABLE cars ADD CONSTRAINT cars_inventory_unit_count_positive
+      CHECK (inventory_unit_count > 0);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'bookings_inventory_units_positive'
+  ) THEN
+    ALTER TABLE bookings ADD CONSTRAINT bookings_inventory_units_positive
+      CHECK (inventory_units > 0);
+  END IF;
+END $$;
 
 create index if not exists bookings_inventory_lookup_idx
   on bookings (kind, item_id, status, start_date);
