@@ -103,15 +103,6 @@ function mapTour(row: TourRow): TourCard {
   };
 }
 
-const tourAvailabilitySelect = `
-  (select min(td.start_date) from tour_departures td
-    where td.tour_id = t.id and td.start_date >= current_date
-      and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
-  (select count(*) from tour_departures td
-    where td.tour_id = t.id and td.start_date >= current_date
-      and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
-`;
-
 export const listDestinations = createServerFn({ method: "GET" }).handler(async () => {
   const sql = await getSql();
   return sql<Destination>`select * from destinations order by title_en`;
@@ -133,7 +124,12 @@ export const listTours = createServerFn({ method: "GET" })
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
         (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
-        ${sql.unsafe(tourAvailabilitySelect)}
+        (select min(td.start_date) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
+        (select count(*) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where (${chapter}::text is null or t.chapter = ${chapter})
@@ -149,7 +145,12 @@ export const getTour = createServerFn({ method: "GET" })
     const tours = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
         (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
-        ${sql.unsafe(tourAvailabilitySelect)}
+        (select min(td.start_date) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
+        (select count(*) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where t.slug = ${slug}
@@ -300,7 +301,12 @@ export const toursForDestination = createServerFn({ method: "GET" })
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
         (select min(price) from tour_departures td where td.tour_id = t.id and td.start_date >= current_date) as from_price,
-        ${sql.unsafe(tourAvailabilitySelect)}
+        (select min(td.start_date) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
+        (select count(*) from tour_departures td
+          where td.tour_id = t.id and td.start_date >= current_date
+            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where t.destination_id = ${id}
