@@ -3,19 +3,11 @@ import { pendingMigrations } from "../../scripts/migration-plan.mjs";
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite";
 
-// An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
-// "unset" — otherwise production would silently run on the PGLite fallback.
 const rawDatabaseUrl =
   typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
 const databaseUrl =
   rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
 
-/**
- * Active backend: real **Neon** when `DATABASE_URL` is set (deployed / configured
- * sandbox), otherwise a local embedded **PGLite** (Postgres compiled to WASM) so
- * the app has a working database even with nothing configured — the live preview
- * included. Swap in Neon later by just setting `DATABASE_URL`; no code changes.
- */
 export const dbSource: DbSource = databaseUrl ? "neon" : "pglite";
 
 export interface SqlTransaction {
@@ -29,36 +21,16 @@ export interface SqlTransaction {
   ): Promise<T[]>;
 }
 
-/** Shared SQL surface, including a transaction wrapper for atomic domain operations. */
 export interface Sql extends SqlTransaction {
   transaction<T>(fn: (tx: SqlTransaction) => Promise<T>): Promise<T>;
 }
 
-/**
- * Init state lives on globalThis as promises: dev HMR creates new instances of
- * this module, and two instances racing module-level state would open a second
- * pool or run two concurrent PGLite migration passes (whose duplicate
- * `_migrations` insert rejects — and would get memoized, poisoning every later
- * `getSql()`). A failed init clears its slot so the next call retries.
- */
 const globalRef = globalThis as typeof globalThis & {
   __pgSqlPromise__?: Promise<Sql>;
   __pgliteInstance__?: Promise<import("@electric-sql/pglite").PGlite>;
   __pgliteMigrateChain__?: Promise<void>;
 };
 
-/**
- * Result-type parity: Postgres sends every value as text plus a type OID — the
- * JS value is the DRIVER's parsing choice, and pg and PGLite disagree (pg:
- * int8 -> string, date -> local-midnight Date; PGLite: int8 -> BigInt, which
- * JSON.stringify rejects, date -> UTC Date). Normalize both so preview and
- * production return identical, JSON-safe shapes:
- *   int8/bigint (incl. count(*)) -> number (past 2^53 loses precision — cast
- *                                   `::text` if you ever need huge integers)
- *   date                         -> 'YYYY-MM-DD' string
- *   interval                     -> Postgres interval text
- * numeric already comes back as a string on both (arbitrary precision).
- */
 const OID_INT8 = 20;
 const OID_DATE = 1082;
 const OID_INTERVAL = 1186;
@@ -66,7 +38,10 @@ const identity = (v: string) => v;
 
 type Run = <T>(text: string, params: unknown[]) => Promise<T[]>;
 
-function buildSql(run: Run, transaction: (fn: (tx: SqlTransaction) => Promise<unknown>) => Promise<unknown>): Sql {
+function buildSql(
+  run: Run,
+  transaction: (fn: (tx: SqlTransaction) => Promise<unknown>) => Promise<unknown>,
+): Sql {
   const sql = (async <T = Record<string, unknown>>(
     strings: TemplateStringsArray,
     ...values: unknown[]
@@ -163,15 +138,18 @@ async function createPgliteSql(): Promise<Sql> {
       import: "default",
       eager: true,
     }) as Record<string, string>;
-    const doneRows = await pg.query<{ name: string }>(
-      "select name from _migrations",
-    );
+    const doneRows = await pg.query<{ name: string }>("select name from _migrations");
     const done = doneRows.rows.map((r) => r.name);
-    for (const { name, path } of pendingMigrations(Object.keys(migrations), done)) {
+    const pending = pendingMigrations(Object.keys(migrations), done);
+    if (pending.length) {
+      console.log(`[db] applying ${pending.length} local migration(s): ${pending.map(({ name }) => name).join(", ")}`);
+    }
+    for (const { name, path } of pending) {
       await pg.transaction(async (tx) => {
         await tx.exec(migrations[path]);
         await tx.query("insert into _migrations (name) values ($1)", [name]);
       });
+      console.log(`[db] applied ${name}`);
     }
   };
   const pass = (globalRef.__pgliteMigrateChain__ ?? Promise.resolve())
