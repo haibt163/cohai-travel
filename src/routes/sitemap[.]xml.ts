@@ -7,8 +7,16 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async ({ request }) => {
         const sql = await getSql();
         const [destinations, tours, stays, cars] = await Promise.all([
-          sql<{ slug: string }>`select slug from destinations order by slug`,
-          sql<{ slug: string }>`select slug from tours order by slug`,
+          sql<{ slug: string }>`
+            select slug from destinations
+            where provenance_state in ('source-backed', 'modern-addition')
+            order by slug
+          `,
+          sql<{ slug: string }>`
+            select slug from tours
+            where provenance_state in ('source-backed', 'modern-addition')
+            order by slug
+          `,
           sql<{ slug: string }>`select slug from stays order by slug`,
           sql<{ slug: string }>`select slug from cars order by slug`,
         ]);
@@ -35,5 +43,5 @@ export const Route = createFileRoute("/sitemap.xml")({
 });
 
 function escapeXml(value: string): string {
-  return value.replace(/[<>&'"]/g, (character) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[character] ?? character));
+  return value.replace(/[<>&'\"]/g, (character) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '\"': "&quot;" }[character] ?? character));
 }

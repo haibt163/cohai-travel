@@ -114,14 +114,23 @@ function mapTour(row: TourRow): TourCard {
 
 export const listDestinations = createServerFn({ method: "GET" }).handler(async () => {
   const sql = await getSql();
-  return sql<Destination>`select * from destinations order by title_en`;
+  return sql<Destination>`
+    select * from destinations
+    where provenance_state in ('source-backed', 'modern-addition')
+    order by title_en
+  `;
 });
 
 export const getDestination = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     const sql = await getSql();
-    const rows = await sql<Destination>`select * from destinations where slug = ${slug} limit 1`;
+    const rows = await sql<Destination>`
+      select * from destinations
+      where slug = ${slug}
+        and provenance_state in ('source-backed', 'modern-addition')
+      limit 1
+    `;
     return rows[0] ?? null;
   });
 
@@ -144,6 +153,8 @@ export const listTours = createServerFn({ method: "GET" })
       from tours t
       join destinations d on d.id = t.destination_id
       where (${chapter}::text is null or t.chapter = ${chapter})
+        and t.provenance_state in ('source-backed', 'modern-addition')
+        and d.provenance_state in ('source-backed', 'modern-addition')
       order by t.featured desc, t.title_en
     `;
     return rows.map(mapTour);
@@ -167,6 +178,8 @@ export const getTour = createServerFn({ method: "GET" })
       from tours t
       join destinations d on d.id = t.destination_id
       where t.slug = ${slug}
+        and t.provenance_state in ('source-backed', 'modern-addition')
+        and d.provenance_state in ('source-backed', 'modern-addition')
       limit 1
     `;
     const tour = tours[0] ? mapTour(tours[0]) : null;
@@ -279,6 +292,8 @@ export const searchCatalog = createServerFn({ method: "GET" })
       from tours t
       join destinations d on d.id = t.destination_id
       where (${chapter}::text is null or t.chapter = ${chapter})
+        and t.provenance_state in ('source-backed', 'modern-addition')
+        and d.provenance_state in ('source-backed', 'modern-addition')
         and (
           ${q} = ''
           or lower(t.title_en) like ${like}
@@ -321,7 +336,8 @@ export const searchCatalog = createServerFn({ method: "GET" })
       const places = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select slug, title_en, title_vn, excerpt_en, excerpt_vn, image
         from destinations
-        where ${q} = '' or lower(title_en) like ${like} or lower(title_vn) like ${like} or lower(country) like ${like}
+        where provenance_state in ('source-backed', 'modern-addition')
+          and (${q} = '' or lower(title_en) like ${like} or lower(title_vn) like ${like} or lower(country) like ${like})
       `;
       for (const p of places) hits.push({ kind: "place", ...p, meta: "place" });
     }
@@ -347,6 +363,8 @@ export const toursForDestination = createServerFn({ method: "GET" })
       from tours t
       join destinations d on d.id = t.destination_id
       where t.destination_id = ${id}
+        and t.provenance_state in ('source-backed', 'modern-addition')
+        and d.provenance_state in ('source-backed', 'modern-addition')
       order by t.title_en
     `;
     return rows.map(mapTour);
