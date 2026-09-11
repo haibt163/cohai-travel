@@ -1,0 +1,65 @@
+name: P2 Legacy Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit-legacy-dump.mjs"
+      - "scripts/audit-legacy-dump.test.mjs"
+      - "docs/P2_MIGRATION_EXECUTION.md"
+      - ".github/workflows/p2-legacy-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p2-legacy-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout CoHai Travel
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download frozen legacy dump
+        run: |
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/haibt163/travel/main/data_vietaustravel \
+            --output /tmp/data_vietaustravel
+
+      - name: Run aggregate legacy audit
+        run: |
+          mkdir -p docs/generated
+          node scripts/audit-legacy-dump.mjs \
+            --input /tmp/data_vietaustravel \
+            --output docs/generated/legacy-audit.json
+
+      - name: Validate audit output
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const report = JSON.parse(fs.readFileSync("docs/generated/legacy-audit.json", "utf8"));
+          if (report.source !== "haibt163/travel:data_vietaustravel") throw new Error("Unexpected audit source");
+          if (report.safety?.rawRecordSamples !== false) throw new Error("Raw record sample flag must remain false");
+          if (report.safety?.piiExported !== false) throw new Error("PII export flag must remain false");
+          if (!report.tables || !report.populatedTables) throw new Error("Audit report is incomplete");
+          console.log(`Audited ${Object.keys(report.tables).length} tables; ${Object.keys(report.populatedTables).length} populated tables.`);
+          console.log(JSON.stringify({ wpPosts: report.wpPosts, structured: report.structured }, null, 2));
+          NODE
+
+      - name: Upload aggregate audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p2-legacy-audit
+          path: docs/generated/legacy-audit.json
+          if-no-files-found: error
+          retention-days: 14
