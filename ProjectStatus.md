@@ -10,11 +10,12 @@ The engineering baseline, full-site visual modernization, and repository synchro
 
 | Item | Status | Next action |
 | --- | --- | --- |
-| P0.1 Reproducible checkout | 🟢 | GitHub `main` remains source of record; sync the latest P2 commits locally at the next local checkpoint. |
-| P0.2 Preview/repo parity | 🟢 | Retain fresh CI/runtime evidence; `npm run dev` remains USER-REPORTED working locally. |
+| P0.1 Reproducible checkout | 🟢 | GitHub `main` remains source of record; keep local checkout synchronized at implementation checkpoints. |
+| P0.2 Preview/repo parity | 🟢 | Local `npm run dev` has now been successfully exercised after the runtime migration fix; retain fresh evidence at future checkpoints. |
 | P0.3 Atomic tour booking | 🟢 | Preserve DB-backed transaction/locking semantics. |
-| P0.4 Stay/car finite inventory | 🟢 | Keep one-unit booking semantics until multi-unit UX is explicitly required. |
-| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions on commit `087e6a37f7c203e06c4d9b0c8fee0a476bdd874` (run #223). |
+| P0.4 Stay/car finite inventory | 🟢 | Keep current finite-inventory model until a broader UX requirement is explicit. |
+| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions on commit `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` (run #251). |
+| P0.6 Runtime migration bootstrap | 🟢 | Existing populated databases are adopted without reseeding; bundled migrations run deterministically and schema verification is enforced. |
 | P1.6 EN/VN URL architecture | 🟢 | Locale-prefixed application routes are canonical. |
 | P1.7 Locale-aware metadata | 🟢 | Titles/descriptions use locale-specific copy on public routes. |
 | P1.8 Sitemap/robots | 🟢 | Locale-aware SEO endpoints remain under TanStack Start. |
@@ -32,19 +33,23 @@ The engineering baseline, full-site visual modernization, and repository synchro
 | P2.19 Connected destination hub | 🟢 | Destination-scoped journeys/stays/cars and cross-navigation are implemented and full CI verified. |
 | P2.20 Provenance guard | 🟢 | Canonical provenance schema, regression coverage and operator-only reconstruction metrics are implemented and full CI verified. |
 | P2.21 Canonical record plan | 🟢 | Publication-gate checklist and current destination/journey reconstruction set are documented in `docs/P2_CANONICAL_RECORD_PLAN.md`. |
-| P2.22 2026 destination fact refresh | 🟢 | First source-backed destination copy refresh is implemented for Hanoi, Ha Long, Hoi An, Hue and Sapa; source ledger is in `docs/P2_2026_FACT_SOURCES.md`. |
+| P2.22 2026 destination fact refresh | 🟢 | First source-backed destination and journey fact refresh is implemented with a current source ledger. |
 
 ## Current verified checkpoint — 11 September 2026
 
-- Before P2 writes, local `main` and GitHub `origin/main` matched at `882979e892fd66875d00f0756e4581634e5de20f` and the local working tree was clean after safely resolving the false-positive `src/routeTree.gen.ts` modification.
-- GitHub Actions run #223 passed `npm ci`, domain tests, typecheck, lint, build and production smoke on `087e6a37f7c203e06c4d9b0c8fee0a476bdd874` — **VERIFIED**.
+- GitHub Actions run #251 on commit `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed `npm ci`, domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+- The local Windows checkout pulled `main` successfully to `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` and then started `npm run dev` successfully.
+- The local runtime log shows the database bootstrap adopting existing catalog data instead of replaying the seed, then applying migrations `0004_inventory`, `0005_booking_status`, `0005_public_contact`, `0006_provenance`, `0007_fact_checked_destinations`, `0008_fact_checked_coastal_destinations`, `0009_fact_checked_source_backed_journeys` and `0010_repair_provenance_schema` successfully.
+- The user confirmed the previously blocking `column t.provenance_state does not exist` failure is now resolved in the local application.
+- The runtime incident was caused by migration/bootstrap behavior, not user database edits. No manual SQL or database deletion was required.
+- The final local startup still emits the PostgreSQL `sslmode` deprecation/security warning; this is separate from the migration/schema failure and is not currently treated as the blocking runtime defect.
 - The frozen legacy source audit produced 30 tables, 19 populated tables, 207 `wp_posts`, 22 media attachments, 48 taxonomy rows, 294 term relationships, 4 tour schedules, 47 currency rows and 76 domain-relevant published records. Raw customer booking records are not exported.
 - The owner has clarified that the old WordPress project was a template-based project built more than 15 years ago around their own travel ideas, not a live customer-data system. Many destination, tour and travel-information subjects remain broadly relevant and should be treated as valuable source material rather than obsolete by default.
-- Legacy media is now a migration candidate: preserve/inspect/verify/optimize first, replace only when quality, licensing, factual relevance or visual needs justify replacement.
-- `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` defines the surviving 2026 product requirements. `docs/P2_CANONICAL_RECONSTRUCTION.md` records the implementation ledger, `docs/P2_CANONICAL_RECORD_PLAN.md` records the controlled destination/journey publication plan, and `docs/P2_2026_FACT_SOURCES.md` records current external evidence used for the first fact refresh.
-- The provenance layer distinguishes `source-backed`, `modern-addition` and `synthetic-pending`; its mappings are regression-tested and current coverage is visible only to allowlisted operators.
-- `npm run dev` works locally — **USER-REPORTED**, not assistant-verified.
-- The latest P2 commits update the repository after the earlier local checkpoint; the user should pull once before the next local development checkpoint.
+- Legacy media is a migration candidate: preserve/inspect/verify/optimize first, replace only when quality, licensing, factual relevance or visual needs justify replacement.
+
+## Evidence rule for completion claims
+
+A change is called **fixed** only after the relevant execution evidence exists. Code review or model confidence is insufficient. For an interactive defect, the evidence must include the relevant runtime/test result and, where the assistant cannot directly access the user's machine, the user's observed confirmation. Use `VERIFIED`, `UNVERIFIED`, or `FAILED` explicitly.
 
 ## Engineering execution rule
 
@@ -62,4 +67,4 @@ Bilingual canonical routes and metadata are implemented. Operator visibility is 
 
 ### P2 — Legacy Product Archaeology & Modern Reconstruction
 
-The archaeology and traceability foundation is complete. Connected destination hubs, provenance controls, canonical publication planning and the first independently fact-checked destination refresh are now implemented and verified. Next: reconstruct the remaining accepted canonical destinations/journeys, build travel-information surfaces, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. The goal is to preserve the strong ideas from the original project while modernizing technology, UX, facts, availability and operations for 2026.
+The archaeology and traceability foundation is complete, and the local runtime migration/bootstrap incident is now closed. Connected destination hubs, provenance controls, canonical publication planning and the first fact-checked destination/journey refresh are implemented and verified. Next: continue source-backed canonical reconstruction, build travel-information surfaces, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. Every future fix must meet the explicit evidence rule above before being described as fixed.
