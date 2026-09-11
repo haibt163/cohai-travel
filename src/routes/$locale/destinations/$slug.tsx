@@ -26,10 +26,17 @@ function DestinationDetail() {
   const { destination, tours, stays, cars } = Route.useLoaderData();
   const { locale, t } = useI18n();
   const isVietnamese = locale === "vn";
+  const travelInfo = [
+    { label: isVietnamese ? "Quốc gia" : "Country", value: destination.country },
+    { label: isVietnamese ? "Ngôn ngữ" : "Languages", value: destination.languages },
+    { label: isVietnamese ? "Tiền tệ" : "Currency", value: destination.currency },
+  ].filter((item): item is { label: string; value: string } => Boolean(item.value));
+
   return (
     <article>
       <div className="relative h-cover overflow-hidden"><Cover src={destination.image} alt={field(destination, locale, "title")} priority /><div className="absolute inset-0 bg-ink/35" /><div className="absolute bottom-0 mx-auto w-full max-w-6xl px-4 pb-8 text-paper"><p className="text-xs uppercase tracking-caps">{destination.country}</p><h1 className="font-display text-5xl">{field(destination, locale, "title")}</h1></div></div>
-      <div className="mx-auto max-w-3xl px-4 py-10"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold uppercase tracking-caps text-muted"><MapPinned className="size-3.5" />{isVietnamese ? "Điểm đến" : "Destination"}</div><p className="text-lg text-muted">{field(destination, locale, "excerpt")}</p><p className="mt-4 whitespace-pre-line">{field(destination, locale, "body")}</p>{destination.languages ? <p className="mt-6 text-sm text-muted">{destination.languages} · {destination.currency}</p> : null}</div>
+      <div className="mx-auto max-w-3xl px-4 py-10"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold uppercase tracking-caps text-muted"><MapPinned className="size-3.5" />{isVietnamese ? "Điểm đến" : "Destination"}</div><p className="text-lg text-muted">{field(destination, locale, "excerpt")}</p><p className="mt-4 whitespace-pre-line">{field(destination, locale, "body")}</p></div>
+      {travelInfo.length ? <section className="mx-auto max-w-6xl px-4 pb-12" aria-label={isVietnamese ? "Thông tin du lịch" : "Travel information"}><div className="rounded-3xl border border-border bg-surface p-6 shadow-border"><div className="max-w-2xl"><p className="eyebrow text-accent">{isVietnamese ? "Thông tin du lịch" : "Travel information"}</p><h2 className="mt-2 font-display text-3xl">{isVietnamese ? "Thông tin cơ bản trước khi lên đường." : "The basics before you go."}</h2></div><dl className="mt-6 grid gap-4 sm:grid-cols-3">{travelInfo.map((item) => <div key={item.label} className="rounded-2xl bg-surface-2 p-4"><dt className="text-xs uppercase tracking-caps text-muted">{item.label}</dt><dd className="mt-2 font-semibold">{item.value}</dd></div>)}</dl></div></section> : null}
       <section className="mx-auto max-w-6xl px-4 pb-12" aria-label={isVietnamese ? "Khám phá điểm đến" : "Explore destination"}>
         <div className="grid overflow-hidden rounded-3xl border border-border bg-surface shadow-border sm:grid-cols-3">
           <a href={tours.length ? "#journeys" : undefined} className={`group flex items-center justify-between gap-4 p-5 transition-colors hover:bg-paper ${!tours.length ? "pointer-events-none opacity-50" : ""}`}>
