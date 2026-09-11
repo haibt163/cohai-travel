@@ -29,6 +29,7 @@ The engineering baseline, full-site visual modernization, and repository synchro
 | P2.16 Legacy URL mapping | 🟢 | Preserve valuable legacy paths through verified canonical replacements. |
 | P2.17 Seed reconciliation | 🟢 | Use source-backed subjects to reconstruct the modern catalog; retain intentional modern additions separately. |
 | P2.18 Fidelity report | 🟡 | Close factual, editorial, media, URL, schedule and source-coverage gaps during reconstruction. |
+| P2.19 Connected destination hub | 🟡 | First implementation batch adds destination-scoped stays/cars and cross-navigation; verify through CI before extending. |
 
 ## Current verified checkpoint — 11 September 2026
 
@@ -37,6 +38,7 @@ The engineering baseline, full-site visual modernization, and repository synchro
 - The frozen legacy source audit produced 30 tables, 19 populated tables, 207 `wp_posts`, 22 media attachments, 48 taxonomy rows, 294 term relationships, 4 tour schedules, 47 currency rows and 76 domain-relevant published records. Raw customer booking records are not exported.
 - The owner has clarified that the old WordPress project was a template-based project built more than 15 years ago around their own travel ideas, not a live customer-data system. Many destination, tour and travel-information subjects remain broadly relevant and should be treated as valuable source material rather than obsolete by default.
 - Legacy media is now a migration candidate: preserve/inspect/verify/optimize first, replace only when quality, licensing, factual relevance or visual needs justify replacement.
+- `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md` defines the surviving 2026 product requirements and is the bridge from historical intent to current implementation. `docs/P2_CANONICAL_RECONSTRUCTION.md` records the first implementation batch.
 - `npm run dev` works locally — **USER-REPORTED**, not assistant-verified.
 - The latest P2 commits update the repository after the earlier local checkpoint; the user should pull once before the next local development checkpoint.
 
@@ -56,4 +58,4 @@ Bilingual canonical routes and metadata are implemented. Operator visibility is 
 
 ### P2 — Legacy Product Archaeology & Modern Reconstruction
 
-The archaeology and traceability foundation is complete. The next implementation stage is source-backed reconstruction guided by `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md`: destinations and tours first, then travel-information surfaces, stays/cars, departures, useful legacy media, and verified legacy redirects. The goal is to preserve the strong ideas from the original project while modernizing the technology, UX, facts, availability and operational model for 2026.
+The archaeology and traceability foundation is complete. The first implementation batch makes destinations connected hubs for journeys, stays and cars, directly modernizing a core idea evidenced in the old product. Next: source-backed canonical destinations and tours, then travel-information surfaces, stays/cars, departures, useful legacy media, and verified legacy redirects. The goal is to preserve the strong ideas from the original project while modernizing technology, UX, facts, availability and operations for 2026.
