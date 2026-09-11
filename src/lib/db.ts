@@ -36,6 +36,7 @@ const OID_INT8 = 20;
 const OID_DATE = 1082;
 const OID_INTERVAL = 1186;
 const identity = (v: string) => v;
+const REPAIR_MIGRATION = "0010_repair_provenance_schema.sql";
 
 type Run = <T>(text: string, params: unknown[]) => Promise<T[]>;
 
@@ -72,6 +73,97 @@ function buildTx(run: Run): SqlTransaction {
   return tx;
 }
 
+function repairMigrationText(): string {
+  const repair = localMigrations.find(({ name }) => name === REPAIR_MIGRATION);
+  if (!repair) throw new Error(`[db] bundled repair migration ${REPAIR_MIGRATION} is missing`);
+  return repair.text;
+}
+
+async function ensureNeonMigrations(pool: import("pg").Pool): Promise<void> {
+  await pool.query(
+    "create table if not exists _migrations (name text primary key, applied_at timestamptz not null default now())",
+  );
+
+  const appliedRows = await pool.query<{ name: string }>(
+    "select name from _migrations",
+  );
+  const applied = appliedRows.rows.map((row) => row.name);
+  const paths = localMigrations.map(({ name }) => `migrations/${name}`);
+  const pending = pendingMigrations(paths, applied);
+
+  for (const { name, path } of pending) {
+    const migration = localMigrations.find(({ name: candidate }) => `migrations/${candidate}` === path);
+    if (!migration) throw new Error(`[db] missing bundled migration text for ${name}`);
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      await client.query(migration.text);
+      await client.query("insert into _migrations (name) values ($1)", [name]);
+      await client.query("COMMIT");
+      console.log(`[db] applied ${name}`);
+    } catch (err) {
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // Keep the original migration error.
+      }
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  const repairText = repairMigrationText();
+  const destinationColumn = await pool.query<{ exists: boolean }>(
+    `select exists (
+       select 1
+       from information_schema.columns
+       where table_schema = 'public'
+         and table_name = 'destinations'
+         and column_name = 'provenance_state'
+     ) as exists`,
+  );
+  const tourColumn = await pool.query<{ exists: boolean }>(
+    `select exists (
+       select 1
+       from information_schema.columns
+       where table_schema = 'public'
+         and table_name = 'tours'
+         and column_name = 'provenance_state'
+     ) as exists`,
+  );
+  if (!destinationColumn.rows[0]?.exists || !tourColumn.rows[0]?.exists) {
+    console.log(`[db] repairing stale catalog schema with ${REPAIR_MIGRATION}`);
+    await pool.query(repairText);
+    await pool.query(
+      "insert into _migrations (name) values ($1) on conflict (name) do nothing",
+      [REPAIR_MIGRATION.replace(/\.sql$/, "")],
+    );
+  }
+
+  const verifiedDestination = await pool.query<{ exists: boolean }>(
+    `select exists (
+       select 1
+       from information_schema.columns
+       where table_schema = 'public'
+         and table_name = 'destinations'
+         and column_name = 'provenance_state'
+     ) as exists`,
+  );
+  const verifiedTour = await pool.query<{ exists: boolean }>(
+    `select exists (
+       select 1
+       from information_schema.columns
+       where table_schema = 'public'
+         and table_name = 'tours'
+         and column_name = 'provenance_state'
+     ) as exists`,
+  );
+  if (!verifiedDestination.rows[0]?.exists || !verifiedTour.rows[0]?.exists) {
+    throw new Error("[db] catalog schema verification failed: provenance_state columns are missing");
+  }
+}
+
 function createNeonSql(): Promise<Sql> {
   globalRef.__pgSqlPromise__ ??= (async () => {
     const { Pool, types } = await import("pg");
@@ -79,6 +171,7 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
     const pool = new Pool({ connectionString: databaseUrl });
+    await ensureNeonMigrations(pool);
     const run = async <T>(text: string, params: unknown[]) => {
       const res = await pool.query(text, params);
       return res.rows as T[];
@@ -179,9 +272,34 @@ async function createPgliteSql(): Promise<Sql> {
        ) as exists`,
     );
     if (!destinationColumn.rows[0]?.exists || !tourColumn.rows[0]?.exists) {
-      throw new Error(
-        "[db] PGLite schema verification failed: provenance_state columns are missing after migration",
+      console.log(`[db] repairing stale local schema with ${REPAIR_MIGRATION}`);
+      await pg.exec(repairMigrationText());
+      await pg.query(
+        "insert into _migrations (name) values ($1) on conflict (name) do nothing",
+        [REPAIR_MIGRATION.replace(/\.sql$/, "")],
       );
+    }
+
+    const verifiedDestination = await pg.query<{ exists: boolean }>(
+      `select exists (
+         select 1
+         from information_schema.columns
+         where table_schema = 'public'
+           and table_name = 'destinations'
+           and column_name = 'provenance_state'
+       ) as exists`,
+    );
+    const verifiedTour = await pg.query<{ exists: boolean }>(
+      `select exists (
+         select 1
+         from information_schema.columns
+         where table_schema = 'public'
+           and table_name = 'tours'
+           and column_name = 'provenance_state'
+       ) as exists`,
+    );
+    if (!verifiedDestination.rows[0]?.exists || !verifiedTour.rows[0]?.exists) {
+      throw new Error("[db] catalog schema verification failed: provenance_state columns are missing");
     }
   };
   const pass = (globalRef.__pgliteMigrateChain__ ?? Promise.resolve())
@@ -236,17 +354,16 @@ export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite
 }
 
 export function ensureDbReady(): Promise<void> {
-  if (dbSource !== "pglite") return Promise.resolve();
   return getSql().then(() => undefined);
 }
 
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };
-if (typeof window === "undefined" && dbSource === "pglite") {
+if (typeof window === "undefined") {
   globalBoot.__pgBootstrapPromise__ ??= ensureDbReady().catch((err) => {
     globalBoot.__pgBootstrapPromise__ = undefined;
-    console.error("[db] PGLite bootstrap failed:", err);
+    console.error("[db] database bootstrap failed:", err);
     throw err;
   });
 }
