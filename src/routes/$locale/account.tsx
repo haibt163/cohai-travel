@@ -7,7 +7,7 @@ import { field, siteCopy, useI18n } from "@/lib/locale";
 import { aud, formatDay } from "@/lib/utils";
 import { EmptyNote, PageHead } from "@/components/shell";
 import { seoHead } from "@/lib/seo";
-import { getOperatorSnapshot, type OperatorSnapshot } from "@/lib/operator.server";
+import { getOperatorSnapshot, type OperatorSnapshot } from "@/lib/operator";
 
 export const Route = createFileRoute("/$locale/account")({
   head: ({ params }) => { const locale = params.locale === "vn" ? "vn" : "en"; return seoHead({ locale, title: siteCopy(locale, "metaAccountTitle"), description: siteCopy(locale, "metaAccountDescription"), pathname: `/${params.locale}/account`, alternatePathname: (l) => `/${l}/account` }); },
