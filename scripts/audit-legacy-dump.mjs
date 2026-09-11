@@ -13,6 +13,7 @@ function splitTopLevel(input, delimiter = ",") {
   out.push(input.slice(start).trim());
   return out.filter(Boolean);
 }
+
 function parseTuples(valuesText) {
   const tuples = []; let start = -1; let depth = 0; let quote = null;
   for (let i = 0; i < valuesText.length; i += 1) {
@@ -24,12 +25,14 @@ function parseTuples(valuesText) {
   }
   return tuples;
 }
+
 function parseScalar(token) {
   const s = token.trim(); if (/^null$/i.test(s)) return null;
   if (s.startsWith("'") && s.endsWith("'")) return s.slice(1, -1).replace(/\\([\\'"nrt])/g, (_, c) => c === "n" ? "\n" : c === "r" ? "\r" : c === "t" ? "\t" : c);
   if (/^-?\d+(?:\.\d+)?$/.test(s)) return Number(s);
   return s;
 }
+
 function readSchemas(sql) {
   const schemas = new Map();
   const re = /CREATE TABLE(?: IF NOT EXISTS)?\s+`?([A-Za-z0-9_]+)`?\s*\(([\s\S]*?)\)\s*(?:ENGINE\b|;)/gi;
@@ -40,6 +43,7 @@ function readSchemas(sql) {
   }
   return schemas;
 }
+
 function readInserts(sql, schemas) {
   const tables = new Map();
   const re = /INSERT INTO\s+`?([A-Za-z0-9_]+)`?(?:\s*\(([^)]*)\))?\s+VALUES\s*/gi;
@@ -53,12 +57,19 @@ function readInserts(sql, schemas) {
   }
   return tables;
 }
+
+export function parseLegacyDump(sql) {
+  return { schemas: readSchemas(sql), tables: readInserts(sql, readSchemas(sql)) };
+}
+
 function histogram(rows, key) { const out = {}; for (const row of rows) { const value = row[key] ?? "<null>"; out[String(value)] = (out[String(value)] ?? 0) + 1; } return out; }
+
 export function auditLegacyDump(sql) {
-  const schemas = readSchemas(sql); const tables = readInserts(sql, schemas); const rowCounts = {};
+  const { schemas, tables } = parseLegacyDump(sql); const rowCounts = {};
   for (const [name, rows] of tables) rowCounts[name] = rows.length;
   const posts = tables.get("wp_posts") ?? []; const postmeta = tables.get("wp_postmeta") ?? [];
   return { generatedAt: new Date().toISOString(), source: "haibt163/travel:data_vietaustravel", safety: { rawRecordSamples: false, piiExported: false, credentialsImported: false }, tables: Object.fromEntries([...schemas.keys()].sort().map((name) => [name, { columns: schemas.get(name)?.length ?? 0, rows: rowCounts[name] ?? 0 }])), populatedTables: Object.fromEntries(Object.entries(rowCounts).filter(([, count]) => count > 0).sort(([a], [b]) => a.localeCompare(b))), wpPosts: { rows: posts.length, byPostType: histogram(posts, "post_type"), byStatus: histogram(posts, "post_status") }, wpPostmeta: { rows: postmeta.length, byKey: histogram(postmeta, "meta_key") }, structured: Object.fromEntries(["wp_byt_tour_schedule", "wp_byt_vacancies", "wp_byt_vacancy_bookings", "wp_byt_tour_booking", "wp_byt_bookings", "wp_byt_car_rental_bookings", "wp_byt_car_rental_booking_days"].map((name) => [name, rowCounts[name] ?? 0])) };
 }
+
 function usage() { console.error("Usage: node scripts/audit-legacy-dump.mjs --input /path/to/data_vietaustravel [--output report.json]"); process.exit(2); }
 if (import.meta.url === `file://${process.argv[1]}`) { const args = process.argv.slice(2); const idx = args.indexOf("--input"); if (idx < 0 || !args[idx + 1]) usage(); const input = path.resolve(args[idx + 1]); const outputIdx = args.indexOf("--output"); const output = outputIdx >= 0 && args[outputIdx + 1] ? path.resolve(args[outputIdx + 1]) : null; const report = auditLegacyDump(fs.readFileSync(input, "utf8")); const text = `${JSON.stringify(report, null, 2)}\n`; if (output) { fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, text); } else process.stdout.write(text); }
