@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CalendarDays } from "lucide-react";
-import { searchCatalog } from "@/lib/catalog";
+import { getTour, searchCatalog } from "@/lib/catalog";
 import { field, siteCopy, useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
 import { SearchBox } from "@/components/search-box";
@@ -23,9 +23,16 @@ export const Route = createFileRoute("/$locale/search")({
   loader: async ({ deps }) => {
     const hits = await searchCatalog({ data: { q: deps.q, chapter: deps.chapter } });
     if (!deps.fromDate) return { hits };
-    return {
-      hits: hits.filter((hit) => hit.kind !== "tour" || Boolean(hit.next_departure && hit.next_departure >= deps.fromDate!)),
-    };
+
+    const filteredTours = await Promise.all(hits.map(async (hit) => {
+      if (hit.kind !== "tour") return hit;
+      const details = await getTour({ data: hit.slug });
+      const available = details?.departures.filter((departure) => departure.start_date >= deps.fromDate! && departure.max_people > departure.booked) ?? [];
+      if (available.length === 0) return null;
+      return { ...hit, next_departure: available[0].start_date, available_departures: available.length };
+    }));
+
+    return { hits: filteredTours.filter((hit): hit is NonNullable<typeof hit> => hit !== null) };
   },
   head: ({ params }) => {
     const locale = params.locale === "vn" ? "vn" : "en";
