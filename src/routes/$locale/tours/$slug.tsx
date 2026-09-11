@@ -21,6 +21,9 @@ function TourDetail() {
   const { tour, departures } = Route.useLoaderData();
   const { locale, t } = useI18n();
   const title = field(tour, locale, "title");
+  const dateLocale = locale === "vn" ? "vi-VN" : "en-AU";
+  const visibleDepartures = departures.slice(0, 4);
+
   return (
     <article>
       <section className="relative min-h-[64vh] overflow-hidden bg-ink">
@@ -39,6 +42,7 @@ function TourDetail() {
           <p className="max-w-3xl text-xl leading-8 text-muted">{field(tour, locale, "excerpt")}</p>
           <div className="my-9 editorial-divider" />
           <div className="max-w-none whitespace-pre-line leading-8 text-ink">{field(tour, locale, "body")}</div>
+          {visibleDepartures.length ? <section className="mt-10" aria-labelledby="upcoming-departures"><div className="flex items-end justify-between gap-4"><div><p className="eyebrow text-accent">{isVietnameseLabel(locale)}</p><h2 id="upcoming-departures" className="mt-2 font-display text-3xl">{locale === "vn" ? "Ngày khởi hành sắp tới" : "Upcoming departures"}</h2></div><span className="text-sm text-muted">{departures.length} {t("departure")}</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2">{visibleDepartures.map((departure) => { const seatsLeft = Math.max(0, departure.max_people - departure.booked); const soldOut = seatsLeft === 0; return <div key={departure.id} className="rounded-2xl border border-border bg-surface p-4 shadow-border"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold">{new Intl.DateTimeFormat(dateLocale, { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${departure.start_date}T00:00:00`))}</p><p className="mt-1 text-xs text-muted">{aud(departure.price)} {t("perPerson")}</p></div><span className={`rounded-full px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-caps ${soldOut ? "bg-ink/10 text-muted" : "bg-accent/15 text-accent"}`}>{soldOut ? (locale === "vn" ? "Hết chỗ" : "Sold out") : `${seatsLeft} ${t("seatsLeft")}`}</span></div></div>; })}</div></section> : <section className="mt-10 rounded-2xl border border-border bg-surface p-5 shadow-border"><p className="text-sm font-semibold">{locale === "vn" ? "Chưa có ngày khởi hành" : "No upcoming departures yet"}</p><p className="mt-1 text-sm text-muted">{locale === "vn" ? "Gửi ngày dự kiến cho bàn điều hành để chúng tôi tìm phương án phù hợp." : "Send your preferred dates to the desk and we can help find the right option."}</p></section>}
           <div className="mt-10 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("seatsLeft")}</p></div><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("currency")}</p></div><div className="rounded-2xl bg-surface p-4 shadow-border"><Check className="size-4 text-accent" /><p className="mt-3 text-sm font-semibold">{t("operator")}</p></div></div>
         </div>
         <div>
@@ -48,4 +52,8 @@ function TourDetail() {
       </section>
     </article>
   );
+}
+
+function isVietnameseLabel(locale: "en" | "vn") {
+  return locale === "vn" ? "Lịch trình" : "Schedule";
 }
