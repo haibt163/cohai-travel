@@ -76,6 +76,18 @@ The source contains four historical schedule records while the current rebuild s
 
 Historical booking rows and their customer PII are not migration content. Their existence may explain old business flows, but no customer-level data enters the rebuild.
 
+## Runtime reliability checkpoint — 11 September 2026
+
+The major local runtime blocker encountered during P2 reconstruction is closed. The incident involved an existing populated Neon database whose migration ledger did not accurately describe the existing catalog. The application was incorrectly attempting to replay seed data, producing a duplicate `hanoi` primary-key error, and the earlier catalog queries then surfaced missing provenance columns.
+
+The final migration/bootstrap design now adopts existing catalog data without reseeding, runs schema migrations deterministically, repairs stale provenance columns idempotently, and verifies the expected schema before application traffic is served.
+
+User-provided Windows execution evidence shows `npm run dev` starting successfully and the bootstrap applying `0004_inventory`, `0005_booking_status`, `0005_public_contact`, `0006_provenance`, `0007_fact_checked_destinations`, `0008_fact_checked_coastal_destinations`, `0009_fact_checked_source_backed_journeys` and `0010_repair_provenance_schema`. The user confirmed the previously blocking page error was resolved.
+
+GitHub Actions run #251 on `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
+
+This runtime incident is therefore **FIXED / VERIFIED** under the project's evidence policy. The PostgreSQL SSL warning remains a separate non-blocking warning and is not part of this resolved incident.
+
 ## Unresolved gaps
 
 1. Convert accepted destination/tour subjects into canonical 2026 records.
@@ -88,4 +100,4 @@ Historical booking rows and their customer PII are not migration content. Their 
 
 ## Fidelity standard for completion
 
-P2 is complete when the surviving original product intent has been translated into the current architecture, accepted source-derived content has explicit provenance and disposition, useful media is preserved or intentionally replaced, high-value legacy URLs are mapped, current commercial facts are verified, and all implementation batches pass the repository CI gate.
+P2 is complete when the surviving original product intent has been translated into the current architecture, accepted source-derived content has explicit provenance and disposition, useful media is preserved or intentionally replaced, high-value legacy URLs are mapped, current commercial facts are verified, and all implementation batches pass the repository CI gate. A defect is not called fixed merely because code review looks correct; the relevant execution evidence must exist first.
