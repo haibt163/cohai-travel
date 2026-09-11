@@ -17,3 +17,11 @@ test("inventory accepts the final available unit", () => {
 test("inventory rejects an over-capacity booking", () => {
   assert.equal(inventoryAvailable(4, 4), false);
 });
+
+test("inventory accepts multiple units when capacity remains", () => {
+  assert.equal(inventoryAvailable(5, 2, 3), true);
+});
+
+test("inventory rejects multiple units when capacity would be exceeded", () => {
+  assert.equal(inventoryAvailable(5, 3, 3), false);
+});
