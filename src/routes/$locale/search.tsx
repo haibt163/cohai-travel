@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CalendarDays } from "lucide-react";
-import { getTour, searchCatalog } from "@/lib/catalog";
+import { searchCatalog } from "@/lib/catalog";
 import { field, siteCopy, useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
 import { SearchBox } from "@/components/search-box";
@@ -20,20 +20,9 @@ export const Route = createFileRoute("/$locale/search")({
     fromDate: typeof s.fromDate === "string" && isDateOnly(s.fromDate) ? s.fromDate : undefined,
   }),
   loaderDeps: ({ search }) => ({ q: search.q, chapter: search.chapter, fromDate: search.fromDate }),
-  loader: async ({ deps }) => {
-    const hits = await searchCatalog({ data: { q: deps.q, chapter: deps.chapter } });
-    if (!deps.fromDate) return { hits };
-
-    const filteredTours = await Promise.all(hits.map(async (hit) => {
-      if (hit.kind !== "tour") return hit;
-      const details = await getTour({ data: hit.slug });
-      const available = details?.departures.filter((departure) => departure.start_date >= deps.fromDate! && departure.max_people > departure.booked) ?? [];
-      if (available.length === 0) return null;
-      return { ...hit, next_departure: available[0].start_date, available_departures: available.length };
-    }));
-
-    return { hits: filteredTours.filter((hit): hit is NonNullable<typeof hit> => hit !== null) };
-  },
+  loader: async ({ deps }) => ({
+    hits: await searchCatalog({ data: { q: deps.q, chapter: deps.chapter, fromDate: deps.fromDate } }),
+  }),
   head: ({ params }) => {
     const locale = params.locale === "vn" ? "vn" : "en";
     return seoHead({ locale, title: siteCopy(locale, "metaSearchTitle"), description: siteCopy(locale, "metaSearchDescription"), pathname: `/${params.locale}/search`, alternatePathname: (l) => `/${l}/search` });
