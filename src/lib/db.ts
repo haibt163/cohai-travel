@@ -1,4 +1,5 @@
 import { pendingMigrations } from "../../scripts/migration-plan.mjs";
+import { localMigrations } from "./local-migrations";
 
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite";
@@ -133,14 +134,13 @@ async function createPgliteSql(): Promise<Sql> {
   const pg = await globalRef.__pgliteInstance__;
 
   const migrate = async (): Promise<void> => {
-    const migrations = import.meta.glob("../../migrations/*.sql", {
-      query: "?raw",
-      import: "default",
-      eager: true,
-    }) as Record<string, string>;
+    const migrationMap = Object.fromEntries(
+      localMigrations.map(({ name, text }) => [`migrations/${name}`, text]),
+    );
+    const paths = Object.keys(migrationMap);
     const doneRows = await pg.query<{ name: string }>("select name from _migrations");
     const done = doneRows.rows.map((r) => r.name);
-    const pending = pendingMigrations(Object.keys(migrations), done);
+    const pending = pendingMigrations(paths, done);
     if (pending.length) {
       console.log(
         `[db] applying ${pending.length} local migration(s): ${pending
@@ -149,8 +149,12 @@ async function createPgliteSql(): Promise<Sql> {
       );
     }
     for (const { name, path } of pending) {
+      const text = migrationMap[path];
+      if (typeof text !== "string") {
+        throw new Error(`[db] missing bundled migration text for ${name}`);
+      }
       await pg.transaction(async (tx) => {
-        await tx.exec(migrations[path]);
+        await tx.exec(text);
         await tx.query("insert into _migrations (name) values ($1)", [name]);
       });
       console.log(`[db] applied ${name}`);
