@@ -12,13 +12,23 @@ alter table tours
   add column if not exists source_ref text,
   add column if not exists provenance_state text not null default 'synthetic-pending';
 
-alter table destinations
-  add constraint destinations_provenance_state_check
-  check (provenance_state in ('source-backed', 'modern-addition', 'synthetic-pending'));
-
-alter table tours
-  add constraint tours_provenance_state_check
-  check (provenance_state in ('source-backed', 'modern-addition', 'synthetic-pending'));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'destinations_provenance_state_check'
+  ) THEN
+    ALTER TABLE destinations ADD CONSTRAINT destinations_provenance_state_check
+      CHECK (provenance_state in ('source-backed', 'modern-addition', 'synthetic-pending'));
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'tours_provenance_state_check'
+  ) THEN
+    ALTER TABLE tours ADD CONSTRAINT tours_provenance_state_check
+      CHECK (provenance_state in ('source-backed', 'modern-addition', 'synthetic-pending'));
+  END IF;
+END $$;
 
 create index if not exists destinations_provenance_idx
   on destinations (provenance_state, source_ref);
