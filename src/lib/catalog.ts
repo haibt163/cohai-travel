@@ -103,6 +103,11 @@ function mapTour(row: TourRow): TourCard {
   };
 }
 
+const availableDepartureSql = `
+  td.start_date >= current_date
+  and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)
+`;
+
 export const listDestinations = createServerFn({ method: "GET" }).handler(async () => {
   const sql = await getSql();
   return sql<Destination>`select * from destinations order by title_en`;
@@ -123,15 +128,9 @@ export const listTours = createServerFn({ method: "GET" })
     const chapter = data.chapter && data.chapter !== "all" ? data.chapter : null;
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(td.price) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
-        (select min(td.start_date) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
-        (select count(*) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
+        (select min(td.price) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as from_price,
+        (select min(td.start_date) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as next_departure,
+        (select count(*) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where (${chapter}::text is null or t.chapter = ${chapter})
@@ -146,15 +145,9 @@ export const getTour = createServerFn({ method: "GET" })
     const sql = await getSql();
     const tours = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(td.price) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
-        (select min(td.start_date) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
-        (select count(*) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
+        (select min(td.price) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as from_price,
+        (select min(td.start_date) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as next_departure,
+        (select count(*) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where t.slug = ${slug}
@@ -176,11 +169,7 @@ export const getTour = createServerFn({ method: "GET" })
       where td.tour_id = ${tour.id} and td.start_date >= current_date
       order by td.start_date
     `;
-    const departures: Departure[] = deps.map((d) => ({
-      ...d,
-      price: num(d.price),
-      booked: num(d.booked),
-    }));
+    const departures: Departure[] = deps.map((d) => ({ ...d, price: num(d.price), booked: num(d.booked) }));
     return { tour, departures };
   });
 
@@ -239,6 +228,8 @@ export type SearchHit = {
   excerpt_vn: string;
   image: string;
   meta: string;
+  next_departure?: string | null;
+  available_departures?: number;
 };
 
 export const searchCatalog = createServerFn({ method: "GET" })
@@ -258,8 +249,12 @@ export const searchCatalog = createServerFn({ method: "GET" })
       excerpt_vn: string;
       image: string;
       chapter: string;
+      next_departure: string | null;
+      available_departures: number | string;
     }>`
-      select t.slug, t.title_en, t.title_vn, t.excerpt_en, t.excerpt_vn, t.image, t.chapter
+      select t.slug, t.title_en, t.title_vn, t.excerpt_en, t.excerpt_vn, t.image, t.chapter,
+        (select min(td.start_date) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as next_departure,
+        (select count(*) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where (${chapter}::text is null or t.chapter = ${chapter})
@@ -270,24 +265,26 @@ export const searchCatalog = createServerFn({ method: "GET" })
           or lower(d.title_en) like ${like}
           or lower(d.title_vn) like ${like}
         )
-      order by t.title_en
+      order by (select count(*) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) desc,
+        (select min(td.start_date) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}),
+        t.title_en
     `;
-    for (const t of tours) hits.push({ kind: "tour", ...t, meta: t.chapter });
+    for (const t of tours) hits.push({ kind: "tour", ...t, available_departures: num(t.available_departures), meta: t.chapter });
 
     if (!chapter) {
-      const stays = await sql<Omit<SearchHit, "kind" | "meta">>`
+      const stays = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select s.slug, s.title_en, s.title_vn, s.excerpt_en, s.excerpt_vn, s.image
         from stays s join destinations d on d.id = s.destination_id
         where ${q} = '' or lower(s.title_en) like ${like} or lower(d.title_en) like ${like} or lower(s.title_vn) like ${like}
       `;
       for (const s of stays) hits.push({ kind: "stay", ...s, meta: "stay" });
-      const cars = await sql<Omit<SearchHit, "kind" | "meta">>`
+      const cars = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select c.slug, c.title_en, c.title_vn, c.excerpt_en, c.excerpt_vn, c.image
         from cars c join destinations d on d.id = c.pickup_id
         where ${q} = '' or lower(c.title_en) like ${like} or lower(d.title_en) like ${like}
       `;
       for (const c of cars) hits.push({ kind: "car", ...c, meta: "car" });
-      const places = await sql<Omit<SearchHit, "kind" | "meta">>`
+      const places = await sql<Omit<SearchHit, "kind" | "meta" | "next_departure" | "available_departures">>`
         select slug, title_en, title_vn, excerpt_en, excerpt_vn, image
         from destinations
         where ${q} = '' or lower(title_en) like ${like} or lower(title_vn) like ${like} or lower(country) like ${like}
@@ -304,15 +301,9 @@ export const toursForDestination = createServerFn({ method: "GET" })
     const sql = await getSql();
     const rows = await sql<TourRow>`
       select t.*, d.slug as dest_slug, d.title_en as dest_title_en, d.title_vn as dest_title_vn,
-        (select min(td.price) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as from_price,
-        (select min(td.start_date) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as next_departure,
-        (select count(*) from tour_departures td
-          where td.tour_id = t.id and td.start_date >= current_date
-            and td.max_people > coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)) as available_departures
+        (select min(td.price) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as from_price,
+        (select min(td.start_date) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as next_departure,
+        (select count(*) from tour_departures td where td.tour_id = t.id and ${sql.unsafe(availableDepartureSql)}) as available_departures
       from tours t
       join destinations d on d.id = t.destination_id
       where t.destination_id = ${id}
