@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { getTour } from "@/lib/catalog";
 import { field, useI18n } from "@/lib/locale";
 import { aud } from "@/lib/utils";
@@ -6,8 +6,14 @@ import { seoHead } from "@/lib/seo";
 import { BookingForm } from "@/components/booking-form";
 import { Cover } from "@/components/cover";
 
+const legacyTourRedirects: Record<string, string> = {
+  "halong-tuan-chau-island": "ha-long-overnight-junk",
+};
+
 export const Route = createFileRoute("/tours/$slug")({
   loader: async ({ params }) => {
+    const legacyTarget = legacyTourRedirects[params.slug];
+    if (legacyTarget) throw redirect({ href: `/en/tours/${legacyTarget}`, statusCode: 301 });
     const data = await getTour({ data: params.slug });
     if (!data) throw notFound();
     return data;
@@ -41,11 +47,7 @@ function TourDetail() {
             · {tour.duration_days} {t("days")}
           </p>
           <h1 className="mt-2 font-display text-4xl md:text-5xl">{field(tour, locale, "title")}</h1>
-          {tour.from_price > 0 ? (
-            <p className="mt-2 tabular-nums">
-              {t("from")} {aud(tour.from_price)}
-            </p>
-          ) : null}
+          {tour.from_price > 0 ? <p className="mt-2 tabular-nums">{t("from")} {aud(tour.from_price)}</p> : null}
         </div>
       </div>
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-5">
@@ -54,12 +56,7 @@ function TourDetail() {
           <p className="mt-4 whitespace-pre-line">{field(tour, locale, "body")}</p>
         </div>
         <div className="lg:col-span-2">
-          <BookingForm
-            kind="tour"
-            itemId={tour.id}
-            departures={departures}
-            unitPrice={tour.from_price}
-          />
+          <BookingForm kind="tour" itemId={tour.id} departures={departures} unitPrice={tour.from_price} />
         </div>
       </div>
     </article>
