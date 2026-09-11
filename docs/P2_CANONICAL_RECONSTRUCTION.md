@@ -19,6 +19,9 @@ This directly modernizes the old site's connected catalog/search concept without
 - Updated `src/routes/$locale/destinations/$slug.tsx` to load tours, stays and cars in parallel.
 - Added destination-page cross-navigation for stays and cars while retaining the existing journey grid.
 - Kept the current normalized catalog schema and server-function boundary; no legacy WordPress runtime behavior was copied.
+- Added a public-catalog provenance guard so `synthetic-pending` destinations and journeys do not leak into catalog retrieval, search or the sitemap.
+- Refreshed the first source-backed destination records — Hanoi, Ha Long, Hoi An, Hue and Sapa — with independently checked 2026 factual copy while preserving canonical ids/slugs and existing media.
+- Recorded the current evidence used for those refreshes in `docs/P2_2026_FACT_SOURCES.md`.
 
 ## Provenance contract
 
@@ -31,7 +34,7 @@ Canonical destination and journey records now carry reconstruction provenance in
 
 The provenance field is traceability metadata, not a publication-readiness claim. Current factual, editorial, media/licensing and commercial verification gates remain separate.
 
-`npm run test:domain` now includes `scripts/provenance.test.mjs`, which guards the state vocabulary, requires explicit source references for the accepted source-backed destination/journey set, and ensures intentional modern additions are not assigned legacy source references.
+`npm run test:domain` includes `scripts/provenance.test.mjs`, which guards the state vocabulary, requires explicit source references for the accepted source-backed destination/journey set, and ensures intentional modern additions are not assigned legacy source references.
 
 ## Content strategy
 
@@ -47,11 +50,25 @@ Current factual details, pricing, departures, capacity, accommodation availabili
 
 Legacy media is an eligible migration candidate. Preserve first when useful and legally usable; optimize and remap; replace only when quality, provenance, factual accuracy or brand requirements justify replacement.
 
+## Current reconstruction progress
+
+### Fact-checked destination refresh — completed
+
+The first five source-backed destination subjects have refreshed current copy in `migrations/0007_fact_checked_destinations.sql`:
+
+- Hanoi — current Vietnam Tourism evidence for history, Old Quarter and present-day city life.
+- Ha Long — current Vietnam Tourism evidence for the karst seascape, cruising/caves and the wider Ha Long–Cat Ba World Heritage landscape.
+- Hoi An — current Vietnam Tourism evidence for the trading-port history, walkable Old Town and cultural influences.
+- Hue — current Vietnam Tourism evidence for the Nguyen Dynasty legacy, 143-year reign and Perfume River setting.
+- Sapa — current Vietnam Tourism evidence for terrace farming, trekking, Fansipan and practical gateways through Lao Cai/Hanoi.
+
+This is a factual-copy refresh, not a final commercial or media approval.
+
 ## Implementation order
 
-1. Destination-led connected catalog UX — current batch.
-2. Source-backed canonical destinations — retain durable historical subjects and establish provenance.
-3. Source-backed canonical tours — reconstruct the strongest historical tour/product ideas.
+1. Destination-led connected catalog UX — implemented.
+2. Source-backed canonical destinations — provenance established; first five destination records fact-refreshed.
+3. Source-backed canonical tours — next major reconstruction batch.
 4. Travel-information surfaces — rebuild durable subject matter with current facts.
 5. Stays/cars — selectively reconstruct and verify useful historical products.
 6. Departures — reconcile the historical schedule model with current availability rules.
