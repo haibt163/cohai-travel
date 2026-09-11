@@ -53,6 +53,14 @@ For a bug fix, prefer this loop:
 
 Do not produce repeated speculative patches without first examining the actual failure evidence available.
 
+### Stop rule — avoid diagnostic loops
+
+Diagnose only until the evidence is sufficient to establish the cause and choose a safe action. Once the root cause is sufficiently established, take the smallest safe intervention and verify the result. Do not keep requesting marginal diagnostics when they are unlikely to change the decision.
+
+For routine, reversible problems, prefer the shortest safe path. Do not turn a simple Git, dependency, lint, typecheck, build, or generated-file issue into a long diagnostic loop when existing evidence already establishes that a safe fix is appropriate.
+
+If a diagnostic command produces enough evidence to support a safe repair, act rather than asking the user to run another redundant diagnostic. After the repair, run one concise verification step and stop when the expected clean state is reached.
+
 ## 5. Validation hierarchy
 
 Prefer independent execution evidence over model confidence.
@@ -133,8 +141,16 @@ The user may and should push for verification. Useful instructions include:
 
 The assistant should apply this standard proactively even when the user does not repeat it.
 
-## 12. Current CoHai Travel baseline
+## 12. Fresh-phase trigger and handoff rule
+
+Start a fresh conversation at a major project phase boundary or when the conversation has become long enough that historical discussion may compete with current repository facts. Do not wait for obvious quality degradation. The fresh session should begin from the repository's current documentation and live repository state.
+
+Before asking the user to begin a new phase, ensure the persistent status documentation records the current verified commit, validation state, known issues, current phase, and prioritized next work.
+
+## 13. Current CoHai Travel baseline
 
 As of this update, `ProjectStatus.md` records the engineering baseline and full-site visual modernization as green and identifies the P2 WordPress reconstruction as the major unfinished phase. The project's CI gate is already defined as `npm ci → domain tests → typecheck → lint → build → smoke`. Preserve that gate and use its results as execution evidence. 
 
 The user reports that the current local folder and GitHub repository are in sync and that `npm run dev` works locally. This local interactive result is user-reported and is therefore recorded here as `USER-REPORTED`, not assistant-verified.
+
+As of the latest checkpoint, local `main` and `origin/main` were verified to resolve to the same commit `882979e892fd66875d00f0756e4581634e5de20f`, and `git status --short` was clean after resolving a false-positive `src/routeTree.gen.ts` modification. The file's working-tree hash matched the `HEAD` blob hash exactly before the safe `git restore` cleanup. This Git state is user-executed evidence from 11 September 2026, not assistant-executed shell evidence.
