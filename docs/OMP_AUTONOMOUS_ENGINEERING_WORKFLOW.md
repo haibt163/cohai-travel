@@ -1,6 +1,6 @@
 # CoHai Travel — OMP Autonomous Engineering Workflow
 
-Last updated: 13 September 2026.
+Last updated: 13 September 2026 (model-role roster revision).
 
 ## Purpose
 
@@ -145,12 +145,41 @@ When comparing models for CoHai work:
 
 ## Current model roles
 
-| Role | Current policy | Default use |
-| --- | --- | --- |
-| Primary implementation / key engineer | DeepSeek V4.1 models and onward | substantive coding and debugging |
-| Routine / Git / small edits | Free model — **TBD** | housekeeping, exploration, low-risk changes |
-| Deep archaeology / investigation | Free model — **TBD** | architecture and legacy analysis |
-| Premium escalation / high-stakes review | GPT-5.6-class or equivalent | difficult architecture, critical fixes, final expert review |
+The following is the **current benchmark-derived working roster as of 13 September 2026**. The free-model assignments are operational picks, not permanent pins. They may be replaced when OpenRouter availability, pricing, latency, throughput, context limits, or observed CoHai performance changes.
+
+| Role | Current working pick | Context | Default use |
+| --- | --- | ---: | --- |
+| Primary implementation / key engineer | **DeepSeek V4.1 models and onward** | up to 1M-class where available | substantive coding, debugging, refactoring, multi-file implementation |
+| Routine / Git / small edits | **Cohere North Mini Code (free)** | **256K** | routine exploration, Git interaction, housekeeping, documentation, small/low-risk fixes |
+| Deep archaeology / investigation | **Thinking Machines Inkling (free)** | **1.048M** | large-context repository archaeology, legacy analysis, architecture reconnaissance |
+| Fast scout / lightweight investigation | **InclusionAI Ling 3.0 Flash Fin (free)** | **262K** | rapid repository scans, focused questions, disposable exploration |
+| Deep-archaeology backup / independent second opinion | **NVIDIA Nemotron 3 Ultra (free)** | **1M** | difficult investigations, large-context second opinions, fallback when Inkling is unavailable |
+| Routine backup | **Poolside Laguna S 2.1 (free)** | **262K** | fallback routine exploration, Git work, small fixes |
+| Premium escalation / high-stakes review | **GPT-5.6-class or equivalent** | model-dependent | difficult architecture, critical fixes, security-sensitive changes, final expert review |
+
+### Context-window policy
+
+Context size is matched to task scope rather than treated as a quality ranking:
+
+- **1M-class models** are preferred for deep archaeology, large legacy investigations, and tasks requiring broad simultaneous repository context.
+- **~262K models** are preferred for focused exploration, routine maintenance, Git operations, and small changes where 1M context provides little practical benefit.
+- **DeepSeek V4.1+** remains the primary implementation tier; context availability should still be considered when assigning unusually large implementation tasks.
+- A smaller-context model must not be forced into a large-context archaeology task merely because it is faster.
+- A 1M-context model should not be used for trivial work solely because the larger window is available.
+
+### Free-model replacement and fallback policy
+
+No free model is permanently assigned to a governance role. The current picks above are the starting roster for the next engineering phase.
+
+For each free role, maintain at least one practical fallback when possible. A model may be replaced when it becomes unavailable, rate-limited, repriced, removed from the free tier, materially slower, unreliable, or demonstrably weaker on the project's benchmark task.
+
+Current fallback relationships:
+
+- Routine/Git: **North Mini Code → Laguna S 2.1**
+- Deep archaeology: **Inkling → Nemotron 3 Ultra**
+- Fast scout: **Ling 3.0 Flash Fin**, with either routine or archaeology models used when the task exceeds Ling's appropriate scope.
+
+These assignments are intentionally replaceable and must not be interpreted as permanent model configuration in OMP.
 
 ## Current governance rule
 
