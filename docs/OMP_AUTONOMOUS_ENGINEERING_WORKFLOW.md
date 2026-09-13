@@ -139,7 +139,6 @@ When comparing models for CoHai work:
 - use the same repository state;
 - use the same task/prompt for each candidate;
 - compare newly released free models rather than assuming public rankings are sufficient;
-- use the same task/prompt;
 - do not leak one model's conclusions to another during blind comparison;
 - compare correctness, verification discipline, tool-call reliability, efficiency, speed, and engineering usefulness;
 - record meaningful results rather than selecting a model solely from public benchmark rankings.
