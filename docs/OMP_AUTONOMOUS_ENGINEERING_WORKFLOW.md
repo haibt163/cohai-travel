@@ -1,6 +1,6 @@
 # CoHai Travel — OMP Autonomous Engineering Workflow
 
-Last updated: 12 September 2026.
+Last updated: 13 September 2026.
 
 ## Purpose
 
@@ -26,7 +26,7 @@ ChatGPT acts as Chief Engineer and primary reviewer. Responsibilities include:
 
 ### Primary Implementation / Key Engineer
 
-DeepSeek V4.1 Flash is the primary implementation engineer for substantive coding work. It is preferred for:
+DeepSeek V4.1 models and onward are the primary implementation/key-engineer tier for substantive coding work. It is preferred for:
 
 - feature implementation;
 - non-trivial bug fixes;
@@ -39,27 +39,29 @@ DeepSeek must not merge its own work into `main` and must not bypass repository 
 
 ### Routine / Git Interaction Engineer
 
-Laguna S 2.1 is the preferred low-cost/free agent for routine engineering work, including:
+A suitable currently available **free model** will be selected for:
 
+- routine repository exploration;
 - Git interaction and repository housekeeping;
 - pull/push workflow preparation;
 - branch/status inspection;
-- routine exploration;
 - documentation-only edits;
 - small, well-scoped fixes;
 - low-risk maintenance tasks.
 
-Laguna may perform changes only after the Chief Engineer has authorized the task and the Product Owner has provided the required approval under the normal chain of command.
+**No specific free model is permanently assigned to this role.** OpenRouter free-model availability, pricing, latency, throughput, and routing can change. A candidate becomes the standing choice only after benchmarking.
 
 ### Deep Repository Archaeology / Investigation
 
-Nemotron 3 Ultra is the preferred deep-investigation model for:
+A suitable currently available **free model** will be selected for:
 
 - repository archaeology;
 - large-scale architecture reconnaissance;
 - legacy-system analysis;
 - investigation of unfamiliar subsystems;
 - comparative analysis of existing implementation versus historical/project documentation.
+
+**No specific free model is permanently assigned to this role.** Candidate models are benchmarked against the same investigation task before being adopted.
 
 Investigation results are advisory engineering evidence and remain subject to Chief Engineer review.
 
@@ -100,15 +102,23 @@ The project deliberately uses different models for different cost/quality requir
 
 ### Free / routine tier
 
-Use Laguna S 2.1 and Nemotron 3 Ultra for high-volume, lower-risk work where strong reasoning is useful but premium model spend is not justified.
+Use a currently available, benchmarked free model for routine/Git work and a currently available, benchmarked free model for deep archaeology. These assignments are intentionally TBD and may change as OpenRouter availability and model quality change.
 
 ### Primary implementation tier
 
-Use DeepSeek V4.1 Flash for substantive coding work where coding quality and autonomous execution matter and its cost advantage is significant.
+Use DeepSeek V4.1 models and onward for substantive coding work where coding quality and autonomous execution matter and its cost advantage is significant.
 
 ### Premium review / escalation tier
 
 GPT-5.6 Luna or another premium model may be used for unusually difficult architectural problems, high-impact debugging, security-sensitive changes, major migrations, or final expert review when the expected value justifies the additional spend.
+
+## OpenRouter and model-selection policy
+
+OpenRouter is the preferred model gateway for OMP. The project does **not** permanently pin a particular model merely because it is currently free, fast, or highly ranked.
+
+The provider/gateway is stable; the actual model remains replaceable.
+
+Free models are treated as replaceable infrastructure. They can become unavailable, rate-limited, repriced, removed from a free tier, or slower under load. Maintain a tested backup candidate for each free role when practical.
 
 ## Cost discipline
 
@@ -120,26 +130,28 @@ Before escalating to a paid or premium model, determine whether the task can be 
 
 The local working copy, Git history, project documentation, CI records, and committed engineering decisions are the durable project memory.
 
-OMP session history is useful for continuity, but changing models does not transfer conversational context automatically unless the same OMP session is retained. Model switching should therefore be preferred for continuity when appropriate, while fresh sessions should be used for controlled benchmark comparisons.
+OMP session history is useful for continuity, but changing models does not transfer conversational context automatically unless the same OMP session is retained. Model switching should therefore be used when continuity is useful, while fresh sessions should be used for controlled benchmark comparisons. Model switching does not change the approval chain.
 
 ## Benchmarking protocol
 
 When comparing models for CoHai work:
 
 - use the same repository state;
+- use the same task/prompt for each candidate;
+- compare newly released free models rather than assuming public rankings are sufficient;
 - use the same task/prompt;
 - do not leak one model's conclusions to another during blind comparison;
 - compare correctness, verification discipline, tool-call reliability, efficiency, speed, and engineering usefulness;
 - record meaningful results rather than selecting a model solely from public benchmark rankings.
 
-## Current preferred model roles
+## Current model roles
 
-| Role | Preferred model | Default use |
+| Role | Current policy | Default use |
 | --- | --- | --- |
-| Primary implementation / key engineer | DeepSeek V4.1 Flash | substantive coding and debugging |
-| Routine / Git / small edits | Laguna S 2.1 (free) | housekeeping, exploration, low-risk changes |
-| Deep archaeology / investigation | Nemotron 3 Ultra (free) | architecture and legacy analysis |
-| Premium escalation / high-stakes review | GPT-5.6 Luna or equivalent | difficult architecture, critical fixes, final expert review |
+| Primary implementation / key engineer | DeepSeek V4.1 models and onward | substantive coding and debugging |
+| Routine / Git / small edits | Free model — **TBD** | housekeeping, exploration, low-risk changes |
+| Deep archaeology / investigation | Free model — **TBD** | architecture and legacy analysis |
+| Premium escalation / high-stakes review | GPT-5.6-class or equivalent | difficult architecture, critical fixes, final expert review |
 
 ## Current governance rule
 
