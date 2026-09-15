@@ -90,3 +90,9 @@ Under the engineering evidence policy, this incident is therefore **FIXED / VERI
 ## Verification rule
 
 Every implementation batch must pass the full repository CI chain. A feature is not considered verified merely because its code looks correct or a local development server starts. A change may be called **fixed** only after the relevant execution evidence exists. For interactive defects, user-observed confirmation is required when the assistant cannot directly inspect the user's local browser/runtime.
+
+## Travel-information surface — source-led planning notes
+
+A bilingual travel-information surface now lives at `/{locale}/travel-notes`. It translates five source-backed destination subjects into short, explicit planning notes and links each note to both its canonical destination hub and the relevant official tourism source in `docs/P2_2026_FACT_SOURCES.md`.
+
+This surface intentionally does **not** claim live departure, weather, access, operator, or activity availability. Each note distinguishes enduring editorial context from date-dependent conditions and directs visitors to confirm the latter for their selected dates. It preserves the legacy travel-information intent while avoiding a blind import of historical copy or commercial facts.
