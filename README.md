@@ -4,15 +4,30 @@ Private journeys in Vietnam, Cambodia and Thailand. Booked in Australian dollars
 
 This repository is the source of record for the **React rebuild** of the old VietAus WordPress site. The WordPress dump stays at `haibt163/travel` and is not the runtime.
 
+## Engineering governance
+
+CoHai Travel uses a two-lane Main Engineer model:
+
+- **Codex Cloud** with GPT models — hosted implementation lane and preferred choice when it reduces local PC resource pressure.
+- **OMP CLI** with DeepSeek / GLM through OpenRouter — interchangeable implementation lane, not backup-only.
+- **ChatGPT** — Chief Engineer for architecture, code, tests, evidence, security, provenance and PR review.
+- **Project Owner** — final human authority and final green light before protected `main`.
+
+Implementation lanes may switch by task fit, context, availability, quality, latency and cost. Neither implementation lane may merge its own work to `main`.
+
+See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative role, Git and approval rules and `docs/AI_ENGINEERING_WORKFLOW.md` for the operating workflow.
+
 ## Project documentation
 
 1. `AGENTS.md` — App Builder/platform contract.
 2. `OriginalWordPress.md` — legacy archive findings and reconstruction boundary.
 3. `ProjectStatus.md` — active audit/implementation ledger.
-4. `docs/CONTENT_ARCHAEOLOGY.md` — source-derived migration model and fidelity rules.
-5. `docs/PARITY_AUDIT.md` — repository ↔ preview reproducibility audit.
-6. `docs/P2_MIGRATION_EXECUTION.md` — concrete legacy extraction, decision matrix and URL/media reconciliation workflow.
-7. `docs/P1_NOTIFICATIONS.md` — production notification contract.
+4. `docs/ENGINEERING_GOVERNANCE.md` — live AI engineering roles and approval boundary.
+5. `docs/AI_ENGINEERING_WORKFLOW.md` — implementation, audit, evidence and handoff workflow.
+6. `docs/CONTENT_ARCHAEOLOGY.md` — source-derived migration model and fidelity rules.
+7. `docs/PARITY_AUDIT.md` — repository ↔ preview reproducibility audit.
+8. `docs/P2_MIGRATION_EXECUTION.md` — concrete legacy extraction, decision matrix and URL/media reconciliation workflow.
+9. `docs/P1_NOTIFICATIONS.md` — production notification contract.
 
 ## Current status
 
