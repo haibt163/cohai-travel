@@ -92,13 +92,19 @@ try {
     throw new Error("GET /robots.txt did not return the expected robots directives");
   }
 
-  for (const path of ["/en/", "/en/destinations", "/en/contact"]) {
+  for (const path of ["/en/", "/en/destinations", "/en/travel-notes", "/vn/travel-notes", "/en/contact"]) {
     const page = await get(path);
     if (!/CoHai Travel/i.test(page.body)) {
       throw new Error(`GET ${path} did not render the CoHai Travel application shell`);
     }
     console.log(`[smoke] GET ${path} -> ${page.response.status}; application route verified.`);
   }
+
+  const sitemap = await get("/sitemap.xml");
+  if (!/\/en\/travel-notes/.test(sitemap.body) || !/\/vn\/travel-notes/.test(sitemap.body)) {
+    throw new Error("GET /sitemap.xml did not include both locale travel-notes URLs");
+  }
+  console.log("[smoke] GET /sitemap.xml -> 200; travel-notes URLs verified.");
 
   if (!/\[db\] applied 0010_repair_provenance_schema|\[db\] applying/.test(output)) {
     throw new Error(
