@@ -8,12 +8,13 @@ This repository is the source of record for the **React rebuild** of the old Vie
 
 CoHai Travel uses a two-lane Main Engineer model:
 
-- **Codex Cloud** with GPT models — hosted implementation lane and preferred choice when it reduces local PC resource pressure.
+- **Codex CLI / Codex App** with GPT/Codex models — the official local Codex engineering lane. Use the CLI for direct terminal control and visibility; use the App when its multi-agent/worktree interface is more convenient.
 - **OMP CLI** with DeepSeek / GLM through OpenRouter — interchangeable implementation lane, not backup-only.
+- **Codex Cloud** — retired and not an approved CoHai Travel engineering environment.
 - **ChatGPT** — Chief Engineer for architecture, code, tests, evidence, security, provenance and PR review.
 - **Project Owner** — final human authority and final green light before protected `main`.
 
-Implementation lanes may switch by task fit, context, availability, quality, latency and cost. Neither implementation lane may merge its own work to `main`.
+Codex CLI/App and OMP may switch by task fit, context, local resource constraints, quality, latency, availability and cost. Neither implementation lane may merge its own work to `main`.
 
 See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative role, Git and approval rules and `docs/AI_ENGINEERING_WORKFLOW.md` for the operating workflow.
 

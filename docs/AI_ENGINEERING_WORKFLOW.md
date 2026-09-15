@@ -16,39 +16,46 @@
 Project Owner defines task
         ↓
 Choose Main Engineer lane
-   ┌───────────────┴───────────────┐
-   ↓                               ↓
-Codex Cloud                     OMP CLI
-GPT models                 DeepSeek / GLM
-   └───────────────┬───────────────┘
-                   ↓
-          implementation / audit
-                   ↓
-          tests + evidence + handoff
-                   ↓
+   ┌────────────────────────────┐
+   │                            │
+   ▼                            ▼
+Codex CLI / App               OMP CLI
+GPT / Codex models         DeepSeek / GLM
+   └──────────────┬─────────────┘
+                  ↓
+         implementation / audit
+                  ↓
+         tests + evidence + handoff
+                  ↓
          Chief Engineer — ChatGPT
           APPROVE / REQUEST CORRECTION
-                   ↓
-       Project Owner final green light
-                   ↓
-             protected `main`
+                  ↓
+      Project Owner final green light
+                  ↓
+            protected `main`
 ```
 
-Codex Cloud and OMP/DeepSeek/GLM are interchangeable Main Engineer lanes. OMP DeepSeek/GLM are not backup-only systems.
+Codex CLI/App and OMP/DeepSeek/GLM are the permanent interchangeable Main Engineer lanes. Codex Cloud is retired and not part of the workflow.
 
 ## 3. Main Engineer lanes
 
-### Codex Cloud
+### Codex CLI / Codex App
 
-Codex Cloud is the normal hosted engineering lane using available GPT models. It is especially useful when hosted execution reduces local PC resource pressure.
+The official Codex lane for CoHai Travel is local Codex via the CLI or Windows App, using available GPT/Codex models.
+
+Use the CLI when direct terminal control, command visibility, Git operations and interactive debugging are valuable. Use the App when its agent/worktree interface is more convenient for local development or parallel work.
 
 ### OMP CLI
 
-OMP CLI is the local engineering lane using DeepSeek and GLM models through OpenRouter. These models may be used for the same classes of implementation work as Codex Cloud when they are the better fit for cost, quality, context, latency or availability.
+OMP CLI is the local multi-model engineering lane using DeepSeek and GLM through OpenRouter. These models may perform the same substantive implementation classes as Codex when they are the better fit for cost, quality, context, latency or availability.
+
+### Retired environment
+
+**Codex Cloud is permanently retired from CoHai Travel engineering. Do not select it, route work to it, or treat it as an approved fallback.**
 
 ### Switching lanes
 
-A task may move between Codex Cloud and OMP at any time when that improves engineering results. The incoming engineer must read the current governance, handoff/report, live Git state and relevant evidence before continuing.
+A task may move between Codex CLI/App and OMP when that improves engineering results. The incoming engineer must read the current governance, handoff/report, live Git state and relevant evidence before continuing.
 
 Changing models or tools never changes the approval boundary.
 
@@ -98,7 +105,7 @@ Each implementation effort should use its own feature branch/worktree where para
 
 Never allow two coding agents to edit the same worktree simultaneously.
 
-This applies to Codex Cloud, OMP and any other coding agent.
+This applies to Codex CLI/App, OMP and any other coding agent.
 
 ## 8. Audit trail and handoff
 
@@ -142,6 +149,8 @@ Commit:
 PR:
 ```
 
+For generated external artifacts, also record the exact workspace path and user-accessibility/retrieval status.
+
 ## 9. Verification standard
 
 - **VERIFIED** = supported by direct repository, command, test, CI or runtime evidence.
@@ -158,7 +167,7 @@ At the beginning of every new CoHai Travel engineering session:
 2. read `docs/ENGINEERING_GOVERNANCE.md`;
 3. read the current handover/report and relevant project plans;
 4. identify whether the task is implementation or read-only audit;
-5. choose Codex Cloud or OMP based on task fit, context, availability, quality and cost;
+5. choose Codex CLI/App or OMP based on task fit, context, local resources, availability, quality and cost;
 6. state the evidence and handoff deliverable;
 7. independently verify important prior claims before relying on them.
 
@@ -170,4 +179,4 @@ Use the least expensive capable engineering lane that can safely perform the tas
 
 OpenRouter spend guardrails remain active for OMP.
 
-Model choice can change without changing governance.
+Model choice can change without changing governance, but Codex Cloud is excluded from the approved choices.

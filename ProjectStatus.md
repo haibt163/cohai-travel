@@ -10,9 +10,11 @@ The engineering baseline, full-site visual modernization, and repository synchro
 
 CoHai Travel now operates under a three-role governance model:
 
-- **Main Engineer:** Codex Cloud with GPT models, or OMP CLI with DeepSeek / GLM through OpenRouter. These are interchangeable implementation lanes, not a primary-plus-backup hierarchy.
+- **Main Engineers:** Codex CLI / Codex App with GPT/Codex models, or OMP CLI with DeepSeek / GLM through OpenRouter. These are interchangeable implementation lanes, not a primary-plus-backup hierarchy.
 - **Chief Engineer:** ChatGPT, providing the independent engineering review gate for codebases, architecture, tests, evidence, security, provenance and PRs.
 - **Project Owner:** final human authority and final green light before protected `main`.
+
+**Codex Cloud is retired from the project governance and is not an approved engineering lane.**
 
 See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract and `docs/AI_ENGINEERING_WORKFLOW.md` for the operating procedure.
 
