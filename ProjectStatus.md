@@ -1,10 +1,20 @@
 # CoHai Travel — project status
 
-Last updated: 11 September 2026.
+Last updated: 15 September 2026.
 
 ## Executive status
 
 The engineering baseline, full-site visual modernization, and repository synchronization checkpoint are green. P1 includes crawlable bilingual routing, locale-aware metadata, operational visibility for allowlisted staff and a provider-neutral notification contract. P2 is now explicitly **Legacy Product Archaeology & Modern Reconstruction**: the 15+ year-old WordPress project is treated as a historical product/content source, not a customer-data migration target.
+
+## Current engineering governance
+
+CoHai Travel now operates under a three-role governance model:
+
+- **Main Engineer:** Codex Cloud with GPT models, or OMP CLI with DeepSeek / GLM through OpenRouter. These are interchangeable implementation lanes, not a primary-plus-backup hierarchy.
+- **Chief Engineer:** ChatGPT, providing the independent engineering review gate for codebases, architecture, tests, evidence, security, provenance and PRs.
+- **Project Owner:** final human authority and final green light before protected `main`.
+
+See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract and `docs/AI_ENGINEERING_WORKFLOW.md` for the operating procedure.
 
 ## Audit matrix
 
@@ -53,7 +63,7 @@ A change is called **fixed** only after the relevant execution evidence exists. 
 
 ## Engineering execution rule
 
-Use `docs/AI_ENGINEERING_WORKFLOW.md`. Inspect actual code/error first; make the smallest safe change; execute validation; inspect the actual result; then stop once verified. Diagnose only until evidence is sufficient. Do not enter redundant diagnostic loops or present predicted behavior as a passing build, lint, test, deployment or integration result.
+Use `docs/AI_ENGINEERING_WORKFLOW.md`. Inspect actual code/error first; choose the appropriate Main Engineer lane; make the smallest safe change; execute validation; inspect the actual result; produce a durable handoff; then stop once verified. Diagnose only until evidence is sufficient. Do not enter redundant diagnostic loops or present predicted behavior as a passing build, lint, test, deployment or integration result.
 
 ## Product boundaries
 
