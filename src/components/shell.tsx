@@ -10,6 +10,7 @@ const links = [
   { path: "/destinations", to: "/$locale/destinations" as const, key: "places" as const },
   { path: "/stays", to: "/$locale/stays" as const, key: "stays" as const },
   { path: "/cars", to: "/$locale/cars" as const, key: "cars" as const },
+  { path: "/travel-notes", to: "/$locale/travel-notes" as const, key: "travelNotes" as const },
   { path: "/contact", to: "/$locale/contact" as const, key: "contact" as const },
 ];
 

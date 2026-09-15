@@ -22,6 +22,7 @@ import { Route as LocaleAccountRouteImport } from './routes/$locale/account'
 import { Route as LocaleContactRouteImport } from './routes/$locale/contact'
 import { Route as LocaleLoginRouteImport } from './routes/$locale/login'
 import { Route as LocaleSearchRouteImport } from './routes/$locale/search'
+import { Route as LocaleTravelNotesRouteImport } from './routes/$locale/travel-notes'
 import { Route as CarsIndexRouteImport } from './routes/cars/index'
 import { Route as CarsSlugRouteImport } from './routes/cars/$slug'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations/index'
@@ -103,6 +104,11 @@ const LocaleLoginRoute = LocaleLoginRouteImport.update({
 const LocaleSearchRoute = LocaleSearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleTravelNotesRoute = LocaleTravelNotesRouteImport.update({
+  id: '/travel-notes',
+  path: '/travel-notes',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const CarsIndexRoute = CarsIndexRouteImport.update({
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/$locale/contact': typeof LocaleContactRoute
   '/$locale/login': typeof LocaleLoginRoute
   '/$locale/search': typeof LocaleSearchRoute
+  '/$locale/travel-notes': typeof LocaleTravelNotesRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/$locale/contact': typeof LocaleContactRoute
   '/$locale/login': typeof LocaleLoginRoute
   '/$locale/search': typeof LocaleSearchRoute
+  '/$locale/travel-notes': typeof LocaleTravelNotesRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/$locale/contact': typeof LocaleContactRoute
   '/$locale/login': typeof LocaleLoginRoute
   '/$locale/search': typeof LocaleSearchRoute
+  '/$locale/travel-notes': typeof LocaleTravelNotesRoute
   '/cars/$slug': typeof CarsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/stays/$slug': typeof StaysSlugRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/$locale/contact'
     | '/$locale/login'
     | '/$locale/search'
+    | '/$locale/travel-notes'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -333,6 +343,7 @@ export interface FileRouteTypes {
     | '/$locale/contact'
     | '/$locale/login'
     | '/$locale/search'
+    | '/$locale/travel-notes'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -365,6 +376,7 @@ export interface FileRouteTypes {
     | '/$locale/contact'
     | '/$locale/login'
     | '/$locale/search'
+    | '/$locale/travel-notes'
     | '/cars/$slug'
     | '/destinations/$slug'
     | '/stays/$slug'
@@ -498,6 +510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleSearchRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/$locale/travel-notes': {
+      id: '/$locale/travel-notes'
+      path: '/travel-notes'
+      fullPath: '/$locale/travel-notes'
+      preLoaderRoute: typeof LocaleTravelNotesRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/cars/': {
       id: '/cars/'
       path: '/cars'
@@ -625,6 +644,7 @@ interface LocaleRouteRouteChildren {
   LocaleContactRoute: typeof LocaleContactRoute
   LocaleLoginRoute: typeof LocaleLoginRoute
   LocaleSearchRoute: typeof LocaleSearchRoute
+  LocaleTravelNotesRoute: typeof LocaleTravelNotesRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
   LocaleCarsSlugRoute: typeof LocaleCarsSlugRoute
   LocaleDestinationsSlugRoute: typeof LocaleDestinationsSlugRoute
@@ -641,6 +661,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleContactRoute: LocaleContactRoute,
   LocaleLoginRoute: LocaleLoginRoute,
   LocaleSearchRoute: LocaleSearchRoute,
+  LocaleTravelNotesRoute: LocaleTravelNotesRoute,
   LocaleIndexRoute: LocaleIndexRoute,
   LocaleCarsSlugRoute: LocaleCarsSlugRoute,
   LocaleDestinationsSlugRoute: LocaleDestinationsSlugRoute,
