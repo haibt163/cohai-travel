@@ -1,57 +1,106 @@
 # CoHai Travel — AI Engineering Workflow
 
-**Last updated: 14 September 2026**
+**Last updated: 15 September 2026**
 
 ## 1. Source of truth
 
 - GitHub `main` is the canonical repository source of truth unless explicitly overridden.
 - Local project folders/ZIPs are working copies unless explicitly declared otherwise.
-- OMP/Codex session history is useful context, not authoritative project memory.
-- Durable truth comes from repository files, Git history, PRs, tests, CI/runtime evidence, and Product Owner decisions.
+- Codex/OMP session history is useful context, not authoritative project memory.
+- Durable truth comes from repository files, Git history, PRs, tests, CI/runtime evidence, and Project Owner decisions.
+- See `docs/ENGINEERING_GOVERNANCE.md` for the role and approval model.
 
-## 2. Real multi-agent pipeline
+## 2. Live engineering pipeline
 
 ```text
-Task
- ↓
-Junior / Specialist Engineer
- ↓
-Evidence + handoff
- ↓
-Main Developer
- ↓
-Tests + implementation handoff
- ↓
-Senior Engineer / Chief Engineer
- ↓
-APPROVE or REQUEST CORRECTION
- ↓
-Product Owner final green light
- ↓
-protected main
+Project Owner defines task
+        ↓
+Choose Main Engineer lane
+   ┌───────────────┴───────────────┐
+   ↓                               ↓
+Codex Cloud                     OMP CLI
+GPT models                 DeepSeek / GLM
+   └───────────────┬───────────────┘
+                   ↓
+          implementation / audit
+                   ↓
+          tests + evidence + handoff
+                   ↓
+         Chief Engineer — ChatGPT
+          APPROVE / REQUEST CORRECTION
+                   ↓
+       Project Owner final green light
+                   ↓
+             protected `main`
 ```
 
-### Current roles
+Codex Cloud and OMP/DeepSeek/GLM are interchangeable Main Engineer lanes. OMP DeepSeek/GLM are not backup-only systems.
 
-- **Laguna S 2.1 FREE** — main junior developer for routine tasks, Git, small/low-risk fixes, exploration and scaffolding. **Backup:** NVIDIA Nemotron 3 Ultra FREE.
-- **DeepSeek V4 Flash 0731+** — primary main developer for substantive coding and completion.
-- **GLM 5.3 Flash+** — backup main developer.
-- **GPT-5.6-class+** — Senior Engineer / Chief Engineer.
-- **Product Owner** — final human authority.
+## 3. Main Engineer lanes
 
-For complicated work, Laguna scaffolds/reconnoiters first and DeepSeek fine-tunes/completes. If the main developers cannot safely resolve the issue, the Product Owner may provide a ZIP/local copy for Chief Engineer repair.
+### Codex Cloud
 
-## 3. Read-only audits
+Codex Cloud is the normal hosted engineering lane using available GPT models. It is especially useful when hosted execution reduces local PC resource pressure.
 
-Multiple agents may inspect the **same clean repository state** concurrently for independent audits, archaeology, architecture reconnaissance, security review and verification.
+### OMP CLI
 
-Read-only agents do not modify application code unless explicitly authorized.
+OMP CLI is the local engineering lane using DeepSeek and GLM models through OpenRouter. These models may be used for the same classes of implementation work as Codex Cloud when they are the better fit for cost, quality, context, latency or availability.
 
-## 4. Implementation isolation
+### Switching lanes
 
-Each implementation agent gets its own branch/worktree. Do not allow two coding agents to modify the same worktree simultaneously. This applies to OMP, Codex and other agents.
+A task may move between Codex Cloud and OMP at any time when that improves engineering results. The incoming engineer must read the current governance, handoff/report, live Git state and relevant evidence before continuing.
 
-## 5. Audit trail and handoff
+Changing models or tools never changes the approval boundary.
+
+## 4. Chief Engineer review
+
+ChatGPT is the Chief Engineer and the independent engineering review gate.
+
+The Chief Engineer reviews, as applicable:
+
+- scope and requirements;
+- architecture and design;
+- implementation quality and correctness;
+- tests and verification evidence;
+- security and privacy;
+- data/source provenance;
+- runtime and deployment implications;
+- remaining risks and unresolved issues;
+- branch, commit and PR state.
+
+Outcome:
+
+**APPROVE** — acceptable for Project Owner consideration.
+
+**REQUEST CORRECTION** — corrective actions and re-verification are required.
+
+Chief Engineer approval does not replace Project Owner approval.
+
+## 5. Project Owner authority
+
+The Project Owner is the final human authority.
+
+No engineer, model, tool, successful test, prior approval, silence or deadline authorizes a merge to protected `main` without the Project Owner's final green light.
+
+## 6. Read-only audits
+
+Independent read-only audits may inspect the same clean repository concurrently for archaeology, architecture reconnaissance, security review, verification or other analysis.
+
+Read-only agents must not modify application code unless explicitly authorized.
+
+Read-only work must explicitly state:
+
+`NO APPLICATION CODE CHANGES.`
+
+## 7. Implementation isolation
+
+Each implementation effort should use its own feature branch/worktree where parallel coding could conflict.
+
+Never allow two coding agents to edit the same worktree simultaneously.
+
+This applies to Codex Cloud, OMP and any other coding agent.
+
+## 8. Audit trail and handoff
 
 Substantial work must leave durable repository-visible evidence rather than relying on conversation memory.
 
@@ -93,52 +142,32 @@ Commit:
 PR:
 ```
 
-For read-only work, explicitly state `NO APPLICATION CODE CHANGES.`
+## 9. Verification standard
 
-## 6. Verification standard
+- **VERIFIED** = supported by direct repository, command, test, CI or runtime evidence.
+- **UNVERIFIED** = proposal, inference or claim lacking sufficient direct evidence.
+- **FAILED** = confirmed execution failure.
 
-- `VERIFIED` = direct repository, command, test, CI or runtime evidence.
-- `UNVERIFIED` = inference/proposal without sufficient direct evidence.
-- `FAILED` = actual execution failure.
-
-Do not call changes fixed, working, passing or complete without evidence.
-
-## 7. Context-window strategy
-
-- **~262K:** Laguna and other focused/routine agents for Git, small fixes and focused exploration.
-- **1M-class:** Nemotron and similar models for broad repository archaeology/investigation.
-- Main implementation models must be assigned with context requirements in mind.
-
-Observed OMP behavior shows Laguna can continue long-running work across context windows. This is useful continuity, but important findings still require durable repository handoff artifacts.
-
-## 8. Git / approval boundary
-
-Agents may create branches, commit their branches, push, and open/update PRs within authorized scope.
-
-Agents may not bypass repository governance or merge their own work.
-
-Senior Engineer outcome:
-
-- **APPROVE**
-- **REQUEST CORRECTION**
-
-Only then does the Product Owner give the final green light before `main`.
-
-## 9. Model switching and cost
-
-Model switching is allowed when it improves cost, quality, latency, reliability or task fit. It does not change governance.
-
-Use the least expensive model that can safely perform the task. OpenRouter spend guardrails remain an additional safety layer.
+Do not call changes fixed, working, passing, complete or production-ready without the relevant evidence.
 
 ## 10. Fresh-session rule
 
-At the beginning of a new CoHai Travel session:
+At the beginning of every new CoHai Travel engineering session:
 
 1. inspect live Git state;
-2. read governance and handover docs;
-3. read relevant reports/plans;
-4. identify task and mode;
-5. pick the appropriate engineer/model;
-6. state the evidence and handoff deliverable.
+2. read `docs/ENGINEERING_GOVERNANCE.md`;
+3. read the current handover/report and relevant project plans;
+4. identify whether the task is implementation or read-only audit;
+5. choose Codex Cloud or OMP based on task fit, context, availability, quality and cost;
+6. state the evidence and handoff deliverable;
+7. independently verify important prior claims before relying on them.
 
-Do not treat prior chat memory as authoritative.
+Do not treat prior chat history as authoritative.
+
+## 11. Cost discipline
+
+Use the least expensive capable engineering lane that can safely perform the task.
+
+OpenRouter spend guardrails remain active for OMP.
+
+Model choice can change without changing governance.
