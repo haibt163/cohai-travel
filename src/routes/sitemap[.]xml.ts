@@ -29,6 +29,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "/stays",
           "/cars",
           "/contact",
+          "/travel-notes",
           ...destinations.map((row) => `/destinations/${row.slug}`),
           ...tours.map((row) => `/tours/${row.slug}`),
           ...stays.map((row) => `/stays/${row.slug}`),
