@@ -41,7 +41,7 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract a
 | P2.15 Source migration matrix | 🟢 | Working record dispositions remain traceability tools; accepted records can move to `migrate` after publication gates. |
 | P2.16 Legacy URL mapping | 🟢 | Preserve valuable legacy paths through verified canonical replacements. |
 | P2.17 Seed reconciliation | 🟢 | Use source-backed subjects to reconstruct the modern catalog; retain intentional modern additions separately. |
-| P2.18 Fidelity report | 🟡 | Close factual, editorial, media, URL, schedule and source-coverage gaps during reconstruction. |
+| P2.18 Fidelity report | 🟡 | A first bilingual, source-led travel-information surface is now implemented; close remaining factual, editorial, media, URL, schedule and source-coverage gaps during reconstruction. |
 | P2.19 Connected destination hub | 🟢 | Destination-scoped journeys/stays/cars and cross-navigation are implemented and full CI verified. |
 | P2.20 Provenance guard | 🟢 | Canonical provenance schema, regression coverage and operator-only reconstruction metrics are implemented and full CI verified. |
 | P2.21 Canonical record plan | 🟢 | Publication-gate checklist and current destination/journey reconstruction set are documented in `docs/P2_CANONICAL_RECORD_PLAN.md`. |
@@ -79,4 +79,4 @@ Bilingual canonical routes and metadata are implemented. Operator visibility is 
 
 ### P2 — Legacy Product Archaeology & Modern Reconstruction
 
-The archaeology and traceability foundation is complete, and the local runtime migration/bootstrap incident is now closed. Connected destination hubs, provenance controls, canonical publication planning and the first fact-checked destination/journey refresh are implemented and verified. Next: continue source-backed canonical reconstruction, build travel-information surfaces, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. Every future fix must meet the explicit evidence rule above before being described as fixed.
+The archaeology and traceability foundation is complete, and the local runtime migration/bootstrap incident is now closed. Connected destination hubs, provenance controls, canonical publication planning, the first fact-checked destination/journey refresh, and an initial source-led travel-information surface are implemented. The travel-notes route has Cloud-reported coverage for PGLite smoke, domain checks, typecheck, lint and build; those checks must be independently reproduced on the review branch. Production preview remains unverified because the built PGLite fallback cannot locate its packaged data asset. Next: continue source-backed canonical reconstruction, selectively verify stays/cars, reconcile departures, migrate useful legacy media, and implement verified legacy redirects. Every future fix must meet the explicit evidence rule above before being described as fixed.
