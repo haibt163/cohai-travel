@@ -8,7 +8,10 @@ agents working on CoHai Travel.
 It is harness-neutral.
 
 Project-specific engineering rules belong in `AGENTS.project.md`.
-Harness-specific operating rules belong in the relevant harness directory.
+Harness-specific operating rules belong in the relevant harness directory
+— in particular, Claude Code operates under `CLAUDE.md`, which grants it
+more working discretion than the baseline rules below, within the same
+hard boundaries (§5, §7).
 Detailed procedures and historical evidence remain under `docs/`.
 
 ---
@@ -53,15 +56,19 @@ conflict.
 
 Use these statuses consistently:
 
-- **VERIFIED** — supported by direct repository, command, test, CI, or runtime
-  evidence.
+- **VERIFIED** — supported by direct repository, command, test, CI, or
+  runtime evidence.
 - **UNVERIFIED** — inference, proposal, or claim without sufficient evidence.
 - **FAILED** — confirmed execution failure.
 
 Never claim that work is implemented, tested, passing, verified, complete, or
 production-ready without the relevant evidence.
 
-Report verification limitations explicitly.
+Report verification limitations explicitly. In particular, state whether
+the evidence came from direct local execution (a lane with real shell
+access, such as Claude Code, Codex CLI, or OMP) or from inspecting
+material handed over into a chat session with no independent repository
+access. These are not equivalent and should not be described as if they were.
 
 ---
 
@@ -114,13 +121,24 @@ When current behavior changes:
 Normal implementation work should use a dedicated feature branch or worktree.
 
 Implementation agents must not bypass the project's review and approval
-process.
+process, regardless of which lane or harness they run under.
 
 Passing tests do not by themselves authorize a merge.
+
+**Approval to merge is held by Claude (chat, as Chief Engineer) or the
+Project Owner. Execution of the merge is held by Claude Code or the
+Project Owner only** — Claude-chat has no repository write access and
+never executes a merge itself. Codex CLI/App and OMP
+(DeepSeek/GLM/Kimi/Qwen) are Main-Engineer lanes only and never hold
+either approval or execution authority for a merge to `main`, however
+much implementation work they perform. The authoritative definition is
+`docs/ENGINEERING_GOVERNANCE.md` §6a; `CLAUDE.md` §6 restates it for
+Claude Code specifically.
 
 See:
 
 - `AGENTS.project.md`
+- `CLAUDE.md`
 - `docs/ENGINEERING_GOVERNANCE.md`
 - `docs/AI_ENGINEERING_WORKFLOW.md`
 

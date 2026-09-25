@@ -173,7 +173,11 @@ See `docs/P1_NOTIFICATIONS.md` for the current notification contract.
 
 ## 10. Legacy Migration and Provenance
 
-Legacy WordPress material is source evidence for reconstruction.
+Legacy WordPress material is source evidence for reconstruction, drawn from
+a template-based personal project built more than 15 years ago — not a
+live customer-data system. Treat destination, tour, and travel-information
+subjects as potentially valuable source material rather than obsolete by
+default, while still keeping the disposition categories below strict.
 
 Migration work must distinguish between:
 
@@ -267,6 +271,7 @@ Important current documents include:
 - `docs/PARITY_AUDIT.md`
 - `docs/P2_MIGRATION_EXECUTION.md`
 - `docs/P1_NOTIFICATIONS.md`
+- `CLAUDE.md` (Claude Code's harness-specific operating rules)
 
 `AGENTS.project.md` should remain a concise project contract rather than a
 duplicate of these documents.
@@ -282,11 +287,11 @@ The project supports multiple implementation environments.
 
 Current implementation lanes:
 
+- Claude Code (governed by `CLAUDE.md`, with wider working discretion than
+  the baseline rules in `AGENTS.md`)
 - Codex CLI / Codex App
-- OMP CLI
-
-Claude CLI may also operate against the repository under the same project
-governance.
+- OMP CLI (DeepSeek, GLM, Kimi, Qwen — used routinely for cost/availability
+  reasons, including whenever a session limit is hit on another lane)
 
 Harness choice does not change:
 
@@ -308,13 +313,29 @@ Project Owner defines task
 → implementation / investigation
 → tests + evidence + handoff
 → Chief Engineer review
-→ Project Owner final approval
+→ APPROVE from Claude (chat) or the Project Owner, relayed to Claude
+  Code by the Project Owner (no direct channel exists between Claude
+  chat and Claude Code)
+→ merge executed by the Project Owner or Claude Code
 → protected `main`
 
-Neither an implementation harness nor a successful automated test may bypass
-this boundary.
+The Chief Engineer role is Claude (in claude.ai chat, or Claude Code
+acting as Co-Chief Engineer per `CLAUDE.md` when reviewing another
+lane's work). Neither an implementation harness nor a successful
+automated test may bypass this boundary.
 
-See `docs/ENGINEERING_GOVERNANCE.md` for authoritative role definitions.
+**Approval authority (who may APPROVE) is held by Claude-chat and the
+Project Owner. Merge-execution authority (who may actually merge) is
+held by the Project Owner and Claude Code only** — Claude-chat never
+executes a merge itself, as it has no repository write access. Codex
+CLI/App and OMP (DeepSeek/GLM/Kimi/Qwen) remain Main-Engineer-only and
+never gain approval or merge-execution authority under this arrangement,
+regardless of the implementation work they do; their work reaches `main`
+only via the same review-and-APPROVE gate, executed by Claude Code or
+the Project Owner.
+
+See `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition
+of the approval gate and merge-execution rules.
 
 ---
 
