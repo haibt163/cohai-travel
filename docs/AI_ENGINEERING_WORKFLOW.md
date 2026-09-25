@@ -26,23 +26,21 @@ Choose Main Engineer lane
 Claude Code    Codex CLI/App       OMP CLI                (future lane)
 (CLAUDE.md)    GPT/Codex models    DeepSeek/GLM/Kimi/Qwen
    └───────────────┴────────────────┴─────────────────────────┘
-                   ↓
-          implementation / audit
-                   ↓
-          tests + evidence + handoff
-                   ↓
-          Chief Engineer — Claude (chat)
-       APPROVE / REQUEST CORRECTION
-                   ↓
-     APPROVE from Claude-chat OR Project Owner
-     — Project Owner relays the APPROVE; no direct
-       channel exists between Claude-chat and Claude Code
-                   ↓
-   merge executed by Project Owner or Claude Code
-   (never Claude-chat itself, never Codex/OMP;
-   see §5, §6a of ENGINEERING_GOVERNANCE.md)
-                   ↓
-             protected `main`
+                  ↓
+           implementation / audit
+                  ↓
+           tests + evidence + handoff
+                  ↓
+      Chief Engineer — Claude Chat or ChatGPT
+        APPROVE / REQUEST CORRECTION
+                  ↓
+      APPROVE from Chief Engineer chat OR Project Owner
+      — Project Owner relays the APPROVE when needed
+                  ↓
+      merge executed by Project Owner, Claude Code, or Codex CLI/App
+      (never by chat; OMP does not execute merges)
+                  ↓
+              protected `main`
 ```
 
 Codex Cloud is retired and not part of the workflow.
@@ -51,11 +49,10 @@ Codex Cloud is retired and not part of the workflow.
 
 ### Claude Code
 
-Claude Code is the local-shell-access lane, governed by `CLAUDE.md` rather
-than the stricter default rules in `AGENTS.md`. Use it when direct
-repository/filesystem/git access, closer trust, or Co-Chief-Engineer-style
-second review is valuable. It is a full implementation lane, not an
-observer-only one.
+Claude Code is a full Main Engineer lane with local shell/filesystem/Git
+access when run in that environment. `CLAUDE.md` provides Claude-specific
+operating guidance. Claude Code has the same Main Engineer role and
+higher-trust, merge-capable standing as Codex CLI/App.
 
 ### Codex CLI / Codex App
 
@@ -91,17 +88,16 @@ Changing models or tools never changes the approval boundary.
 
 ## 4. Chief Engineer review
 
-Claude is the Chief Engineer and the independent engineering review gate
-(replacing the prior ChatGPT-as-Chief-Engineer arrangement).
+The Chief Engineer role may be performed by the active chat/review lane:
+**Claude Chat or ChatGPT**. These two chat lanes have the same governance role
+and review authority.
 
-This can run two ways:
-
-- **claude.ai chat** — reviews based on what Maris pastes/uploads
-  (diffs, logs, test output, handoff docs), or on connector-provided repo
-  access when explicitly available in that session. No assumption of
-  live, independent repository access unless stated.
-- **Claude Code, acting as Co-Chief Engineer** — reviews with direct
-  local repository/shell access, per `CLAUDE.md` §8.
+- **Chat** — reviews based on what the Project Owner pastes/uploads (diffs,
+  logs, test output, handoff docs), or on connector-provided repo access when
+  explicitly available. No assumption of live, independent repository access
+  unless stated.
+- **A coding lane providing a peer review** may inspect its local repository
+  directly, but peer review does not replace the Chief Engineer gate.
 
 Either way, the review covers, as applicable:
 
@@ -126,24 +122,21 @@ Chief Engineer approval does not replace Project Owner approval.
 
 ## 5. Project Owner authority and merge execution
 
-The Project Owner (Maris) is the final human authority over scope,
-priorities, and whether to override any engineering recommendation.
+The Project Owner is the final human authority over scope, priorities, and
+whether to override any engineering recommendation.
 
 For the specific act of merging to protected `main`, the approval gate is
-satisfied by an APPROVE from **either** Claude acting as Chief Engineer
-in claude.ai chat, **or** the Project Owner directly — see
+satisfied by an APPROVE from **either** Claude Chat or ChatGPT acting as
+Chief Engineer, **or** the Project Owner directly — see
 `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition.
 No engineer, model, tool, successful test, prior approval, silence or
 deadline substitutes for that gate.
 
-Once the gate is satisfied, who actually executes the merge is likewise
-narrow: the Project Owner or Claude Code. Claude-chat participates only
-in the approval gate above — it has no repository write access in any
-currently available session type, so it never executes a merge itself.
-There is no direct channel between Claude-chat and Claude Code; the
-Project Owner relays the APPROVE. Codex CLI/App and OMP never execute a
-merge either, regardless of the work they've done — see
-`docs/ENGINEERING_GOVERNANCE.md` §6a.
+Once the gate is satisfied, the Project Owner, Claude Code, or Codex CLI/App
+may execute the merge. The active chat/review lane may approve but does not
+execute merges from chat-only environments. OMP does not execute merges. There
+is no direct live channel between the chat/review lane and the implementation
+lane, so the Project Owner relays the APPROVE when needed.
 
 ## 6. Read-only audits
 

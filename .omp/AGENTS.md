@@ -34,6 +34,10 @@ Before substantive work:
 
 Do not treat a prior agent report as proof of current repository state.
 
+Claude Code and Codex CLI/App are higher-trust, merge-capable Main Engineer
+lanes under the project governance. OMP remains an implementation lane and
+does not execute merges to protected `main`.
+
 ---
 
 ## 2. Task Modes
@@ -157,6 +161,11 @@ read governance
 
 A previous model's conversation is context, not project truth.
 
+When OMP hands work to another lane, the incoming engineer must follow the
+shared governance: Claude Chat and ChatGPT are peer Chief Engineer chat lanes;
+Claude Code and Codex CLI/App are peer higher-trust, merge-capable Main Engineer
+lanes; OMP does not hold merge authority.
+
 ---
 
 ## 10. Completion Report
@@ -193,4 +202,5 @@ Model selection may vary with:
 - availability;
 - cost.
 
-Changing models does not change project governance.
+Changing models does not change project governance. OMP cannot promote
+itself into a merge-capable lane merely by changing its model.

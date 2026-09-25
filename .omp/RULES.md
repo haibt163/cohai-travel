@@ -15,7 +15,9 @@
 11. Never add secrets or credentials.
 12. Report failures and limitations honestly.
 13. Do not bypass the project's review/approval boundary.
-14. Do not merge implementation work directly to protected `main`.
+14. OMP must not merge implementation work to protected `main`; approved
+    merge execution is held by the Project Owner, Claude Code, or Codex CLI/App
+    after the required approval gate is satisfied.
 
 ---
 
@@ -36,7 +38,11 @@
 - never treat an agent report as proof when repository verification is possible;
 - never treat silence or lack of objection as approval;
 - never treat prior model approval as approval for the current change;
-- never merge directly to protected `main`.
+- never merge directly to protected `main`;
+- never treat completion of an OMP task as merge authority;
+- never assume OMP can execute a merge merely because an approval exists;
+  approved merge execution is reserved for the Project Owner, Claude Code, or
+  Codex CLI/App.
 
 ---
 
@@ -80,9 +86,11 @@ A clean test result does not authorize a merge.
 
 Implementation / investigation
 → tests + evidence + handoff
-→ Chief Engineer review
-→ Project Owner final approval
+→ Chief Engineer review (Claude Chat or ChatGPT)
+→ APPROVE from Chief Engineer chat or Project Owner
+→ merge executed by Project Owner, Claude Code, or Codex CLI/App
 → protected `main`
 
 No model, harness, tool, test result, prior approval, or deadline bypasses this
-boundary.
+boundary. OMP remains non-merge-capable even though Claude Code and Codex CLI/App
+are authorized merge-capable Main Engineer lanes.

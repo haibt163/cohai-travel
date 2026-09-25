@@ -8,10 +8,10 @@ agents working on CoHai Travel.
 It is harness-neutral.
 
 Project-specific engineering rules belong in `AGENTS.project.md`.
-Harness-specific operating rules belong in the relevant harness directory
-— in particular, Claude Code operates under `CLAUDE.md`, which grants it
-more working discretion than the baseline rules below, within the same
-hard boundaries (§5, §7).
+Harness-specific operating rules belong in the relevant harness directory.
+`CLAUDE.md` provides Claude Code-specific operating guidance. Claude Code and
+Codex CLI/App are designated higher-trust, merge-capable Main Engineer lanes;
+OMP remains a Main Engineer lane without merge authority.
 Detailed procedures and historical evidence remain under `docs/`.
 
 ---
@@ -125,26 +125,13 @@ process, regardless of which lane or harness they run under.
 
 Passing tests do not by themselves authorize a merge.
 
-**Approval to merge is held by Claude (chat, as Chief Engineer) or the
-Project Owner. Execution of the merge is held by Claude Code or the
-Project Owner only** — Claude-chat has no repository write access and
-never executes a merge itself. Codex CLI/App and OMP
-(DeepSeek/GLM/Kimi/Qwen) are Main-Engineer lanes only and never hold
-either approval or execution authority for a merge to `main`, however
-much implementation work they perform. The authoritative definition is
-`docs/ENGINEERING_GOVERNANCE.md` §6a; `CLAUDE.md` §6 restates it for
-Claude Code specifically.
-
-See:
-
-- `AGENTS.project.md`
-- `CLAUDE.md`
-- `docs/ENGINEERING_GOVERNANCE.md`
-- `docs/AI_ENGINEERING_WORKFLOW.md`
-
-for the current project-specific governance model.
-
----
+**Approval to merge is held by the active Chief Engineer chat lane
+(Claude Chat or ChatGPT) or the Project Owner. Execution of the merge is held
+by the Project Owner, Claude Code, or Codex CLI/App.** Claude Chat and ChatGPT
+have the same Chief Engineer role; Claude Code and Codex CLI/App have the same
+Main Engineer role and the same higher-trust, merge-capable standing. OMP is a
+Main Engineer lane but does not hold merge authority. The
+authoritative definition is `docs/ENGINEERING_GOVERNANCE.md` §6a.
 
 ## 8. Completion
 

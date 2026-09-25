@@ -12,11 +12,11 @@ The engineering baseline, full-site visual modernization, and repository synchro
 
 CoHai Travel now operates under a three-role governance model:
 
-- **Main Engineers:** Claude Code (governed by `CLAUDE.md`, with direct local repository/shell access and wider working discretion), Codex CLI / Codex App with GPT/Codex models, or OMP CLI with DeepSeek / GLM / Kimi / Qwen through OpenRouter or OpenCode Go. These are interchangeable implementation lanes, not a primary-plus-backup hierarchy, and switching between them — including because a session limit was hit — is routine.
-- **Chief Engineer:** Claude, providing the independent engineering review gate for codebases, architecture, tests, evidence, security, provenance and PRs. This replaces the prior ChatGPT-as-Chief-Engineer arrangement. As confirmed in practice (see `docs/ENGINEERING_GOVERNANCE.md` §2), the claude.ai chat role currently has no live repository access — the GitHub connector's "Claude Code cloud sessions" access is a separate product mode from chat — so chat works from what Maris pastes or uploads. Claude Code has direct repository access when run locally or in a properly connected cloud session, and can act as Co-Chief Engineer reviewing other lanes' work.
+- **Main Engineers:** Claude Code (governed by `CLAUDE.md` for Claude-specific operating details), Codex CLI / Codex App with GPT/Codex models, or OMP CLI with DeepSeek / GLM / Kimi / Qwen through OpenRouter or OpenCode Go. Claude Code and Codex CLI/App have the same Main Engineer role and the same higher-trust, merge-capable governance standing; these remain interchangeable implementation lanes rather than a primary-plus-backup hierarchy, and switching between them — including because a session limit was hit — is routine.
+- **Chief Engineer:** the active chat/review lane, either Claude Chat or ChatGPT, providing the independent engineering review gate for codebases, architecture, tests, evidence, security, provenance and PRs. Claude Chat and ChatGPT have the same Chief Engineer role. Chat/repository access differences are environment capabilities, not governance differences.
 - **Project Owner:** Maris — final human authority and final green light before protected `main`.
 
-**Merge authority to `main`:** approval is held by Claude-chat or Maris; execution is held by Maris or Claude Code only (see `docs/ENGINEERING_GOVERNANCE.md` §6a). Claude-chat never executes a merge itself — it has no repository write access — and there is no direct channel between Claude-chat and Claude Code, so Maris relays any APPROVE. Codex CLI/App and OMP never hold approval or merge-execution authority, regardless of implementation work performed.
+**Merge authority to `main`:** approval is held by Claude Chat, ChatGPT, or Maris; execution is held by Maris, Claude Code, or Codex CLI/App after the approval gate is satisfied (see `docs/ENGINEERING_GOVERNANCE.md` §6a). Chat/review lanes do not execute merges from chat-only environments, and OMP does not execute merges.
 
 **Codex Cloud is retired from the project governance and is not an approved engineering lane.**
 
@@ -54,9 +54,9 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 > **Note on this matrix (25 September 2026):** the rows above are carried
 > forward unchanged from the 15 September 2026 version. This governance
 > revision (chat session, no repository access) did not independently
-> re-verify any 🟢/🟡 status. Have Claude Code re-confirm current state
-> against live Git/CI evidence at the next implementation session before
-> treating these as current.
+> re-verify any 🟢/🟡 status. Have a direct-repository Main Engineer
+> re-confirm current state against live Git/CI evidence at the next
+> implementation session before treating these as current.
 
 ## Current verified checkpoint — 11 September 2026
 

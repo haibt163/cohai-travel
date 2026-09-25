@@ -271,7 +271,8 @@ Important current documents include:
 - `docs/PARITY_AUDIT.md`
 - `docs/P2_MIGRATION_EXECUTION.md`
 - `docs/P1_NOTIFICATIONS.md`
-- `CLAUDE.md` (Claude Code's harness-specific operating rules)
+- `CLAUDE.md` (Claude Code's harness-specific operating guidance; it does not
+  alter Claude Code's governance standing)
 
 `AGENTS.project.md` should remain a concise project contract rather than a
 duplicate of these documents.
@@ -287,23 +288,24 @@ The project supports multiple implementation environments.
 
 Current implementation lanes:
 
-- Claude Code (governed by `CLAUDE.md`, with wider working discretion than
-  the baseline rules in `AGENTS.md`)
+- Claude Code (governed by `CLAUDE.md` for Claude-specific operating details)
 - Codex CLI / Codex App
 - OMP CLI (DeepSeek, GLM, Kimi, Qwen — used routinely for cost/availability
   reasons, including whenever a session limit is hit on another lane)
 
-Harness choice does not change:
+Claude Code and Codex CLI/App have the same Main Engineer role and the same
+higher-trust, merge-capable governance standing. OMP remains a full
+implementation lane but does not hold merge authority. Harness choice does not
+change:
 
 - project scope;
 - verification requirements;
 - Git rules;
 - review boundaries;
+- approval boundaries;
 - final Project Owner authority.
 
 The repository should remain portable across harnesses.
-
----
 
 ## 17. Approval Boundary
 
@@ -313,31 +315,27 @@ Project Owner defines task
 → implementation / investigation
 → tests + evidence + handoff
 → Chief Engineer review
-→ APPROVE from Claude (chat) or the Project Owner, relayed to Claude
-  Code by the Project Owner (no direct channel exists between Claude
-  chat and Claude Code)
-→ merge executed by the Project Owner or Claude Code
+→ APPROVE from the active Chief Engineer chat lane (Claude Chat or
+  ChatGPT), or the Project Owner
+→ merge executed by the Project Owner, Claude Code, or Codex CLI/App
 → protected `main`
 
-The Chief Engineer role is Claude (in claude.ai chat, or Claude Code
-acting as Co-Chief Engineer per `CLAUDE.md` when reviewing another
-lane's work). Neither an implementation harness nor a successful
-automated test may bypass this boundary.
+The Chief Engineer role is performed by the active chat/review lane — Claude
+Chat or ChatGPT — and these two have the same role and authority. Claude Code
+is a Main Engineer lane with the same governance standing as Codex CLI/App.
+Neither an implementation harness nor a successful automated test may bypass
+this boundary.
 
-**Approval authority (who may APPROVE) is held by Claude-chat and the
-Project Owner. Merge-execution authority (who may actually merge) is
-held by the Project Owner and Claude Code only** — Claude-chat never
-executes a merge itself, as it has no repository write access. Codex
-CLI/App and OMP (DeepSeek/GLM/Kimi/Qwen) remain Main-Engineer-only and
-never gain approval or merge-execution authority under this arrangement,
-regardless of the implementation work they do; their work reaches `main`
-only via the same review-and-APPROVE gate, executed by Claude Code or
-the Project Owner.
+**Approval authority is held by the active Chief Engineer chat lane
+(Claude Chat or ChatGPT) and the Project Owner. Merge-execution authority is
+held by the Project Owner, Claude Code, and Codex CLI/App.** Claude Chat and
+ChatGPT do not execute merges from chat-only environments; Claude Code and
+Codex CLI/App may execute an approved merge. OMP does not execute a merge to
+`main`; its implementation work reaches `main` through the same review-and-
+approval gate.
 
 See `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition
 of the approval gate and merge-execution rules.
-
----
 
 ## 18. Scope Control
 
