@@ -1,6 +1,6 @@
 # CoHai Travel — AI Engineering Workflow
 
-**Last updated: 25 September 2026** (supersedes 15 September 2026 version)
+**Last updated: 26 September 2026** (supersedes 25 September 2026 version)
 
 ## 1. Source of truth
 
@@ -25,20 +25,23 @@ Choose Main Engineer lane
    ▼                ▼                ▼                         ▼
 Claude Code    Codex CLI/App       OMP CLI                (future lane)
 (CLAUDE.md)    GPT/Codex models    DeepSeek/GLM/Kimi/Qwen
+(peer, merge-capable)
    └───────────────┴────────────────┴─────────────────────────┘
                   ↓
            implementation / audit
                   ↓
            tests + evidence + handoff
                   ↓
-      Chief Engineer — Claude Chat or ChatGPT
+      Chief Engineer — Claude Chat or ChatGPT (peers)
         APPROVE / REQUEST CORRECTION
                   ↓
       APPROVE from Chief Engineer chat OR Project Owner
+      — either chat lane's APPROVE is independently sufficient
       — Project Owner relays the APPROVE when needed
                   ↓
       merge executed by Project Owner, Claude Code, or Codex CLI/App
-      (never by chat; OMP does not execute merges)
+      (Claude Code and Codex CLI/App are equally merge-capable —
+       never by chat; OMP does not execute merges)
                   ↓
               protected `main`
 ```
@@ -52,12 +55,15 @@ Codex Cloud is retired and not part of the workflow.
 Claude Code is a full Main Engineer lane with local shell/filesystem/Git
 access when run in that environment. `CLAUDE.md` provides Claude-specific
 operating guidance. Claude Code has the same Main Engineer role and
-higher-trust, merge-capable standing as Codex CLI/App.
+higher-trust, merge-capable standing as Codex CLI/App — the two are peers,
+not primary-and-backup.
 
 ### Codex CLI / Codex App
 
 The official Codex lane for CoHai Travel is local Codex via the CLI or
-Windows App, using available GPT/Codex models.
+Windows App, using available GPT/Codex models. It holds the same
+merge-capable standing as Claude Code (see `docs/ENGINEERING_GOVERNANCE.md`
+§6a).
 
 Use the CLI when direct terminal control, command visibility, Git
 operations and interactive debugging are valuable. Use the App when its
@@ -70,7 +76,9 @@ OMP CLI is the local multi-model engineering lane using DeepSeek, GLM,
 Kimi, and Qwen through OpenRouter or OpenCode Go. These models may perform
 the same substantive implementation classes as Claude Code or Codex when
 they are the better fit for cost, quality, context, latency, or
-availability — and routinely when a session limit is hit elsewhere.
+availability — and routinely when a session limit is hit elsewhere. OMP
+does not hold merge authority, regardless of the implementation work it
+performs.
 
 ### Retired environment
 
@@ -89,15 +97,19 @@ Changing models or tools never changes the approval boundary.
 ## 4. Chief Engineer review
 
 The Chief Engineer role may be performed by the active chat/review lane:
-**Claude Chat or ChatGPT**. These two chat lanes have the same governance role
-and review authority.
+**Claude Chat or ChatGPT**. These two chat lanes have the same governance
+role and review authority — peers, not primary-and-backup. Either lane's
+review and outcome stands on its own; neither requires confirmation from
+the other.
 
 - **Chat** — reviews based on what the Project Owner pastes/uploads (diffs,
   logs, test output, handoff docs), or on connector-provided repo access when
   explicitly available. No assumption of live, independent repository access
-  unless stated.
+  unless stated. This applies equally to Claude Chat and ChatGPT.
 - **A coding lane providing a peer review** may inspect its local repository
-  directly, but peer review does not replace the Chief Engineer gate.
+  directly, but peer review does not replace the Chief Engineer gate. Any
+  Main Engineer lane offering peer review is held to the same evidence
+  standard as any other.
 
 Either way, the review covers, as applicable:
 
@@ -127,16 +139,20 @@ whether to override any engineering recommendation.
 
 For the specific act of merging to protected `main`, the approval gate is
 satisfied by an APPROVE from **either** Claude Chat or ChatGPT acting as
-Chief Engineer, **or** the Project Owner directly — see
+Chief Engineer — either one alone is sufficient, with no preference between
+them — **or** the Project Owner directly — see
 `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition.
 No engineer, model, tool, successful test, prior approval, silence or
 deadline substitutes for that gate.
 
 Once the gate is satisfied, the Project Owner, Claude Code, or Codex CLI/App
-may execute the merge. The active chat/review lane may approve but does not
-execute merges from chat-only environments. OMP does not execute merges. There
-is no direct live channel between the chat/review lane and the implementation
-lane, so the Project Owner relays the APPROVE when needed.
+may execute the merge — Claude Code and Codex CLI/App hold this authority
+equally, with no default or preferred executor between them. The active
+chat/review lane may approve but does not execute merges from chat-only
+environments, regardless of which chat lane it is. OMP does not execute
+merges. There is no direct live channel between the chat/review lane and
+the implementation lane, so the Project Owner relays the APPROVE when
+needed.
 
 ## 6. Read-only audits
 
@@ -169,7 +185,8 @@ than relying on conversation memory.
 Claude Code may use a lighter-weight handoff for small/exploratory work
 per `CLAUDE.md` §5; the full templates below remain the standard for
 substantive changes and for anything crossing the Chief Engineer review
-boundary.
+boundary. The same lighter-weight allowance applies to Codex CLI/App for
+equivalent small/exploratory work.
 
 ### Audit report
 
@@ -232,7 +249,8 @@ At the beginning of every new CoHai Travel engineering session:
 3. read the current handover/report and relevant project plans;
 4. identify whether the task is implementation or read-only audit;
 5. choose a Main Engineer lane (Claude Code, Codex CLI/App, or OMP) based
-   on task fit, context, local resources, availability, quality and cost;
+   on task fit, context, local resources, availability, quality and cost —
+   Claude Code and Codex CLI/App are equally valid first choices;
 6. state the evidence and handoff deliverable;
 7. independently verify important prior claims before relying on them.
 
@@ -246,7 +264,9 @@ the task, within Maris's fixed monthly budget (see
 
 OpenRouter/OpenCode Go spend guardrails remain active for OMP. Switching
 to OMP when a primary lane's session limit is hit is expected, routine
-behavior — not a fallback of last resort.
+behavior — not a fallback of last resort. The same routine-switching logic
+applies between Claude Code and Codex CLI/App, and between Claude Chat and
+ChatGPT: switching is normal operation, not an escalation.
 
 Model choice can change without changing governance, but Codex Cloud is
 excluded from the approved choices.

@@ -10,8 +10,10 @@ It is harness-neutral.
 Project-specific engineering rules belong in `AGENTS.project.md`.
 Harness-specific operating rules belong in the relevant harness directory.
 `CLAUDE.md` provides Claude Code-specific operating guidance. Claude Code and
-Codex CLI/App are designated higher-trust, merge-capable Main Engineer lanes;
-OMP remains a Main Engineer lane without merge authority.
+Codex CLI/App are peer, equally higher-trust, merge-capable Main Engineer
+lanes — neither is primary and neither is the other's fallback; OMP remains
+a Main Engineer lane without merge authority. Likewise, Claude Chat and
+ChatGPT are peer Chief Engineer lanes with identical review authority.
 Detailed procedures and historical evidence remain under `docs/`.
 
 ---
@@ -126,12 +128,15 @@ process, regardless of which lane or harness they run under.
 Passing tests do not by themselves authorize a merge.
 
 **Approval to merge is held by the active Chief Engineer chat lane
-(Claude Chat or ChatGPT) or the Project Owner. Execution of the merge is held
-by the Project Owner, Claude Code, or Codex CLI/App.** Claude Chat and ChatGPT
-have the same Chief Engineer role; Claude Code and Codex CLI/App have the same
-Main Engineer role and the same higher-trust, merge-capable standing. OMP is a
-Main Engineer lane but does not hold merge authority. The
-authoritative definition is `docs/ENGINEERING_GOVERNANCE.md` §6a.
+(Claude Chat or ChatGPT — either is independently sufficient) or the
+Project Owner. Execution of the merge is held equally by the Project Owner,
+Claude Code, or Codex CLI/App.** Claude Chat and ChatGPT have the same Chief
+Engineer role, as peers rather than a primary lane and a backup; Claude Code
+and Codex CLI/App have the same Main Engineer role and the same
+higher-trust, merge-capable standing, likewise as peers with no default or
+preferred lane between them. OMP is a Main Engineer lane but does not hold
+merge authority. The authoritative definition is
+`docs/ENGINEERING_GOVERNANCE.md` §6a.
 
 ## 8. Completion
 

@@ -2,10 +2,11 @@
 
 This file governs Claude Code when acting as a **Main Engineer** on CoHai Travel.
 
-It inherits `AGENTS.md` and `AGENTS.project.md`. Like Codex CLI/App, Claude Code
-is a Main Engineer lane; this file adds Claude Code-specific operating
-mechanics. Claude Code has the same higher-trust, merge-capable standing as
-Codex CLI/App; environment-specific mechanics do not create a different role.
+It inherits `AGENTS.md` and `AGENTS.project.md`. Claude Code and Codex
+CLI/App are peer Main Engineer lanes with identical higher-trust,
+merge-capable standing — this file adds Claude Code-specific operating
+mechanics, not a different role or a different level of trust.
+Environment-specific mechanics do not create a different role.
 
 Read `AGENTS.project.md` for what CoHai Travel *is*. This file is about
 how Claude Code should *work* within the same project governance.
@@ -15,8 +16,10 @@ how Claude Code should *work* within the same project governance.
 ## 1. Standing and governance parity
 
 Claude Code has the same Main Engineer role and higher-trust, merge-capable
-standing as Codex CLI/App. It may use the capabilities available in its
-execution environment, including local shell, filesystem and Git access.
+standing as Codex CLI/App — the two are peers; neither is the designated
+primary lane and neither is the other's fallback. Claude Code may use the
+capabilities available in its execution environment, including local
+shell, filesystem and Git access.
 
 For substantive work, follow the same scope, evidence, review and approval
 boundaries defined by `AGENTS.md`, `AGENTS.project.md` and
@@ -38,11 +41,11 @@ At the start of a session, or before anything non-trivial:
    outright, especially anything marked UNVERIFIED.
 
 You have full local shell and filesystem access in this environment;
-other engineering lanes and the Chief Engineer role in claude.ai chat may
-not. When producing anything meant for the Chief Engineer or Maris to
-review, assume they cannot independently re-run your commands unless they
-say otherwise — so the evidence you leave (§5) has to actually stand on
-its own.
+other engineering lanes and the Chief Engineer role in chat (Claude Chat
+or ChatGPT) may not. When producing anything meant for the Chief Engineer
+or Maris to review, assume they cannot independently re-run your commands
+unless they say otherwise — so the evidence you leave (§5) has to actually
+stand on its own.
 
 ## 3. Working style
 
@@ -88,27 +91,29 @@ For exploratory or read-only work, a short summary is enough — you don't
 need to force it into the audit-report template unless Maris asks for a
 formal audit.
 
-## 6. Merge authority (same as Codex)
+## 6. Merge authority (peer standing with Codex, not a copy of it)
 
 Claude Code is a merge-capable Main Engineer lane with the same authority
-standing as Codex CLI/App. It may execute an approved merge to protected
-`main`.
+standing as Codex CLI/App — the two are peers. It may execute an approved
+merge to protected `main`.
 
 - Commit implementation work to a dedicated feature branch, never directly
   to `main`.
 - Prepare the branch, evidence and handoff for Chief Engineer review.
 - A merge requires an APPROVE from the active Chief Engineer chat lane
-  (Claude Chat or ChatGPT), or the Project Owner directly.
+  (Claude Chat or ChatGPT — either is independently sufficient), or the
+  Project Owner directly.
 - Once that approval is on record, the Project Owner, Claude Code, or Codex
-  CLI/App may execute the merge.
+  CLI/App may execute the merge — whichever is active or asked to do so;
+  there is no default or preferred executor between Claude Code and Codex.
 - Do not infer approval from test success, silence, prior conversation or
   another agent's report.
 
 ## 7. Hard boundaries
 
-These apply to Claude Code and Codex CLI/App as higher-trust, merge-capable
-Main Engineer lanes; OMP remains subject to the same review boundary but does
-not execute merges:
+These apply equally to Claude Code and Codex CLI/App as peer, higher-trust,
+merge-capable Main Engineer lanes; OMP remains subject to the same review
+boundary but does not execute merges:
 
 - No merge to protected `main` without the required APPROVE — see §6.
 - No bypassing Chief Engineer review on substantive changes.
@@ -120,9 +125,10 @@ not execute merges:
 ## 8. Relationship to other lanes
 
 Codex CLI/App and OMP are Main Engineer lanes. Claude Code and Codex CLI/App
-have the same Main Engineer role and higher-trust, merge-capable standing;
-environment capabilities may differ, but their project scope, evidence
-requirements and review boundaries are governed the same way.
+have the same Main Engineer role and higher-trust, merge-capable standing,
+as true peers; environment capabilities may differ, but their project
+scope, evidence requirements and review boundaries are governed the same
+way, with neither designated as primary.
 
 When asked to review another lane's work, apply the same evidence lens
 described in `ENGINEERING_GOVERNANCE.md` — scope, correctness, tests/evidence,

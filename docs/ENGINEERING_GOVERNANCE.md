@@ -1,6 +1,6 @@
 # CoHai Travel — Engineering Governance
 
-**Effective:** 25 September 2026 (supersedes 15 September 2026 version)
+**Effective:** 26 September 2026 (supersedes 25 September 2026 version)
 
 ## 1. Purpose
 
@@ -29,7 +29,9 @@ The Project Owner:
 
 The Chief Engineer role may be performed by **Claude Chat or ChatGPT**.
 These two chat/review lanes have the same role, authority and review
-responsibility. Neither is superior to the other by vendor or model.
+responsibility. Neither is superior to the other by vendor or model, and
+neither is a fallback for the other — either may independently review
+evidence and issue the governing outcome for a given piece of work.
 
 The Chief Engineer is the independent engineering review and quality gate.
 The Chief Engineer reviews substantial engineer work before it is eligible
@@ -42,7 +44,9 @@ works from what the Project Owner pastes or uploads into the conversation
 access. A direct-repository coding lane may instead have local repository
 and shell access. Reviews should say plainly which situation applies — a
 review based only on handed-over material is not the same as one backed by
-direct inspection, and the review output should not blur the two.
+direct inspection, and the review output should not blur the two. This
+access boundary applies equally to Claude Chat and ChatGPT; neither has a
+standing access advantage over the other.
 
 The Chief Engineer reviews, as applicable:
 
@@ -65,7 +69,9 @@ Chief Engineer outcomes are:
 it can proceed.
 
 Chief Engineer approval is an engineering gate, not the final product-owner
-approval.
+approval. An APPROVE from either chat lane carries the same weight; the
+Project Owner does not need to prefer one over the other, and a REQUEST
+CORRECTION from either lane is likewise binding on its own.
 
 ### Main Engineers — interchangeable implementation lanes
 
@@ -83,7 +89,10 @@ CoHai Travel has the following Main Engineer lanes:
    limits are hit on other lanes — not backup-only or degraded lanes.
 
 Claude Code and Codex CLI/App have the same Main Engineer role and governance
-standing. Environment capabilities can differ, but governance does not.
+standing, including the same merge-execution authority (§6a). Environment
+capabilities can differ, but governance does not, and neither lane is a
+fallback for the other — either may be the lane that actually executes a
+given approved merge.
 
 **Codex Cloud is retired from the CoHai Travel governance model and must
 not be selected for project engineering work.**
@@ -95,7 +104,8 @@ availability.
 **Workflow for Codex CLI/App and OMP specifically:** these lanes commit
 their work to a dedicated feature/sub-branch, never to `main`. Once that
 branch is ready, the active Chief Engineer chat lane (Claude Chat or
-ChatGPT), or a peer engineer when appropriate, reviews it. Only after an APPROVE is on record from the active Chief Engineer chat lane or
+ChatGPT), or a peer engineer when appropriate, reviews it. Only after an
+APPROVE is on record from the active Chief Engineer chat lane or
 the Project Owner may the Project Owner, Claude Code, or Codex CLI/App merge
 that branch into `main`. OMP does not gain merge authority by having its branch
 reviewed or merged.
@@ -113,20 +123,22 @@ Choose Main Engineer lane
    ▼               ▼               ▼                      ▼
 Claude Code    Codex CLI/App     OMP CLI              (future lanes)
 (CLAUDE.md)    GPT/Codex models  DeepSeek/GLM/Kimi/Qwen
+   (peer, merge-capable)
    └──────────────┴───────────────┴──────────────────────┘
                  ↓
           Implement / investigate
                  ↓
           Tests + evidence + handoff
                  ↓
-       Chief Engineer — Claude Chat or ChatGPT
+       Chief Engineer — Claude Chat or ChatGPT (peers)
           APPROVE / REQUEST CORRECTION
                  ↓
      APPROVE from Chief Engineer chat OR Project Owner
      — Project Owner relays the APPROVE when needed
                  ↓
         merge executed by Project Owner, Claude Code, or Codex CLI/App
-        (never by chat; OMP does not execute merges)
+        (Claude Code and Codex CLI/App are equally merge-capable —
+         never by chat; OMP does not execute merges)
                  ↓
               protected `main`
 ```
@@ -134,7 +146,7 @@ Claude Code    Codex CLI/App     OMP CLI              (future lanes)
 Model or environment switching does not bypass any stage. Merge
 authority itself (who may approve, who may execute) is defined
 exclusively in §6a and does not vary by which Main Engineer lane
-produced the work.
+produced the work, nor by which chat lane approved it.
 
 ## 4. Choosing the Main Engineer
 
@@ -163,7 +175,9 @@ relevant evidence before continuing — regardless of which lane it is.
 Do not use Codex Cloud for CoHai Travel work.
 
 Claude Code and Codex CLI/App are equivalent Main Engineer choices; neither
-receives a governance preference over the other.
+receives a governance preference over the other. The same holds for Claude
+Chat and ChatGPT as Chief Engineer choices — selection between either pair
+is a matter of session availability, context, and cost, never of standing.
 
 ## 5. Task modes
 
@@ -202,14 +216,17 @@ concurrently.
 - A successful test run does not itself authorize a merge.
 - Silence or lack of objection is not approval.
 - Prior model approval does not substitute for the current review.
-- A merge requires an APPROVE from Claude-chat or the Project Owner — see
-  §6a for exactly who may then execute it.
+- A merge requires an APPROVE from the active Chief Engineer chat lane
+  (Claude Chat or ChatGPT — either is sufficient on its own) or the
+  Project Owner — see §6a for exactly who may then execute it.
 
 ## 6a. Merge authority (Project Owner, Claude Code, and Codex CLI/App)
 
-Merge execution authority to protected `main` is held by the Project Owner,
-Claude Code, and Codex CLI/App. Claude Code and Codex CLI/App are designated
-higher-trust, merge-capable Main Engineer lanes; OMP is not merge-capable.
+Merge execution authority to protected `main` is held equally by the
+Project Owner, Claude Code, and Codex CLI/App. Claude Code and Codex
+CLI/App are peer, equally higher-trust, merge-capable Main Engineer
+lanes — neither is the primary and neither is the other's fallback; OMP
+is not merge-capable.
 
 **Approval gate.** A merge to `main` requires an APPROVE on record from one
 of:
@@ -218,8 +235,10 @@ of:
 - ChatGPT, acting as Chief Engineer; or
 - the Project Owner, directly.
 
-A Main Engineer self-review, a passing test suite, or another Main Engineer
-lane's sign-off does not by itself satisfy the Chief Engineer approval gate.
+Claude Chat and ChatGPT satisfy this gate identically — an APPROVE from
+either one, alone, is sufficient. A Main Engineer self-review, a passing
+test suite, or another Main Engineer lane's sign-off does not by itself
+satisfy the Chief Engineer approval gate.
 
 **No direct chat-to-coding handoff is assumed.** The Project Owner relays an
 APPROVE to the active implementation lane when needed. Nothing in this
@@ -227,7 +246,9 @@ document should be read as implying an automatic or live hand-off.
 
 **Who executes the merge, once approved.** The Project Owner, Claude Code, or
 Codex CLI/App may perform the merge to protected `main` and should record the
-approval source.
+approval source. Claude Code and Codex CLI/App hold this execution authority
+equally — whichever lane is active, or whichever the Project Owner asks to
+handle it, may do so; there is no default or preferred executor between them.
 
 **No approval, no merge.** If neither the Chief Engineer chat lane nor the
 Project Owner has approved the work, no merge to `main` may occur.
@@ -249,10 +270,11 @@ A normal implementation handoff should contain:
 
 The Chief Engineer may review the branch or PR and either approve it for
 Project Owner consideration or request explicit corrections. Where the
-Chief Engineer role is running in claude.ai chat without direct repo
-access, the handoff itself — pasted or uploaded — is the evidence; the
-review should note this explicitly rather than implying independent
-verification that didn't happen.
+Chief Engineer role is running in a chat session (Claude Chat or ChatGPT)
+without direct repo access, the handoff itself — pasted or uploaded — is
+the evidence; the review should note this explicitly rather than implying
+independent verification that didn't happen. This applies equally
+regardless of which chat lane is reviewing.
 
 ## 8. Evidence standard
 
@@ -316,7 +338,10 @@ engineering lanes, not inferior fallback-only systems, and are expected to
 see routine use whenever a primary lane's session limit is reached. Claude
 Code and Codex CLI/App are equivalent Main Engineer lanes; choose between
 them based on task fit, environment, context, availability, quality and
-cost.
+cost. Claude Chat and ChatGPT are likewise equivalent Chief Engineer
+lanes; choose between them on the same basis — session availability,
+budget, and which one the Project Owner has open — never on a standing
+preference for one over the other.
 
 OpenRouter/OpenCode Go spend guardrails remain active for OMP-based work.
 
@@ -325,15 +350,18 @@ Codex Cloud is not an approved CoHai Travel engineering lane.
 ## 12. Simple operating rule
 
 ```text
-MAIN ENGINEERS
+MAIN ENGINEERS (peers)
 Claude Code ↔ Codex CLI/App ↔ OMP (DeepSeek/GLM/Kimi/Qwen)
+  (Claude Code and Codex CLI/App are equally merge-capable;
+   OMP is implementation-only)
 
                   │
                   ▼
-   CHIEF ENGINEER — Claude Chat or ChatGPT
+   CHIEF ENGINEER (peers) — Claude Chat or ChatGPT
                   │
                   ▼
  APPROVE from Chief Engineer chat OR Project Owner (Maris) required
+ — either chat lane's APPROVE is independently sufficient
  — Project Owner relays the APPROVE when needed
                   │
                   ▼
@@ -345,7 +373,9 @@ Claude Code ↔ Codex CLI/App ↔ OMP (DeepSeek/GLM/Kimi/Qwen)
 ```
 
 No model, agent, tool, successful test, deadline or previous decision may
-skip getting that APPROVE. Merge *execution* authority is exclusive to the
-Project Owner (§6a). Chat/review lanes and implementation lanes may have
-different environment capabilities, but those differences do not change
-governance authority.
+skip getting that APPROVE. Merge *execution* authority is held equally by
+the Project Owner, Claude Code, and Codex CLI/App (§6a) — it is not
+exclusive to the Project Owner. Chat/review lanes and implementation lanes
+may have different environment capabilities, but those differences do not
+change governance authority, and no lane within either peer pair (Claude
+Chat/ChatGPT, Claude Code/Codex CLI App) outranks its peer.
