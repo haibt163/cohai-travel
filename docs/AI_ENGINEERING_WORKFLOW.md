@@ -188,6 +188,27 @@ substantive changes and for anything crossing the Chief Engineer review
 boundary. The same lighter-weight allowance applies to Codex CLI/App for
 equivalent small/exploratory work.
 
+**Standard package for chat-based Chief Engineer review.** When the
+Chief Engineer review is happening in a chat lane (Claude Chat or
+ChatGPT) without direct repo access, the Main Engineer's finishing
+sequence should be:
+
+```text
+git status
+git log -5 --oneline --decorate
+git show --stat --oneline HEAD
+        ↓
+run the project's ZIP snapshot script
+        ↓
+hand off: ZIP + Git output + verification command output
+```
+
+The ZIP snapshot and the Git output serve different purposes and neither
+replaces the other — see `docs/ENGINEERING_GOVERNANCE.md` §7 for why both
+are required. This is the preferred handoff shape for substantive work
+reaching the Chief Engineer gate; it does not replace running the actual
+verification commands (§9 below) or reporting their real output.
+
 ### Audit report
 
 ```markdown
