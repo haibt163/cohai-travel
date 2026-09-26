@@ -276,6 +276,35 @@ the evidence; the review should note this explicitly rather than implying
 independent verification that didn't happen. This applies equally
 regardless of which chat lane is reviewing.
 
+**Standard handoff package: ZIP snapshot + Git state.** For a chat-based
+Chief Engineer review, the preferred handoff is two parts together, not
+either alone:
+
+1. a repository ZIP snapshot taken at the point the Main Engineer finished
+   (produced by the project's zip script, which preserves `.git`, `.github`,
+   `.claude`, `.omp`, `docs`, `src`, `server`, `scripts`, `migrations`,
+   `public`, and root configuration, excluding only local/runtime material
+   such as `node_modules` and `.env`); and
+2. the engineer's own Git output from that same point — at minimum
+   `git status`, `git log -5 --oneline --decorate`, and
+   `git show --stat --oneline HEAD`.
+
+The ZIP lets the Chief Engineer inspect the full repository state directly
+rather than relying solely on a pasted diff, which can hide context a
+reviewer would otherwise catch. The Git output lets the Chief Engineer
+locate exactly what changed and where it sits in history, without having
+to reconstruct that from the snapshot alone. Neither substitutes for the
+other.
+
+This package still does not give the chat lane the ability to execute
+anything — no install, no test run, no build. A ZIP-based review verifies
+what the code says and does static analysis of that; it does not verify
+that a test suite, lint, typecheck, or build actually passed. The handoff
+should therefore also include the actual output of whichever verification
+commands the Main Engineer ran (§14 of `AGENTS.project.md`), not just the
+Git summary — a Chief Engineer reading only `git show --stat` can confirm
+what changed, but not whether it works.
+
 ## 8. Evidence standard
 
 Use these statuses consistently:

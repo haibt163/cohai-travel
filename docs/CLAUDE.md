@@ -87,6 +87,13 @@ AGENTS.md template for small tasks, but should always include):
 - what's still unverified or risky;
 - current branch/commit.
 
+When the work is going to a chat-based Chief Engineer (Claude Chat or
+ChatGPT) for review, finish with `git status`, `git log -5 --oneline
+--decorate`, and `git show --stat --oneline HEAD`, then run the
+project's ZIP snapshot script before handing off. Give Maris the actual
+Git output plus a pointer to run the script — don't just say "ready for
+review" and assume the chat lane can inspect the repo itself; it can't.
+
 For exploratory or read-only work, a short summary is enough — you don't
 need to force it into the audit-report template unless Maris asks for a
 formal audit.
