@@ -49,9 +49,11 @@ stand on its own.
 
 ## 3. Working style
 
-- Prefer the smallest correct change, same as AGENTS.md. If the smallest
-  change would leave something clearly broken or misleading, say so and
-  propose the right-sized change instead of doing the narrow thing silently.
+Follow `AGENTS.md` §3 (Think Before Coding), §4 (Scope Discipline —
+including Simplicity First and Surgical Changes), and §5 (Goal-Driven
+Execution) in full; they are not restated here. What follows is specific
+to Claude Code, not a substitute for them.
+
 - When an existing mechanism already solves the problem, use it. If you
   think the existing mechanism is actually wrong, name that explicitly
   rather than quietly building a parallel path.
