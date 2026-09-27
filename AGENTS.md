@@ -54,7 +54,131 @@ conflict.
 
 ---
 
-## 3. Evidence Standard
+## 3. Think Before Coding
+
+Do not silently pick an interpretation when a task is ambiguous and run with
+it. This applies before implementation starts — it is about surfacing
+confusion early, distinct from the after-the-fact evidence reporting in §8.
+
+- State assumptions explicitly before implementing on top of them.
+- When more than one reasonable interpretation exists, present the
+  interpretations and the tradeoff between them rather than choosing quietly.
+- If a simpler approach than the one implied by the task exists, say so
+  before building the more complex one.
+- If something in the task or the existing code is unclear, name what's
+  unclear and ask, rather than guessing and proceeding.
+
+---
+
+## 4. Scope Discipline
+
+Prefer the smallest correct change.
+
+Do not add unrelated refactors, dependency upgrades, aesthetic rewrites, or
+architecture changes to a scoped task unless required or explicitly
+authorized.
+
+When an existing project mechanism already solves the need, prefer it over
+introducing a parallel mechanism.
+
+**Simplicity first.** Write the minimum code that solves the authorized
+task — nothing speculative:
+
+- No features beyond what was asked.
+- No abstraction introduced for what is currently single-use code.
+- No "configurability" or "flexibility" that wasn't requested.
+- No error handling for scenarios that cannot occur given the current
+  callers and data.
+- If a change could reasonably be written in a fifth of the lines, rewrite
+  it rather than submit the bloated version.
+
+The test: would a reviewer reasonably call this overcomplicated for what
+was asked? If yes, simplify before handing it off.
+
+**Surgical changes.** When editing existing code, touch only what the task
+requires:
+
+- Do not "improve" adjacent code, comments, or formatting while passing
+  through it.
+- Do not refactor something that isn't broken just because you're already
+  in the file.
+- Match the existing style in the surrounding code, even where you would
+  have written it differently.
+- If you notice unrelated dead code or pre-existing problems, report them
+  in your handoff — do not delete or fix them as part of this task unless
+  asked.
+- Do remove imports, variables, or functions that your own change made
+  unused — that cleanup is part of finishing your change correctly, not an
+  unrelated refactor.
+
+The test: every changed line should trace directly back to the authorized
+task. If it doesn't, it's out of scope.
+
+This is a bias toward caution over speed. For genuinely trivial changes
+(a typo, an obvious one-line fix), use judgment rather than forcing the
+full weight of this section — the point is avoiding costly mistakes on
+non-trivial work, not slowing down the trivial kind.
+
+---
+
+## 5. Goal-Driven Execution
+
+Prefer verifiable success criteria over imperative instructions followed
+blindly. Where practical, translate the task into a form that can be
+checked rather than merely asserted:
+
+| Instead of...     | Do this...                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| "Add validation"    | Write tests for the invalid-input cases, then make them pass  |
+| "Fix the bug"       | Write a test that reproduces it, then make it pass             |
+| "Refactor X"         | Confirm tests pass before the change and still pass after      |
+
+For a multi-step task, state a brief plan before starting, with a
+verification check against each step:
+
+```
+1. [step] → verify: [check]
+2. [step] → verify: [check]
+3. [step] → verify: [check]
+```
+
+A vague goal ("make it work") invites guessing and back-and-forth. A
+concrete, checkable goal lets an agent work independently and lets the
+result be judged on evidence rather than the agent's own confidence — see
+§8 for how that evidence is reported.
+
+---
+
+## 6. Security, Data, and Provenance
+
+Treat authentication, authorization, booking/inventory, customer data,
+database writes, notifications, secrets, migration, provenance, and production
+configuration as sensitive boundaries.
+
+Never:
+
+- commit credentials or secrets;
+- bypass authorization or validation;
+- expose sensitive data unnecessarily;
+- represent synthetic data as historical migration content;
+- discard source provenance for convenience.
+
+---
+
+## 7. Documentation
+
+Keep durable project knowledge in repository-visible documentation.
+
+When current behavior changes:
+
+- update current documentation where useful;
+- preserve historical audits and reports;
+- do not rewrite historical evidence merely to match later conclusions;
+- avoid duplicating detailed procedures unnecessarily.
+
+---
+
+## 8. Evidence Standard
 
 Use these statuses consistently:
 
@@ -74,49 +198,7 @@ access. These are not equivalent and should not be described as if they were.
 
 ---
 
-## 4. Scope Discipline
-
-Prefer the smallest correct change.
-
-Do not add unrelated refactors, dependency upgrades, aesthetic rewrites, or
-architecture changes to a scoped task unless required or explicitly
-authorized.
-
-When an existing project mechanism already solves the need, prefer it over
-introducing a parallel mechanism.
-
----
-
-## 5. Security, Data, and Provenance
-
-Treat authentication, authorization, booking/inventory, customer data,
-database writes, notifications, secrets, migration, provenance, and production
-configuration as sensitive boundaries.
-
-Never:
-
-- commit credentials or secrets;
-- bypass authorization or validation;
-- expose sensitive data unnecessarily;
-- represent synthetic data as historical migration content;
-- discard source provenance for convenience.
-
----
-
-## 6. Documentation
-
-Keep durable project knowledge in repository-visible documentation.
-
-When current behavior changes:
-
-- update current documentation where useful;
-- preserve historical audits and reports;
-- do not rewrite historical evidence merely to match later conclusions;
-- avoid duplicating detailed procedures unnecessarily.
-
----
-
-## 7. Git and Review Boundary
+## 9. Git and Review Boundary
 
 `main` is the protected canonical integration branch.
 
@@ -138,7 +220,7 @@ preferred lane between them. OMP is a Main Engineer lane but does not hold
 merge authority. The authoritative definition is
 `docs/ENGINEERING_GOVERNANCE.md` §6a.
 
-## 8. Completion
+## 10. Completion
 
 Every substantive task must leave a factual evidence trail.
 

@@ -77,6 +77,29 @@ Understand
 Do not implement solely from the task description when repository evidence is
 available.
 
+**Think before coding.** Do not silently pick an interpretation of an
+ambiguous task and run with it:
+
+- State assumptions explicitly before implementing on top of them.
+- When more than one reasonable interpretation exists, name the options and
+  their tradeoff rather than choosing quietly.
+- If something in the task or the existing code is unclear, say what's
+  unclear and ask, rather than guessing.
+
+**Goal-driven execution.** Where practical, turn the task into a checkable
+goal rather than an instruction followed blindly — e.g. "write a test that
+reproduces the bug, then make it pass" rather than just "fix the bug." For
+a multi-step task, state a short plan with a verification check per step
+before implementing:
+
+```
+1. [step] → verify: [check]
+2. [step] → verify: [check]
+```
+
+A concrete, checkable goal is what lets §5 (Verification) be evidence
+rather than self-report.
+
 ---
 
 ## 4. Scope Discipline
@@ -90,7 +113,21 @@ For a scoped change:
 - avoid dependency upgrades unless required;
 - preserve historical/provenance material.
 
-The target is a focused, reviewable patch.
+**Simplicity first.** Write the minimum code the task requires — no
+speculative abstraction, no unrequested configurability, no error handling
+for cases that can't occur given current callers and data. If a change
+could reasonably be a fifth of the size, write it that way.
+
+**Surgical changes.** Touch only what the task requires. Don't "improve"
+adjacent code, comments, or formatting while passing through a file, and
+don't refactor something that isn't broken just because you're already
+there. If you notice unrelated dead code or a pre-existing problem, report
+it — don't fix it as part of this task unless asked. Do remove imports,
+variables, or functions that your own change made unused; that's part of
+finishing the change correctly, not an unrelated refactor.
+
+The target is a focused, reviewable patch: every changed line should trace
+back to the authorized task.
 
 ---
 
