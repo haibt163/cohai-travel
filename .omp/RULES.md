@@ -19,6 +19,8 @@
     merge execution is held equally by the Project Owner, Claude Code, or
     Codex CLI/App (peers, neither preferred) after the required approval
     gate is satisfied.
+15. The lane that authored a change never approves it (see
+    `docs/ENGINEERING_GOVERNANCE.md` §2b).
 
 ---
 
