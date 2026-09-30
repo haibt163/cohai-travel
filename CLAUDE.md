@@ -117,6 +117,8 @@ merge to protected `main`.
   there is no default or preferred executor between Claude Code and Codex.
 - Do not infer approval from test success, silence, prior conversation or
   another agent's report.
+- Never approve a change you authored (`docs/ENGINEERING_GOVERNANCE.md`
+  §2b). State your lane as the author lane on the pull request.
 
 ## 7. Hard boundaries
 

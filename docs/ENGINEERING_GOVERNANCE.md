@@ -1,6 +1,6 @@
 # CoHai Travel — Engineering Governance
 
-**Effective:** 26 September 2026 (supersedes 25 September 2026 version)
+**Effective:** 30 September 2026 (supersedes 26 September 2026 version)
 
 ## 1. Purpose
 
@@ -10,6 +10,10 @@ The project uses multiple AI engineering environments, but governance does
 not depend on a particular model or vendor. Implementation work may move
 between Main Engineer lanes without changing the review or approval
 boundary.
+
+Work runs in one of two operating modes (§2a). In both, the lane that
+authored a change never approves it (§2b), and the Project Owner may
+override any rule in this document when doing so benefits the project (§2).
 
 ## 2. Roles
 
@@ -21,9 +25,19 @@ The Project Owner:
 
 - defines product intent and priorities;
 - decides whether proposed scope should proceed;
-- gives the final green light for protected `main`;
+- holds the same approval standing at the `main` merge gate as either chat
+  lane (§6a), and may approve, reject or decline to proceed;
 - may override or reject an engineering recommendation;
+- may override any rule in this document when doing so benefits the
+  project — including committing, opening pull requests, reviewing,
+  approving, merging, and relaying work between lanes personally. Governance
+  is there to help the Project Owner, not to restrict them. Note an override
+  on the pull request so the record stays clear;
 - owns the final release decision.
+
+The Project Owner is not expected to be an engineer. Engineers and Chief
+Engineers explain hand-offs to the Project Owner in plain language with
+step-by-step instructions (see `docs/AI_ENGINEERING_WORKFLOW.md` §8).
 
 ### Chief Engineer — Chat lane
 
@@ -35,7 +49,7 @@ evidence and issue the governing outcome for a given piece of work.
 
 The Chief Engineer is the independent engineering review and quality gate.
 The Chief Engineer reviews substantial engineer work before it is eligible
-for the Project Owner's final approval.
+to merge into `main`.
 
 **Evidence-access boundary:** a chat/review session may have no live access
 to the repository, git history, or a runnable environment. Chat therefore
@@ -63,15 +77,19 @@ The Chief Engineer reviews, as applicable:
 
 Chief Engineer outcomes are:
 
-**APPROVE** — the work is acceptable for Project Owner consideration.
+**APPROVE** — the work is acceptable to merge into `main` under §6a (and
+§2b: the approving lane must not be the author).
 
 **REQUEST CORRECTION** — the work must be corrected and re-verified before
 it can proceed.
 
-Chief Engineer approval is an engineering gate, not the final product-owner
-approval. An APPROVE from either chat lane carries the same weight; the
-Project Owner does not need to prefer one over the other, and a REQUEST
-CORRECTION from either lane is likewise binding on its own.
+A Chief Engineer APPROVE is a complete approval for the merge gate: an
+APPROVE from either chat lane, alone, satisfies §6a, and no separate
+Project Owner approval is required. The Project Owner has the same standing
+as either chat lane at that gate and keeps override authority (see
+"Project Owner" above). An APPROVE from either chat lane carries the same
+weight; the Project Owner does not need to prefer one over the other, and a
+REQUEST CORRECTION from either lane is likewise binding on its own.
 
 ### Main Engineers — interchangeable implementation lanes
 
@@ -111,6 +129,56 @@ that branch into `main`. OMP does not gain merge authority by having its branch
 reviewed or merged.
 
 No lane merges its own unreviewed work to `main`.
+
+## 2a. Operating modes — three lanes or two lanes
+
+**Standard mode (three lanes).** A Main Engineer lane (Claude Code, Codex
+CLI/App or OMP) implements; a Chief Engineer chat lane (Claude Chat or
+ChatGPT) reviews and approves; the Project Owner directs and holds equal
+approval standing (§6a).
+
+**Reduced mode (two lanes).** For audits, small revisions and ad hoc tasks,
+Claude Chat or ChatGPT may act as the Main Engineer (the author) — for
+example by preparing a patch, a Git bundle or documentation changes. The
+*other* chat lane then acts as Chief Engineer: it reviews, and may approve
+commits to a sub-branch and the merge to `main`. The Project Owner may
+review and approve as well.
+
+In both modes, final approval status for merging to `main` is equal among
+Claude Chat, ChatGPT and the Project Owner (§6a), always subject to §2b.
+
+**Capability declaration.** At the start of a session every lane states
+which Git / GitHub / shell capabilities it actually has in that session. A
+lane that cannot commit, push or open a pull request directly (at the time of
+writing, Claude Chat has no direct GitHub write capability) hands its
+commits over as a Git bundle or patch — the commits keep the authoring
+lane's identity — together with plain-language steps. The Project Owner,
+ChatGPT, or a Main Engineer lane then pushes the branch and opens the pull
+request. If a chat lane gains direct write access (for example a GitHub
+connector, or committing to sub-branches of a public fork), it may commit,
+push and open pull requests itself, under the same rules. Record any
+capability change in the handoff.
+
+## 2b. Author ≠ approver
+
+The lane (or person) that authored the commits of a change may never be the
+one who approves that change's pull request or its merge to `main`. This
+applies in every mode and for every lane.
+
+- Authored by Claude Chat → approved by ChatGPT or the Project Owner.
+- Authored by ChatGPT → approved by Claude Chat or the Project Owner.
+- Authored by Claude Code, Codex CLI/App or OMP → approved by Claude Chat,
+  ChatGPT or the Project Owner.
+- Another session or model of the same lane counts as the same lane.
+- Relaying is not authoring: when the Project Owner (or another lane) only
+  applies or pushes someone else's commits unchanged, the original lane
+  remains the author. If the Project Owner materially writes or edits the
+  change, they are an author too and should not be the sole approver unless
+  they are using the override in §2 (noted on the pull request).
+- Every pull request states its **author lane** and **reviewer lane**; they
+  must differ.
+- Approval and execution are different acts: executing an already-approved
+  merge (§6a) is allowed for the lanes listed there.
 
 ## 3. Engineering pipeline
 
@@ -219,6 +287,7 @@ concurrently.
 - A merge requires an APPROVE from the active Chief Engineer chat lane
   (Claude Chat or ChatGPT — either is sufficient on its own) or the
   Project Owner — see §6a for exactly who may then execute it.
+- The author of a change may not approve it (§2b).
 
 ## 6a. Merge authority (Project Owner, Claude Code, and Codex CLI/App)
 
@@ -238,7 +307,8 @@ of:
 Claude Chat and ChatGPT satisfy this gate identically — an APPROVE from
 either one, alone, is sufficient. A Main Engineer self-review, a passing
 test suite, or another Main Engineer lane's sign-off does not by itself
-satisfy the Chief Engineer approval gate.
+satisfy the Chief Engineer approval gate. The approver must not be the
+author of the change (§2b).
 
 **No direct chat-to-coding handoff is assumed.** The Project Owner relays an
 APPROVE to the active implementation lane when needed. Nothing in this
@@ -266,7 +336,8 @@ A normal implementation handoff should contain:
 - unverified items;
 - branch name;
 - commit SHA;
-- PR number/URL when applicable.
+- PR number/URL when applicable;
+- author lane and reviewer lane (they must differ — §2b).
 
 The Chief Engineer may review the branch or PR and either approve it for
 Project Owner consideration or request explicit corrections. Where the
@@ -400,6 +471,10 @@ Claude Code ↔ Codex CLI/App ↔ OMP (DeepSeek/GLM/Kimi/Qwen)
                   ▼
              protected `main`
 ```
+
+Two-lane mode (§2a): a chat lane may be the author, the other chat lane
+reviews and approves, and the Project Owner has equal approval standing. The
+author never approves their own change (§2b).
 
 No model, agent, tool, successful test, deadline or previous decision may
 skip getting that APPROVE. Merge *execution* authority is held equally by

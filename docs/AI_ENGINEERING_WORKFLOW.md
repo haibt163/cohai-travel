@@ -1,6 +1,6 @@
 # CoHai Travel — AI Engineering Workflow
 
-**Last updated: 26 September 2026** (supersedes 25 September 2026 version)
+**Last updated: 30 September 2026** (supersedes 26 September 2026 version)
 
 ## 1. Source of truth
 
@@ -47,6 +47,11 @@ Claude Code    Codex CLI/App       OMP CLI                (future lane)
 ```
 
 Codex Cloud is retired and not part of the workflow.
+
+**Two-lane mode.** For audits, small revisions and ad hoc tasks, Claude Chat
+or ChatGPT may act as the Main Engineer (author) while the other chat lane
+acts as Chief Engineer (see `docs/ENGINEERING_GOVERNANCE.md` §2a). The
+author never approves their own change (§2b).
 
 ## 3. Main Engineer lanes
 
@@ -125,17 +130,22 @@ Either way, the review covers, as applicable:
 
 Outcome:
 
-**APPROVE** — acceptable for Project Owner consideration.
+**APPROVE** — acceptable to merge under `docs/ENGINEERING_GOVERNANCE.md` §6a
+(the approving lane must not be the author — §2b).
 
 **REQUEST CORRECTION** — corrective actions and re-verification are
 required.
 
-Chief Engineer approval does not replace Project Owner approval.
+A Chief Engineer APPROVE from either chat lane satisfies the merge gate on
+its own (governance §6a); the Project Owner has the same standing and keeps
+override authority (governance §2).
 
 ## 5. Project Owner authority and merge execution
 
 The Project Owner is the final human authority over scope, priorities, and
-whether to override any engineering recommendation.
+whether to override any engineering recommendation, and may override any
+governance rule when that benefits the project (governance §2). The approver
+of a change is never its author (governance §2b).
 
 For the specific act of merging to protected `main`, the approval gate is
 satisfied by an APPROVE from **either** Claude Chat or ChatGPT acting as
@@ -245,10 +255,31 @@ verification commands (§9 below) or reporting their real output.
 Branch:
 Commit:
 PR:
+Author lane:
+Reviewer lane:
 ```
 
 For generated external artifacts, also record the exact workspace path
 and user-accessibility/retrieval status.
+
+### Handoff to the Project Owner (plain language)
+
+The Project Owner is not expected to be an engineer. Whenever a lane hands
+work to the Project Owner it should:
+
+- say in one or two plain sentences what changed and why;
+- give numbered steps, including where files go and the exact Git commands
+  to type in Command Prompt (cmd), each in its own code block;
+- say what the Project Owner should see after each step, and what to do if
+  it looks different;
+- avoid engineering jargon, or explain any term the first time it is used;
+- say which lane authored the work and which lane should review it (§2b of
+  the governance).
+
+A lane that cannot commit or open pull requests itself (governance §2a)
+hands over a Git bundle or patch so that commits keep the authoring lane's
+identity; the Project Owner (or another lane) pushes it and opens the pull
+request.
 
 ## 9. Verification standard
 
@@ -265,7 +296,8 @@ production-ready without the relevant evidence.
 
 At the beginning of every new CoHai Travel engineering session:
 
-1. inspect live Git state;
+1. inspect live Git state and state which Git/GitHub/shell capabilities
+   this session actually has (governance §2a);
 2. read `docs/ENGINEERING_GOVERNANCE.md`;
 3. read the current handover/report and relevant project plans;
 4. identify whether the task is implementation or read-only audit;

@@ -342,6 +342,10 @@ approver between Claude Chat and ChatGPT. OMP does not execute a merge to
 `main`; its implementation work reaches `main` through the same review-and-
 approval gate.
 
+The author of a change never approves it, in three-lane or two-lane mode
+(`docs/ENGINEERING_GOVERNANCE.md` §2a–§2b). The Project Owner may override
+any rule when it benefits the project.
+
 See `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition
 of the approval gate and merge-execution rules.
 

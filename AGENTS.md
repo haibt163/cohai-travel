@@ -220,6 +220,12 @@ preferred lane between them. OMP is a Main Engineer lane but does not hold
 merge authority. The authoritative definition is
 `docs/ENGINEERING_GOVERNANCE.md` §6a.
 
+**The author of a change never approves it.** Work may run with three lanes
+(Main Engineer → Chief Engineer → Project Owner) or, for audits, small
+revisions and ad hoc tasks, two lanes (one chat lane authors, the other chat
+lane reviews). The Project Owner may override any rule when it benefits the
+project. See `docs/ENGINEERING_GOVERNANCE.md` §2a–§2b.
+
 ## 10. Completion
 
 Every substantive task must leave a factual evidence trail.
