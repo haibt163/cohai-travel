@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getSql } from "@/lib/db";
+import { siteOriginFor } from "@/lib/seo";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -20,8 +21,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           sql<{ slug: string }>`select slug from stays order by slug`,
           sql<{ slug: string }>`select slug from cars order by slug`,
         ]);
-        const requestUrl = new URL(request.url);
-        const origin = (import.meta.env.VITE_SITE_URL?.trim() || requestUrl.origin).replace(/\/$/, "");
+        const origin = siteOriginFor(new URL(request.url).origin);
         const publicPaths = [
           "/",
           "/tours",

@@ -49,7 +49,7 @@ export const Route = createRootRoute({
           "@type": "TravelAgency",
           name: APP_NAME,
           description: APP_DESCRIPTION,
-          url: absoluteUrl("/en"),
+          ...(absoluteUrl("/en") ? { url: absoluteUrl("/en") } : {}),
         }),
       },
     ],
