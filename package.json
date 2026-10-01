@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/migrate.mjs && node scripts/with-app-env.mjs vite dev --host 0.0.0.0 --port 8080",
-    "build": "node scripts/with-app-env.mjs vite build && npm run db:migrate",
+    "build": "node scripts/check-site-url.mjs && node scripts/with-app-env.mjs vite build && npm run db:migrate",
     "db:migrate": "node scripts/migrate.mjs",
     "build:dev": "node scripts/with-app-env.mjs vite build --mode development",
     "preview": "node scripts/with-app-env.mjs vite preview --host 127.0.0.1 --port 8081",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test:domain": "node --test scripts/booking-concurrency.test.mjs scripts/migration-plan.test.mjs scripts/sign-out-plan.test.mjs scripts/audit-legacy-dump.test.mjs scripts/provenance.test.mjs && node --experimental-strip-types --test src/lib/booking-rules.test.ts",
+    "test:domain": "node --test scripts/booking-concurrency.test.mjs scripts/migration-plan.test.mjs scripts/sign-out-plan.test.mjs scripts/audit-legacy-dump.test.mjs scripts/provenance.test.mjs scripts/check-site-url.test.mjs && node --experimental-strip-types --test src/lib/booking-rules.test.ts src/lib/seo.test.ts",
     "test:smoke": "node scripts/smoke.mjs",
     "format": "prettier --write ."
   },
