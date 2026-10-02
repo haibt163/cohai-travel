@@ -35,22 +35,28 @@ export async function placeBooking(
 
   if (data.kind === "tour") {
     if (!data.departureId) throw new Error("Choose a departure");
+    // Lock the departure row first, then count seats in a separate statement:
+    // a count inside the locking statement uses the snapshot taken before the
+    // lock wait and would not see a booking committed by the lock holder.
     const deps = await tx<{
       id: string;
       start_date: string;
       price: string | number;
       max_people: number;
-      booked: number;
     }>`
-      select td.id, td.start_date, td.price, td.max_people,
-        coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
+      select td.id, td.start_date, td.price, td.max_people
       from tour_departures td
       where td.id = ${data.departureId} and td.tour_id = ${data.itemId}
       for update
     `;
     const dep = deps[0];
     if (!dep) throw new Error("Departure not found");
-    const left = dep.max_people - num(dep.booked);
+    const seatRows = await tx<{ booked: number }>`
+      select coalesce(sum(guests), 0)::int as booked
+      from bookings
+      where departure_id = ${dep.id} and status = 'confirmed'
+    `;
+    const left = dep.max_people - num(seatRows[0]?.booked ?? 0);
     if (data.guests > left) throw new Error("Not enough seats on that departure");
     total = num(dep.price) * data.guests;
     startDate = dep.start_date;
