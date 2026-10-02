@@ -72,7 +72,7 @@ export async function placeBooking(
       where kind = 'stay'
         and item_id = ${data.itemId}
         and status = 'confirmed'
-        and start_date < (${startDate}::date + ${data.nights})
+        and start_date < (${startDate}::date + ${data.nights}::int)
         and (start_date + nights) > ${startDate}::date
     `;
     const bookedUnits = num(conflicts[0]?.booked_units ?? 0);
@@ -95,7 +95,7 @@ export async function placeBooking(
       where kind = 'car'
         and item_id = ${data.itemId}
         and status = 'confirmed'
-        and start_date < (${startDate}::date + ${data.nights})
+        and start_date < (${startDate}::date + ${data.nights}::int)
         and (start_date + nights) > ${startDate}::date
     `;
     if (!inventoryAvailable(car.inventory_unit_count, num(conflicts[0]?.booked_units ?? 0), inventoryUnits)) {

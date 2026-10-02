@@ -61,7 +61,7 @@ export const checkItemAvailability = createServerFn({ method: "GET" })
       where kind = ${data.kind}
         and item_id = ${data.itemId}
         and status = 'confirmed'
-        and start_date < (${data.startDate}::date + ${data.nights})
+        and start_date < (${data.startDate}::date + ${data.nights}::int)
         and (start_date + nights) > ${data.startDate}::date
     `;
 
