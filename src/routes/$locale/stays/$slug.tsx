@@ -37,7 +37,7 @@ function StayDetail() {
           <div className="whitespace-pre-line text-base leading-8 text-ink">{field(stay, locale, "body")}</div>
           <div className="mt-10 rounded-3xl bg-ink p-6 text-paper shadow-soft sm:p-8"><div className="flex items-start gap-4"><span className="grid size-11 place-items-center rounded-2xl bg-paper/10"><Sparkles className="size-5" /></span><div><p className="eyebrow text-paper-2">{t("stays")}</p><p className="mt-2 text-lg">{t("operator")}</p></div></div><div className="mt-7 grid gap-3 sm:grid-cols-2"><div className="flex items-center gap-2 text-sm text-paper-2"><Check className="size-4" />{t("perNight")}</div><div className="flex items-center gap-2 text-sm text-paper-2"><Bath className="size-4" />{t("places")}</div></div></div>
         </div>
-        <div><p className="eyebrow text-accent">{t("bookStay")}</p><p className="mt-2 mb-4 text-sm text-muted">{t("perNight")}</p><BookingForm kind="stay" itemId={stay.id} unitPrice={stay.price_per_night} /></div>
+        <div><p className="eyebrow mb-4 text-accent">{t("bookStay")}</p><BookingForm kind="stay" itemId={stay.id} unitPrice={stay.price_per_night} /></div>
       </section>
     </article>
   );

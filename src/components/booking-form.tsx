@@ -31,7 +31,10 @@ export function BookingForm({ kind, itemId, departures, unitPrice }: { kind: Kin
   const [error, setError] = useState("");
   const dep = departures?.find((d) => d.id === departureId);
   const left = dep ? dep.max_people - dep.booked : 99;
-  const price = kind === "tour" ? (dep?.price ?? 0) * guests : (unitPrice ?? 0) * nights;
+  const unit = kind === "tour" ? (dep?.price ?? 0) : (unitPrice ?? 0);
+  const unitLabel = kind === "tour" ? t("perPerson") : kind === "stay" ? t("perNight") : t("perDay");
+  const price = kind === "tour" ? unit * guests : unit * nights;
+  const quantity = kind === "tour" ? `${guests} ${t("guests").toLowerCase()}` : kind === "stay" ? `${nights} ${t("nights").toLowerCase()}` : `${nights} ${t("days")}`;
 
   useEffect(() => {
     if (kind === "tour" || !startDate) return;
@@ -81,7 +84,7 @@ export function BookingForm({ kind, itemId, departures, unitPrice }: { kind: Kin
 
   return (
     <aside className="overflow-hidden rounded-3xl border border-border/70 bg-surface shadow-lift">
-      <div className="bg-ink p-5 text-paper sm:p-6"><div className="flex items-start justify-between gap-4"><div><p className="eyebrow text-paper-2">{kind === "tour" ? t("book") : kind === "stay" ? t("bookStay") : t("bookCar")}</p><p className="mt-2 text-3xl font-semibold tabular-nums">{price > 0 ? aud(price) : "—"}</p></div><span className="grid size-10 place-items-center rounded-2xl bg-paper/10"><LockKeyhole className="size-4" /></span></div></div>
+      <div className="bg-ink p-5 text-paper sm:p-6"><div className="flex items-start justify-between gap-4"><div><p className="eyebrow text-paper-2">{kind === "tour" ? t("book") : kind === "stay" ? t("bookStay") : t("bookCar")}</p><p className="mt-2 text-3xl font-semibold tabular-nums">{unit > 0 ? aud(unit) : "—"} <span className="text-base font-normal text-paper-2">{unitLabel}</span></p></div><span className="grid size-10 place-items-center rounded-2xl bg-paper/10"><LockKeyhole className="size-4" /></span></div></div>
       <div className="p-5 sm:p-6">
         <SignedOut><div className="rounded-2xl bg-surface-2 p-4"><p className="text-sm leading-6">{t("needSignIn")}</p><Link to="/login" className="mt-3 inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm font-semibold text-paper">{t("signIn")}</Link></div></SignedOut>
         <SignedIn>
@@ -96,6 +99,7 @@ export function BookingForm({ kind, itemId, departures, unitPrice }: { kind: Kin
               <div><Label htmlFor="phone">{t("phone")}</Label><Input id="phone" name="phone" type="tel" autoComplete="tel" /></div>
               <div><Label htmlFor="notes">{t("notes")}</Label><Textarea id="notes" name="notes" /></div>
               {error ? <p role="alert" className="rounded-xl bg-danger/10 p-3 text-sm text-danger">{error}</p> : null}
+              <div className="flex items-baseline justify-between gap-3 rounded-2xl bg-surface-2 p-4"><span className="text-sm text-muted">{t("total")} · {quantity}</span><span className="text-2xl font-semibold tabular-nums">{price > 0 ? aud(price) : "—"}</span></div>
               <Button type="submit" disabled={status === "busy" || (kind === "tour" && left <= 0) || noInventory} className="w-full">{kind === "tour" && left <= 0 ? t("soldOut") : noInventory ? (locale === "vn" ? "Hết chỗ" : "Unavailable") : <><UserRound className="mr-2 size-4" />{t("confirm")}</>}</Button>
             </form>
           )}
