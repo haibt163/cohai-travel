@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { inventoryAvailable } from "@/lib/booking-rules";
+import { placeBooking } from "@/lib/booking-core";
 import { num } from "@/lib/utils";
 
 const bookingInput = z.object({
@@ -61,7 +61,7 @@ export const checkItemAvailability = createServerFn({ method: "GET" })
       where kind = ${data.kind}
         and item_id = ${data.itemId}
         and status = 'confirmed'
-        and start_date < (${data.startDate}::date + ${data.nights})
+        and start_date < (${data.startDate}::date + ${data.nights}::int)
         and (start_date + nights) > ${data.startDate}::date
     `;
 
@@ -76,96 +76,7 @@ export const createBooking = createServerFn({ method: "POST" })
   .validator((raw: unknown) => bookingInput.parse(raw))
   .handler(async ({ context, data }) => {
     const sql = await getSql();
-
-    return sql.transaction(async (tx) => {
-      let total = 0;
-      let startDate = data.startDate;
-      const inventoryUnits = 1;
-
-      if (data.kind === "tour") {
-        if (!data.departureId) throw new Error("Choose a departure");
-        const deps = await tx<{
-          id: string;
-          start_date: string;
-          price: string | number;
-          max_people: number;
-          booked: number;
-        }>`
-          select td.id, td.start_date, td.price, td.max_people,
-            coalesce((select sum(b.guests) from bookings b where b.departure_id = td.id and b.status = 'confirmed'), 0)::int as booked
-          from tour_departures td
-          where td.id = ${data.departureId} and td.tour_id = ${data.itemId}
-          for update
-        `;
-        const dep = deps[0];
-        if (!dep) throw new Error("Departure not found");
-        const left = dep.max_people - num(dep.booked);
-        if (data.guests > left) throw new Error("Not enough seats on that departure");
-        total = num(dep.price) * data.guests;
-        startDate = dep.start_date;
-      } else if (data.kind === "stay") {
-        const stays = await tx<{
-          price_per_night: string | number;
-          inventory_unit_count: number;
-        }>`
-          select price_per_night, inventory_unit_count
-          from stays
-          where id = ${data.itemId}
-          for update
-        `;
-        const stay = stays[0];
-        if (!stay) throw new Error("Stay not found");
-        const conflicts = await tx<{ booked_units: number }>`
-          select coalesce(sum(inventory_units), 0)::int as booked_units
-          from bookings
-          where kind = 'stay'
-            and item_id = ${data.itemId}
-            and status = 'confirmed'
-            and start_date < (${startDate}::date + ${data.nights})
-            and (start_date + nights) > ${startDate}::date
-        `;
-        const bookedUnits = num(conflicts[0]?.booked_units ?? 0);
-        if (!inventoryAvailable(stay.inventory_unit_count, bookedUnits, inventoryUnits)) {
-          throw new Error("Not enough rooms for those dates");
-        }
-        total = num(stay.price_per_night) * data.nights;
-      } else {
-        const cars = await tx<{ price_per_day: string | number; inventory_unit_count: number }>`
-          select price_per_day, inventory_unit_count
-          from cars
-          where id = ${data.itemId}
-          for update
-        `;
-        const car = cars[0];
-        if (!car) throw new Error("Car not found");
-        const conflicts = await tx<{ booked_units: number }>`
-          select coalesce(sum(inventory_units), 0)::int as booked_units
-          from bookings
-          where kind = 'car'
-            and item_id = ${data.itemId}
-            and status = 'confirmed'
-            and start_date < (${startDate}::date + ${data.nights})
-            and (start_date + nights) > ${startDate}::date
-        `;
-        if (!inventoryAvailable(car.inventory_unit_count, num(conflicts[0]?.booked_units ?? 0), inventoryUnits)) {
-          throw new Error("Car is unavailable for those dates");
-        }
-        total = num(car.price_per_day) * data.nights;
-      }
-
-      const id = crypto.randomUUID();
-      await tx`
-        insert into bookings (
-          id, user_id, kind, item_id, departure_id, start_date, guests, nights, inventory_units,
-          first_name, last_name, email, phone, notes, total_price, status
-        ) values (
-          ${id}, ${context.userId}, ${data.kind}, ${data.itemId}, ${data.departureId ?? null},
-          ${startDate}, ${data.guests}, ${data.nights}, ${inventoryUnits}, ${data.firstName}, ${data.lastName},
-          ${data.email}, ${data.phone ?? null}, ${data.notes ?? null}, ${total}, 'confirmed'
-        )
-      `;
-      return { id, total };
-    });
+    return sql.transaction((tx) => placeBooking(tx, context.userId, data));
   });
 
 export const listMyBookings = createServerFn({ method: "GET" })
