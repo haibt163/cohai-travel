@@ -1,325 +1,127 @@
-# CoHai Travel — AI Engineering Workflow
+# AI Engineering Workflow (universal master)
 
-**Last updated: 30 September 2026** (supersedes 26 September 2026 version)
+This file is identical in every project. Project commands, deployment steps
+and prompt templates live in `AGENTS.project.md` or, if present, `docs/PROJECT_PROCEDURES.md`.
+Roles and authority are defined only in `docs/ENGINEERING_GOVERNANCE.md`.
+Read this file when you write a handoff, request a review, switch lanes, or
+give the Project Owner steps to follow (`AGENTS.md` §1).
 
 ## 1. Source of truth
 
-- GitHub `main` is the canonical repository source of truth unless
-  explicitly overridden.
-- Local project folders/checkouts are working copies unless explicitly
-  declared otherwise.
-- Session history from any lane (Claude Code, Codex, OMP) is useful
-  context, not authoritative project memory.
-- Durable truth comes from repository files, Git history, PRs, tests,
-  CI/runtime evidence, and Project Owner decisions.
-- See `docs/ENGINEERING_GOVERNANCE.md` for the role and approval model.
+Repository state and direct evidence beat chat memory. Durable knowledge
+goes in repository-visible documents: `AGENTS.md`, `AGENTS.project.md`, the
+status/handover document, audits and handoffs. Historical audits are
+evidence; add new evidence and status, never rewrite old findings.
 
-## 2. Live engineering pipeline
+## 2. Lanes in one line each
 
-```text
-Project Owner defines task
-        ↓
-Choose Main Engineer lane
-   ┌───────────────┬────────────────┬─────────────────────────┐
-   │                │                │                         │
-   ▼                ▼                ▼                         ▼
-Claude Code    Codex CLI/App       OMP CLI                (future lane)
-(CLAUDE.md)    GPT/Codex models    DeepSeek/GLM/Kimi/Qwen
-(peer, merge-capable)
-   └───────────────┴────────────────┴─────────────────────────┘
-                  ↓
-           implementation / audit
-                  ↓
-           tests + evidence + handoff
-                  ↓
-      Chief Engineer — Claude Chat or ChatGPT (peers)
-        APPROVE / REQUEST CORRECTION
-                  ↓
-      APPROVE from Chief Engineer chat OR Project Owner
-      — either chat lane's APPROVE is independently sufficient
-      — Project Owner relays the APPROVE when needed
-                  ↓
-      merge executed by Project Owner, Claude Code, or Codex CLI/App
-      (Claude Code and Codex CLI/App are equally merge-capable —
-       never by chat; OMP does not execute merges)
-                  ↓
-              protected `main`
+Governance §2 defines them. Practically: Claude Code and Codex CLI/App
+implement and may execute approved merges; OMP implements and never merges;
+Claude Chat and ChatGPT review (and sometimes author, reduced mode); the
+Project Owner directs and may do anything the others can. Changing model or
+tool never changes the approval boundary.
+
+## 3. Report formats
+
+**Audit / review result.** Use exactly these four headings, in this order,
+and nothing else unless the task asks:
+
+```
+VERIFIED
+FAILED
+UNVERIFIED
+Owner decision
 ```
 
-Codex Cloud is retired and not part of the workflow.
+Each item: one line of finding, then the evidence (file and line, command and
+output, PR or commit). Do not re-list items already known unless they now
+block the current phase or the evidence or priority changed. Read-only work
+ends with `NO APPLICATION CODE CHANGES.`
 
-**Two-lane mode.** For audits, small revisions and ad hoc tasks, Claude Chat
-or ChatGPT may act as the Main Engineer (author) while the other chat lane
-acts as Chief Engineer (see `docs/ENGINEERING_GOVERNANCE.md` §2a). The
-author never approves their own change (§2b).
+**Implementation handoff.** Task · scope · what changed · verification run
+with real output · remaining risks · UNVERIFIED items · Git (branch, commit,
+PR, author lane, reviewer lane). Small or exploratory work may use a short
+summary of the same facts.
 
-## 3. Main Engineer lanes
+**Final report to the Project Owner.** Concise, plain language, ordered:
+*Must fix / verify now* · *Owner decision required* · *Future work*.
 
-### Claude Code
+## 4. Requesting and performing a review
 
-Claude Code is a full Main Engineer lane with local shell/filesystem/Git
-access when run in that environment. `CLAUDE.md` provides Claude-specific
-operating guidance. Claude Code has the same Main Engineer role and
-higher-trust, merge-capable standing as Codex CLI/App — the two are peers,
-not primary-and-backup.
-
-### Codex CLI / Codex App
-
-The official Codex lane for CoHai Travel is local Codex via the CLI or
-Windows App, using available GPT/Codex models. It holds the same
-merge-capable standing as Claude Code (see `docs/ENGINEERING_GOVERNANCE.md`
-§6a).
-
-Use the CLI when direct terminal control, command visibility, Git
-operations and interactive debugging are valuable. Use the App when its
-agent/worktree interface is more convenient for local development or
-parallel work.
-
-### OMP CLI
-
-OMP CLI is the local multi-model engineering lane using DeepSeek, GLM,
-Kimi, and Qwen through OpenRouter or OpenCode Go. These models may perform
-the same substantive implementation classes as Claude Code or Codex when
-they are the better fit for cost, quality, context, latency, or
-availability — and routinely when a session limit is hit elsewhere. OMP
-does not hold merge authority, regardless of the implementation work it
-performs.
-
-### Retired environment
-
-**Codex Cloud is permanently retired from CoHai Travel engineering. Do not
-select it, route work to it, or treat it as an approved fallback.**
-
-### Switching lanes
-
-A task may move between any of the lanes above when that improves
-engineering results or is forced by a session/rate limit. The incoming
-engineer must read the current governance, handoff/report, live Git state
-and relevant evidence before continuing.
-
-Changing models or tools never changes the approval boundary.
-
-## 4. Chief Engineer review
-
-The Chief Engineer role may be performed by the active chat/review lane:
-**Claude Chat or ChatGPT**. These two chat lanes have the same governance
-role and review authority — peers, not primary-and-backup. Either lane's
-review and outcome stands on its own; neither requires confirmation from
-the other.
-
-- **Chat** — reviews based on what the Project Owner pastes/uploads (diffs,
-  logs, test output, handoff docs), or on connector-provided repo access when
-  explicitly available. No assumption of live, independent repository access
-  unless stated. This applies equally to Claude Chat and ChatGPT.
-- **A coding lane providing a peer review** may inspect its local repository
-  directly, but peer review does not replace the Chief Engineer gate. Any
-  Main Engineer lane offering peer review is held to the same evidence
-  standard as any other.
-
-Either way, the review covers, as applicable:
-
-- scope and requirements;
-- architecture and design;
-- implementation quality and correctness;
-- tests and verification evidence;
-- security and privacy;
-- data/source provenance;
-- runtime and deployment implications;
-- remaining risks and unresolved issues;
-- branch, commit and PR state.
-
-Outcome:
-
-**APPROVE** — acceptable to merge under `docs/ENGINEERING_GOVERNANCE.md` §6a
-(the approving lane must not be the author — §2b).
-
-**REQUEST CORRECTION** — corrective actions and re-verification are
-required.
-
-A Chief Engineer APPROVE from either chat lane satisfies the merge gate on
-its own (governance §6a); the Project Owner has the same standing and keeps
-override authority (governance §2).
-
-## 5. Project Owner authority and merge execution
-
-The Project Owner is the final human authority over scope, priorities, and
-whether to override any engineering recommendation, and may override any
-governance rule when that benefits the project (governance §2). The approver
-of a change is never its author (governance §2b).
-
-For the specific act of merging to protected `main`, the approval gate is
-satisfied by an APPROVE from **either** Claude Chat or ChatGPT acting as
-Chief Engineer — either one alone is sufficient, with no preference between
-them — **or** the Project Owner directly — see
-`docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition.
-No engineer, model, tool, successful test, prior approval, silence or
-deadline substitutes for that gate.
-
-Once the gate is satisfied, the Project Owner, Claude Code, or Codex CLI/App
-may execute the merge — Claude Code and Codex CLI/App hold this authority
-equally, with no default or preferred executor between them. The active
-chat/review lane may approve but does not execute merges from chat-only
-environments, regardless of which chat lane it is. OMP does not execute
-merges. There is no direct live channel between the chat/review lane and
-the implementation lane, so the Project Owner relays the APPROVE when
-needed.
-
-## 6. Read-only audits
-
-Independent read-only audits may inspect the same clean repository
-concurrently for archaeology, architecture reconnaissance, security
-review, verification or other analysis.
-
-Read-only agents must not modify application code unless explicitly
-authorized.
-
-Read-only work must explicitly state:
-
-`NO APPLICATION CODE CHANGES.`
-
-## 7. Implementation isolation
-
-Each implementation effort should use its own feature branch/worktree
-where parallel coding could conflict.
-
-Never allow two coding agents to edit the same worktree simultaneously.
-
-This applies to Claude Code, Codex CLI/App, OMP and any other coding
-agent.
-
-## 8. Audit trail and handoff
-
-Substantial work must leave durable repository-visible evidence rather
-than relying on conversation memory.
-
-Claude Code may use a lighter-weight handoff for small/exploratory work
-per `CLAUDE.md` §5; the full templates below remain the standard for
-substantive changes and for anything crossing the Chief Engineer review
-boundary. The same lighter-weight allowance applies to Codex CLI/App for
-equivalent small/exploratory work.
-
-**Standard package for chat-based Chief Engineer review.** When the
-Chief Engineer review is happening in a chat lane (Claude Chat or
-ChatGPT) without direct repo access, the Main Engineer's finishing
-sequence should be:
+**Author's package for a chat reviewer** (the chat lane cannot see the
+repository):
 
 ```text
 git status
 git log -5 --oneline --decorate
 git show --stat --oneline HEAD
-        ↓
-run the project's ZIP snapshot script
-        ↓
-hand off: ZIP + Git output + verification command output
 ```
 
-The ZIP snapshot and the Git output serve different purposes and neither
-replaces the other — see `docs/ENGINEERING_GOVERNANCE.md` §7 for why both
-are required. This is the preferred handoff shape for substantive work
-reaching the Chief Engineer gate; it does not replace running the actual
-verification commands (§9 below) or reporting their real output.
+plus the project's ZIP snapshot script output, the real
+verification output, and the handoff. Both are needed: the ZIP shows the
+files as handed over; the Git output shows what is actually committed and
+whether anything is uncommitted. Neither replaces the other, and neither
+replaces running the checks.
 
-### Audit report
+**Reviewer** checks in this order: requirements → design → correctness and
+maintainability → tests and evidence → security and privacy → provenance →
+deployment implications → risks → Git state. Then replies:
 
-```markdown
-# [Audit Title]
-## Scope
-## Repository State
-## Method
-## Findings
-## Evidence
-## Verification Status
-### VERIFIED
-### UNVERIFIED
-### FAILED
-## Risks / Concerns
-## Unresolved Questions
-## Recommendations
-## Changes Made
-## Handoff
+```
+REVIEW OUTCOME: APPROVE | REQUEST CORRECTION
+Reviewed commit: <sha>   Branch/PR: <n>
+Author lane: <lane>   Reviewer lane: <lane> (must differ)
+Evidence basis: handed-over material only | direct repository access
+Corrections (if any): 1) … 2) …
+Evidence relied on: <what was actually seen>   UNVERIFIED: <what was not>
 ```
 
-### Implementation handoff
+An APPROVE is valid for the stated commit only. A coding lane may give a peer
+review, but it does not replace the Chief Engineer gate.
 
-```markdown
-# Implementation Handoff
-## Task
-## Scope
-## Design
-## Changes
-## Tests / Verification
-## Evidence
-## Remaining Risks
-## Unverified
-## Git
-Branch:
-Commit:
-PR:
-Author lane:
-Reviewer lane:
-```
+## 5. Read-only audits and parallel work
 
-For generated external artifacts, also record the exact workspace path
-and user-accessibility/retrieval status.
+Several read-only audits may inspect a clean repository at once. They change
+no application code and say so. Implementation uses its own branch or
+worktree; two coding agents never share a worktree.
 
-### Handoff to the Project Owner (plain language)
+## 6. Handing work to the Project Owner (plain language)
 
-The Project Owner is not expected to be an engineer. Whenever a lane hands
-work to the Project Owner it should:
+The Project Owner is not an engineer. Every hand-off to them:
 
-- say in one or two plain sentences what changed and why;
-- give numbered steps, including where files go and the exact Git commands
-  to type in Command Prompt (cmd), each in its own code block;
-- say what the Project Owner should see after each step, and what to do if
-  it looks different;
-- avoid engineering jargon, or explain any term the first time it is used;
-- say which lane authored the work and which lane should review it (§2b of
-  the governance).
+- says in one or two plain sentences what changed and why;
+- gives numbered steps, each command in its own code block (Windows Command
+  Prompt unless told otherwise);
+- says what they should see after each step and what to do if it differs;
+- avoids jargon, or explains a term the first time;
+- names the author lane and the reviewer lane.
 
-A lane that cannot commit or open pull requests itself (governance §2a)
-hands over a Git bundle or patch so that commits keep the authoring lane's
-identity; the Project Owner (or another lane) pushes it and opens the pull
-request.
+A lane that cannot push (governance §2a) hands over a Git bundle or patch so
+commits keep their author. If the project has `docs/PROJECT_PROCEDURES.md`, its step-by-step
+bundle instructions are there.
 
-## 9. Verification standard
+## 7. Fresh-session rule
 
-- **VERIFIED** = supported by direct repository, command, test, CI or
-  runtime evidence.
-- **UNVERIFIED** = proposal, inference or claim lacking sufficient direct
-  evidence.
-- **FAILED** = confirmed execution failure.
+At the start of a new engineering session:
 
-Do not call changes fixed, working, passing, complete or
-production-ready without the relevant evidence.
+1. inspect live Git state, and state which Git/GitHub/shell capabilities
+   this session actually has;
+2. read `AGENTS.md` and `AGENTS.project.md`, then the current
+   status/handover document and the task's handoff, if any;
+3. identify whether the task is implementation or read-only audit;
+4. state the evidence and handoff you will deliver;
+5. verify important prior claims before relying on them.
 
-## 10. Fresh-session rule
+Do not read governance or this workflow for this; open them only when
+`AGENTS.md` §1 says to. Do not treat prior chat history as authoritative.
 
-At the beginning of every new CoHai Travel engineering session:
+When switching lanes mid-task: commit or stash cleanly, refresh the handoff
+with the current Git state and next step, then start the new lane at step 1.
 
-1. inspect live Git state and state which Git/GitHub/shell capabilities
-   this session actually has (governance §2a);
-2. read `docs/ENGINEERING_GOVERNANCE.md`;
-3. read the current handover/report and relevant project plans;
-4. identify whether the task is implementation or read-only audit;
-5. choose a Main Engineer lane (Claude Code, Codex CLI/App, or OMP) based
-   on task fit, context, local resources, availability, quality and cost —
-   Claude Code and Codex CLI/App are equally valid first choices;
-6. state the evidence and handoff deliverable;
-7. independently verify important prior claims before relying on them.
+## 8. Cost
 
-Do not treat prior chat history as authoritative.
-
-## 11. Cost discipline
-
-Use the least expensive capable engineering lane that can safely perform
-the task, within Maris's fixed monthly budget (see
-`docs/ENGINEERING_GOVERNANCE.md` §11).
-
-OpenRouter/OpenCode Go spend guardrails remain active for OMP. Switching
-to OMP when a primary lane's session limit is hit is expected, routine
-behavior — not a fallback of last resort. The same routine-switching logic
-applies between Claude Code and Codex CLI/App, and between Claude Chat and
-ChatGPT: switching is normal operation, not an escalation.
-
-Model choice can change without changing governance, but Codex Cloud is
-excluded from the approved choices.
+Use the least expensive capable lane that can safely do the task, within the
+Project Owner's fixed monthly budget (governance §11). Switching lanes when a
+session limit is hit is routine. If a cheaper lane keeps producing work that
+fails review, report it to the Project Owner; do not keep paying for
+corrections.

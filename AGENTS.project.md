@@ -1,5 +1,8 @@
 # CoHai Travel — Project Instructions
 
+Project facts and rules. Universal rules are in `AGENTS.md`; roles and merge authority in `docs/ENGINEERING_GOVERNANCE.md`; report and review formats in
+`docs/AI_ENGINEERING_WORKFLOW.md`. This file adds project facts; it never weakens the universal rules.
+
 ## 1. Project Identity
 
 **CoHai Travel**
@@ -259,126 +262,27 @@ Do not claim a command passed without executing it.
 
 ---
 
-## 15. Documentation Structure
+---
+
+## 15. Sensitive Boundaries
+
+Treat as sensitive: authentication and authorization; booking and inventory;
+database writes and migrations; notifications; customer data; secrets;
+legacy-migration provenance; production configuration. Never represent
+synthetic data as historical migration content.
+
+---
+
+## 16. Documentation Structure
 
 Detailed project procedures belong in `docs/`.
 
-Important current documents include:
+- `AGENTS.md` (universal contract), `CLAUDE.md`, `.omp/AGENTS.md`,
+  `.omp/RULES.md`
+- `docs/ENGINEERING_GOVERNANCE.md`, `docs/AI_ENGINEERING_WORKFLOW.md`
+- `docs/CONTENT_ARCHAEOLOGY.md`, `docs/PARITY_AUDIT.md`,
+  `docs/P2_MIGRATION_EXECUTION.md`, `docs/P1_NOTIFICATIONS.md`
 
-- `docs/ENGINEERING_GOVERNANCE.md`
-- `docs/AI_ENGINEERING_WORKFLOW.md`
-- `docs/CONTENT_ARCHAEOLOGY.md`
-- `docs/PARITY_AUDIT.md`
-- `docs/P2_MIGRATION_EXECUTION.md`
-- `docs/P1_NOTIFICATIONS.md`
-- `CLAUDE.md` (Claude Code's harness-specific operating guidance; it does not
-  alter Claude Code's governance standing, which is equal to Codex CLI/App)
-
-`AGENTS.project.md` should remain a concise project contract rather than a
-duplicate of these documents.
-
-Historical documents remain evidence and should not be rewritten merely to
-make current behavior look continuous.
-
----
-
-## 16. Multi-Harness Engineering Model
-
-The project supports multiple implementation environments.
-
-Current implementation lanes:
-
-- Claude Code (governed by `CLAUDE.md` for Claude-specific operating details)
-- Codex CLI / Codex App
-- OMP CLI (DeepSeek, GLM, Kimi, Qwen — used routinely for cost/availability
-  reasons, including whenever a session limit is hit on another lane)
-
-Claude Code and Codex CLI/App have the same Main Engineer role and the same
-higher-trust, merge-capable governance standing — they are peers, and
-neither is the designated primary or the other's fallback. OMP remains a
-full implementation lane but does not hold merge authority. Harness choice
-does not change:
-
-- project scope;
-- verification requirements;
-- Git rules;
-- review boundaries;
-- approval boundaries;
-- final Project Owner authority.
-
-The same peer relationship holds on the review side: Claude Chat and
-ChatGPT are equally-standing Chief Engineer lanes (see §17).
-
-The repository should remain portable across harnesses.
-
-## 17. Approval Boundary
-
-The current workflow is:
-
-Project Owner defines task
-→ implementation / investigation
-→ tests + evidence + handoff
-→ Chief Engineer review
-→ APPROVE from the active Chief Engineer chat lane (Claude Chat or
-  ChatGPT — either is independently sufficient), or the Project Owner
-→ merge executed by the Project Owner, Claude Code, or Codex CLI/App
-  (either lane is independently sufficient)
-→ protected `main`
-
-The Chief Engineer role is performed by the active chat/review lane — Claude
-Chat or ChatGPT — and these two have the same role and authority, as true
-peers rather than a primary lane with a backup. Claude Code is a Main
-Engineer lane with the same governance standing as Codex CLI/App, likewise
-as peers. Neither an implementation harness nor a successful automated test
-may bypass this boundary.
-
-**Approval authority is held by the active Chief Engineer chat lane
-(Claude Chat or ChatGPT) and the Project Owner. Merge-execution authority is
-held equally by the Project Owner, Claude Code, and Codex CLI/App.** Claude
-Chat and ChatGPT do not execute merges from chat-only environments; Claude
-Code and Codex CLI/App may equally execute an approved merge — there is no
-default or preferred executor between the two, and no default or preferred
-approver between Claude Chat and ChatGPT. OMP does not execute a merge to
-`main`; its implementation work reaches `main` through the same review-and-
-approval gate.
-
-The author of a change never approves it, in three-lane or two-lane mode
-(`docs/ENGINEERING_GOVERNANCE.md` §2a–§2b). The Project Owner may override
-any rule when it benefits the project.
-
-See `docs/ENGINEERING_GOVERNANCE.md` §6a for the authoritative definition
-of the approval gate and merge-execution rules.
-
-## 18. Scope Control
-
-A task should normally produce the smallest correct change that satisfies its
-requirements.
-
-Do not combine unrelated:
-
-- refactors;
-- dependency modernization;
-- UI redesign;
-- migration cleanup;
-- content rewriting;
-- architecture replacement;
-
-with a scoped engineering task unless explicitly authorized.
-
-Record newly discovered unrelated issues separately.
-
----
-
-## 19. Definition of Done
-
-A substantive task is complete when:
-
-- the authorized scope is implemented or investigated;
-- relevant verification has been run;
-- important claims are evidence-backed;
-- security, data, and provenance implications have been considered;
-- the diff is focused and reviewable;
-- documentation is accurate where behavior changed;
-- remaining limitations are explicit;
-- Git state is understood;
-- the work is ready for the required review.
+`AGENTS.project.md` stays a concise project contract, not a copy of these.
+Historical documents remain evidence; do not rewrite them to make current
+behavior look continuous.
