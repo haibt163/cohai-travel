@@ -1,8 +1,7 @@
 # CoHai Travel — project status
 
-Last updated: 25 September 2026 (governance section revised; product/audit
-status below carried forward from 15 September 2026 pending fresh
-verification — see note at end of Audit matrix).
+Last updated: 2 October 2026 (fresh verification of `main`; see "Evidence — 2 October 2026"
+below. Matrix rows not mentioned there are still carried forward from 15 September 2026).
 
 ## Executive status
 
@@ -35,12 +34,12 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 | P1.6 EN/VN URL architecture | 🟢 | Locale-prefixed application routes are canonical. |
 | P1.7 Locale-aware metadata | 🟢 | Titles/descriptions use locale-specific copy on public routes. |
 | P1.8 Sitemap/robots | 🟢 | Locale-aware SEO endpoints remain under TanStack Start. |
-| P1.9 Images | 🟡 | Verify final asset provenance/licensing; legacy media may now be migrated when useful. |
+| P1.9 Images | 🟢 | Provenance/licensing reviewed and confirmed by the Project Owner (2 October 2026). Legacy media may be migrated when useful. |
 | P1.10 Booking tests | 🟡 | Add real DB-backed concurrency/integration harness when production DB test infrastructure is available. |
 | P1.11 Booking state | 🟢 | Current confirmed/cancelled model remains locked. |
 | P1.12 Public contact | 🟢 | Public endpoint with anti-spam/rate-limit protections. |
 | P1 operations/admin | 🟢 | Allowlisted users get an operator desk section in My trips, including current P2 provenance coverage. |
-| P1 notifications | 🟡 | Contract documented; provider credentials, delivery worker and monitoring remain to be configured. |
+| P1 notifications | ⚪ optional | Contract documented. Provider, credentials, delivery worker and monitoring are **optional / not a current priority** (Project Owner, 2 October 2026). |
 | P2.14 Legacy product archaeology | 🟢 | Original product/business/UX intent is documented in `docs/P2_LEGACY_PRODUCT_ARCHAEOLOGY.md`. |
 | P2.15 Source migration matrix | 🟢 | Working record dispositions remain traceability tools; accepted records can move to `migrate` after publication gates. |
 | P2.16 Legacy URL mapping | 🟢 | Preserve valuable legacy paths through verified canonical replacements. |
@@ -57,6 +56,22 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 > re-verify any 🟢/🟡 status. Have a direct-repository Main Engineer
 > re-confirm current state against live Git/CI evidence at the next
 > implementation session before treating these as current.
+
+## Evidence — 2 October 2026 (`main` @ `828b88e`, PR #16 merge)
+
+Run by Claude Chat on an uploaded review ZIP in a sandbox (Node 22, `npm ci`); no access to GitHub, Vercel or the live Neon database.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| `npm ci`, `test:domain` (29 tests), `typecheck`, `lint` (0 errors, 4 warnings), `build`, `test:smoke` | **VERIFIED** | Run in the sandbox; all exit 0. |
+| Local folder vs `main` | **VERIFIED** | Differences are line-ending only, plus `create-project-zip.ps1` deleted locally and `create-project-zip-universal.ps1` untracked (handled in a separate branch). |
+| Catalog data in Neon vs migrations | **VERIFIED** | Project Owner's JSON exports of `destinations`, `tours`, `stays`, `cars`, `tour_departures` (10/9/6/4/23 rows) compared field by field with a database built from `migrations/`: 0 differences. A deliberately altered copy was detected, so the comparison is sensitive. |
+| Booking prices charged | **VERIFIED (code)** | The server prices bookings from database rows (stay = nightly rate × nights, car = daily rate × days, tour = departure price × guests). A booking-panel headline that showed unit price × default quantity (e.g. $210/night shown as $630) was a display issue, not a database one; fix is in a separate PR. |
+| `booking-concurrency.integration.mjs` | **FAILED on `main`, fixed in a separate PR** | Not run by CI. Rewritten to call the real booking code on real PostgreSQL 16 it exposed two production defects: stay/car availability SQL errors (`date + unknown`), and a tour seat count that could over-book under contention. Fixes and the CI wiring are in a separate PR and are **UNVERIFIED in GitHub Actions until it runs there**. |
+| P1.10 Booking tests | 🟡 until the PR above is merged and CI is green | |
+| Live site after PRs #15 (canonical URL) and #16 (icons) | **UNVERIFIED** | Not reachable from the review environment; Project Owner to check view-source canonical, `/favicon.ico`, `/site.webmanifest`. |
+
+**Owner decisions recorded 2 October 2026:** image rights — done; notifications — optional; five superseded September branches — delete; `create-project-zip-universal.ps1` — adopt, remove the old script.
 
 ## Current verified checkpoint — 11 September 2026
 
