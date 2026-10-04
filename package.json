@@ -11,7 +11,7 @@
     "preview": "node scripts/with-app-env.mjs vite preview --host 127.0.0.1 --port 8081",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test:domain": "node --test scripts/booking-concurrency.test.mjs scripts/migration-plan.test.mjs scripts/sign-out-plan.test.mjs scripts/audit-legacy-dump.test.mjs scripts/provenance.test.mjs scripts/check-site-url.test.mjs scripts/site-icons.test.mjs && node --experimental-strip-types --test src/lib/booking-rules.test.ts src/lib/seo.test.ts && node --experimental-strip-types scripts/booking-concurrency.integration.mjs",
+    "test:domain": "node --test scripts/booking-concurrency.test.mjs scripts/migration-plan.test.mjs scripts/sign-out-plan.test.mjs scripts/audit-legacy-dump.test.mjs scripts/provenance.test.mjs scripts/check-site-url.test.mjs scripts/site-icons.test.mjs && node --experimental-strip-types --test src/lib/booking-rules.test.ts src/lib/seo.test.ts src/lib/auth/sign-in-error.test.ts && node --experimental-strip-types scripts/booking-concurrency.integration.mjs",
     "test:smoke": "node scripts/smoke.mjs",
     "format": "prettier --write ."
   },

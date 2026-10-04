@@ -57,6 +57,19 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 > re-confirm current state against live Git/CI evidence at the next
 > implementation session before treating these as current.
 
+## Evidence — 4 October 2026 (branch `fix/auth-signin-error-surface`, from `main` @ `33caefc`)
+
+Author lane: Claude Chat, on an uploaded review ZIP in a sandbox (Node 22, `npm ci`). No access to GitHub, Vercel, Google, X or the auth broker (`auth.grok.me`).
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Login buttons called `signIn()` without catching a rejection (`src/routes/login.tsx`, `src/routes/$locale/login.tsx`), so a failed start showed nothing | **VERIFIED (code)** | Read from source; `signIn()` in `src/lib/auth/client.ts` throws on error. |
+| Fix: both login pages now show a visible, localized (EN/VN) error and disable buttons while starting | **VERIFIED (static)** / **UNVERIFIED (browser)** | `typecheck` pass, `lint` 0 errors / 4 existing warnings, `test:domain` pass (4 new tests for the error helper), `vite build` pass. `test:smoke` not run. Not exercised in a browser. |
+| `.env.example` listed unused `GOOGLE_*` / `TWITTER_*` variables | **Fixed in branch** | Replaced with the `GROK_AUTH_*` variables that `src/lib/auth/server.ts` actually reads. |
+| `GROK_AUTH_ISSUER`, `GROK_AUTH_CLIENT_ID`, `GROK_AUTH_CLIENT_SECRET` set in Vercel Production | **UNVERIFIED** | Only `DATABASE_URL` (Neon) has been confirmed. If missing, the server falls back to the preview-only client (`src/lib/auth/preview.ts`), which the broker accepts only for `*.grok-sandbox.com`. |
+| Google and X sign-in working on the live site | **UNVERIFIED** | Not reachable from the review environment. |
+| X consent screen shows "Grok App Builder" | **Owner decision** | The name comes from the broker's registered X application, not from this repository (`label: "X"` is button text only). |
+
 ## Evidence — 2 October 2026 (`main` @ `828b88e`, PR #16 merge)
 
 Run by Claude Chat on an uploaded review ZIP in a sandbox (Node 22, `npm ci`); no access to GitHub, Vercel or the live Neon database.
