@@ -1,8 +1,8 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
+import { authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/locale";
-import { Button } from "@/components/ui/button";
+import { ProviderSignIn } from "@/components/provider-sign-in";
 
 export const Route = createFileRoute("/login")({ component: Login });
 
@@ -22,17 +22,7 @@ function Login() {
         <p className="mt-2 text-sm text-muted">{t("signInLead")}</p>
         <div className="mt-6 space-y-2">
           {authEnabled ? (
-            GROK_PROVIDERS.map((p) => (
-              <Button
-                key={p.providerId}
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => signIn(p.providerId, { callbackURL: "/account" })}
-              >
-                Continue with {p.label}
-              </Button>
-            ))
+            <ProviderSignIn callbackURL="/account" />
           ) : (
             <p className="text-sm text-muted">Sign-in is disabled.</p>
           )}
