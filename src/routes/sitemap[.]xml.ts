@@ -8,18 +8,18 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async ({ request }) => {
         const sql = await getSql();
         const [destinations, tours, stays, cars] = await Promise.all([
-          sql`
+          sql<{ slug: string }>`
             select slug from destinations
             where provenance_state in ('source-backed', 'modern-addition')
             order by slug
           `,
-          sql`
+          sql<{ slug: string }>`
             select slug from tours
             where provenance_state in ('source-backed', 'modern-addition')
             order by slug
           `,
-          sql`select slug from stays order by slug`,
-          sql`select slug from cars order by slug`,
+          sql<{ slug: string }>`select slug from stays order by slug`,
+          sql<{ slug: string }>`select slug from cars order by slug`,
         ]);
         const origin = siteOriginFor(new URL(request.url).origin);
         const publicPaths = [
