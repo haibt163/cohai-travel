@@ -12,7 +12,7 @@ export type Locale = "en" | "vn";
 type Dictionary = Record<string, { en: string; vn: string }>;
 
 const copy: Dictionary = {
-  brand: { en: "CoHai Travel", vn: "CoHai Travel" },
+  brand: { en: "Cô Hai Travel", vn: "Cô Hai Travel" },
   tagline: { en: "Vietnam, Cambodia, Thailand — paced properly.", vn: "Việt Nam, Campuchia, Thái Lan — đúng nhịp." },
   journeys: { en: "Journeys", vn: "Hành trình" }, places: { en: "Places", vn: "Điểm đến" }, stays: { en: "Stays", vn: "Lưu trú" }, cars: { en: "Cars", vn: "Xe" }, contact: { en: "Contact", vn: "Liên hệ" }, travelNotes: { en: "Travel notes", vn: "Ghi chú hành trình" }, search: { en: "Search", vn: "Tìm" }, account: { en: "My trips", vn: "Chuyến của tôi" }, signIn: { en: "Sign in", vn: "Đăng nhập" }, currency: { en: "AUD", vn: "AUD" }, from: { en: "From", vn: "Từ" }, perPerson: { en: "per person", vn: "mỗi khách" }, perNight: { en: "per night", vn: "mỗi đêm" }, perDay: { en: "per day", vn: "mỗi ngày" }, days: { en: "days", vn: "ngày" },
   book: { en: "Book this departure", vn: "Đặt chuyến này" }, bookStay: { en: "Book this stay", vn: "Đặt phòng" }, bookCar: { en: "Book this car", vn: "Đặt xe" }, more: { en: "Read the itinerary", vn: "Xem lịch trình" }, nature: { en: "Nature", vn: "Thiên nhiên" }, beach: { en: "Coast", vn: "Biển" }, unesco: { en: "UNESCO", vn: "UNESCO" }, allJourneys: { en: "All journeys", vn: "Mọi hành trình" }, heroKicker: { en: "Private departures from Australia", vn: "Chuyến riêng từ Úc" },
