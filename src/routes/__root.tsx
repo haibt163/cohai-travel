@@ -7,8 +7,8 @@ import { Shell } from "@/components/shell";
 import { absoluteUrl } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "CoHai Travel";
-const APP_DESCRIPTION = "Private journeys in Vietnam, Cambodia and Thailand. Booked in AUD.";
+const APP_NAME = "Cô Hai Travel";
+const APP_DESCRIPTION = "Private journeys in Vietnam, Cambodia and Thailand. Booked in Australian dollars, with live departures and thoughtful local detail.";
 
 function localeFromPathname(pathname: string): Locale {
   return pathname.split("/").filter(Boolean)[0] === "vn" ? "vn" : "en";
@@ -50,7 +50,7 @@ export const Route = createRootRoute({
           "@type": "TravelAgency",
           name: APP_NAME,
           description: APP_DESCRIPTION,
-          ...(absoluteUrl("/en") ? { url: absoluteUrl("/en") } : {}),
+          url: absoluteUrl("/en"),
         }),
       },
     ],

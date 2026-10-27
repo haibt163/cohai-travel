@@ -1,4 +1,5 @@
 const DEV_SITE_URL = "http://localhost:3000";
+const CANONICAL_SITE_URL = "https://cohaitravel.com";
 export type SeoLocale = "en" | "vn";
 
 type SeoLink = { rel: string; href: string; hrefLang?: string };
@@ -6,11 +7,8 @@ type SeoLink = { rel: string; href: string; hrefLang?: string };
 const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]", "0.0.0.0"]);
 
 /**
- * Resolve the public site URL from the configured value.
- *
- * Returns `undefined` instead of guessing when there is no trustworthy public URL:
- * a missing, malformed, or non-HTTPS public value, or a localhost value outside dev.
- * Callers must omit canonical/og:url/hreflang rather than emit a wrong address.
+ * Resolve a configured site URL. Production SEO uses the owner-confirmed
+ * canonical domain below so a stale Vercel alias cannot leak into search metadata.
  */
 export function resolveSiteUrl(configured: string | undefined, isDev: boolean): string | undefined {
   const value = configured?.trim();
@@ -30,17 +28,20 @@ export function resolveSiteUrl(configured: string | undefined, isDev: boolean): 
   return parsed.origin + parsed.pathname.replace(/\/$/, "");
 }
 
+/** Canonical public host is fixed to the owner-confirmed production domain. */
 export function getSiteUrl(): string | undefined {
-  return resolveSiteUrl(import.meta.env.VITE_SITE_URL, import.meta.env.DEV);
+  return import.meta.env.DEV
+    ? resolveSiteUrl(import.meta.env.VITE_SITE_URL, true)
+    : CANONICAL_SITE_URL;
 }
 
-/** Origin for sitemap.xml and robots.txt: the configured public URL, else the request's own origin. */
+/** Use the canonical production host for crawler-facing robots and sitemap URLs. */
 export function siteOriginFor(requestOrigin: string): string {
   return getSiteUrl() ?? requestOrigin.replace(/\/$/, "");
 }
 
 function joinUrl(siteUrl: string, pathname: string): string {
-  return new URL(pathname, `${siteUrl}/`).toString();
+  return new URL(pathname, siteUrl + "/").toString();
 }
 
 export function absoluteUrl(pathname: string): string | undefined {
@@ -57,7 +58,7 @@ type SeoArgs = {
   locale?: SeoLocale;
 };
 
-/** Pure builder; `siteUrl` is `undefined` when no public URL is known. */
+/** Pure builder; siteUrl is undefined when no public URL is known. */
 export function buildSeoHead(
   siteUrl: string | undefined,
   { title, description, pathname, alternatePathname, image, locale }: SeoArgs,

@@ -13,10 +13,12 @@ export const Route = createFileRoute("/")({
   },
   head: () =>
     seoHead({
-      title: "CoHai Travel | Private journeys in Vietnam, Cambodia and Thailand",
+      title: "Cô Hai Travel | Private journeys in Vietnam, Cambodia and Thailand",
       description:
-        "Private journeys through Vietnam and its neighbours, booked in Australian dollars with live departures.",
-      pathname: "/",
+        "Plan considered private journeys through Vietnam and its neighbours, with live departures and prices in Australian dollars.",
+      pathname: "/en",
+      locale: "en",
+      alternatePathname: (locale) => "/" + locale,
       image: "/media/hero-halong.jpg",
     }),
   component: Home,
