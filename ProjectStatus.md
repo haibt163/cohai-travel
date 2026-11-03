@@ -57,6 +57,18 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 > re-confirm current state against live Git/CI evidence at the next
 > implementation session before treating these as current.
 
+## Evidence — 3 November 2026 (production database URL guard; branch `chore/require-database-url-production`)
+
+Author lane: OMP (DeepSeek V4.1 Flash). Direct local repository execution on Windows; base `main` @ `1556e31`. No access to Vercel settings, Neon data or the live site.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Production builds fail closed when `DATABASE_URL` is missing, blank or not a PostgreSQL connection string | **VERIFIED (local execution)** | `scripts/check-database-url.mjs` runs immediately after the site URL guard in `npm run build`. `VERCEL_ENV=production DATABASE_URL= npm run build` exits 1 before Vite; `VERCEL_ENV=production DATABASE_URL=postgres://user:pass@example.invalid/db node scripts/check-database-url.mjs` exits 0. The message names Vercel → Settings → Environment Variables → Production and never prints the value. |
+| Non-production builds keep the PGlite fallback and are not blocked | **VERIFIED (local execution)** | With `VERCEL_ENV` unset, the guard returns `{ ok: true, skipped: true }`; `npm run build`, `typecheck`, `lint` (0 errors, 4 pre-existing warnings) and `test:smoke` exit 0. The four new guard tests run inside `npm run test:domain`. |
+| Production `DATABASE_URL` is present and valid in Vercel | **UNVERIFIED** | This lane cannot read Vercel settings. The 5 October 2026 Owner confirmation above predates this guard; re-confirm the Production variable before merge/deploy. |
+
+The local session reports `CI=true` but has no PostgreSQL server; `test:domain` was executed with `CI` unset so the documented PGlite fallback applied (logic and pricing only, no row-lock proof). GitHub Actions on the PR branch runs the same suite with PostgreSQL 16.
+
 ## Evidence — 5 October 2026 (booking identity path and OAuth status; documentation only, no code changed)
 
 Author lane: Claude Chat, reading the uploaded review ZIP at `2035255`. No access to Vercel, Neon or the live site; Vercel statements below are Owner-confirmed.
