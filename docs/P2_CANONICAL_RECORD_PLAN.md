@@ -37,6 +37,8 @@ This document is a decision ledger, not a claim that every record is already pro
 | `angkor-dawn` | `modern-addition` | No direct legacy journey mapping used in current provenance migration. | Keep as an intentional 2026 addition; independently verify current facts. |
 | `puluong` | `modern-addition` | No direct legacy journey mapping used in current provenance migration. | Keep as an intentional 2026 addition; independently verify current facts. |
 
+> **Note — 3 November 2026:** the four `modern-addition` records (`siemreap`, `bangkok`, `angkor-dawn`, `puluong`) now carry official-tourism-source copy in `migrations/0011_fact_checked_modern_additions.sql`, recorded in `docs/P2_2026_FACT_SOURCES.md`. They remain `modern-addition`; P2.18 remains 🟡 until the remaining editorial, media, URL, schedule and source-coverage gates close. The `puluong` tour is still seeded with `destination_id = 'sapa'`; this copy-only refresh does not change routing, and the relationship is an Owner decision.
+
 ## Runtime readiness checkpoint — 11 September 2026
 
 The application migration/bootstrap blocker encountered during local P2 work is now closed. The final runtime behavior is supported by user-observed local execution evidence and independently passing CI.
