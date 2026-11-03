@@ -1,5 +1,7 @@
 # Repository ↔ Preview parity audit
 
+> **Superseded — 3 November 2026:** this 9 September 2026 snapshot is retained as historical evidence. The current repository/preview parity audit is `docs/REPO_PREVIEW_PARITY.md`; the findings below are not current status.
+
 Last reviewed: 9 September 2026.
 
 ## Gate

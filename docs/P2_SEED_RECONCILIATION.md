@@ -22,6 +22,8 @@ The P2 audit reports 30 source tables, 19 populated tables, 207 `wp_posts`, 22 m
 
 ## Interpretation of the current seed
 
+**Update — 3 November 2026:** provenance states are now assigned in `migrations/0006_provenance.sql` and repaired idempotently in `0010`; `0007`–`0009` refreshed the source-backed destination and journey copy. The four intentional 2026 additions remain `modern-addition`, and the current seed still must not be described as a completed historical migration.
+
 The synthetic seed was useful as application scaffolding. It is now treated as a temporary implementation fixture. The historical archive should inform the content plan more strongly than the original scaffold did, particularly for destinations, tours, travel-information subjects and the Nature/Beach/UNESCO discovery structure.
 
 ## Destinations

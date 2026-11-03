@@ -1,6 +1,6 @@
 # CoHai Travel — P2 Fidelity Report
 
-Last reviewed: 11 September 2026.
+Last reviewed: 11 September 2026; current-`main` status note added 3 November 2026.
 
 ## Executive result
 
@@ -87,6 +87,8 @@ User-provided Windows execution evidence shows `npm run dev` starting successful
 GitHub Actions run #251 on `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
 
 This runtime incident is therefore **FIXED / VERIFIED** under the project's evidence policy. The PostgreSQL SSL warning remains a separate non-blocking warning and is not part of this resolved incident.
+
+**Update — 3 November 2026:** `migrations/0008_fact_checked_coastal_destinations.sql` and `0009_fact_checked_source_backed_journeys.sql` extended the fact-checked set to eight destinations and seven journeys. GitHub Actions run #319 on `main` @ `1556e31` is the current successful repository gate. The unresolved gaps below remain, and P2.18 stays 🟡.
 
 ## Unresolved gaps
 

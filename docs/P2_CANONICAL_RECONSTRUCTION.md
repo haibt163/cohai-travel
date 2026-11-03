@@ -1,6 +1,6 @@
 # CoHai Travel — P2 Canonical Reconstruction
 
-Last reviewed: 11 September 2026.
+Last reviewed: 3 November 2026 (current progress note added; 11 September detail preserved).
 
 ## Purpose
 
@@ -64,6 +64,16 @@ The first five source-backed destination subjects have refreshed current copy in
 
 This is a factual-copy refresh, not a final commercial or media approval.
 
+### Post-11 September updates
+
+- `migrations/0008_fact_checked_coastal_destinations.sql` refreshed Mekong Delta, Phu Quoc and Nha Trang.
+- `migrations/0009_fact_checked_source_backed_journeys.sql` refreshed the seven source-backed journeys.
+- `migrations/0010_repair_provenance_schema.sql` made the provenance schema repair idempotent.
+- GitHub Actions run #319 on `main` @ `1556e31` passed the full gate, including the PostgreSQL 16 booking integration test.
+- The four intentional modern additions remain labelled `modern-addition`; their fact refresh is tracked separately from this ledger.
+
+The provenance label remains traceability metadata, not a publication-readiness claim.
+
 ## Runtime readiness — fixed / verified 11 September 2026
 
 The development database/bootstrap incident that blocked the landing page and most product routes is now closed.
@@ -79,8 +89,8 @@ Under the engineering evidence policy, this incident is therefore **FIXED / VERI
 ## Implementation order
 
 1. Destination-led connected catalog UX — implemented.
-2. Source-backed canonical destinations — provenance established; first five destination records fact-refreshed.
-3. Source-backed canonical tours — next major reconstruction batch.
+2. Source-backed canonical destinations — provenance established; `0007` and `0008` refreshed eight destination records.
+3. Source-backed canonical tours — seven journeys refreshed in `0009`; further source subjects remain.
 4. Travel-information surfaces — rebuild durable subject matter with current facts.
 5. Stays/cars — selectively reconstruct and verify useful historical products.
 6. Departures — reconcile the historical schedule model with current availability rules.
