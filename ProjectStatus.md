@@ -63,18 +63,19 @@ Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and GitHub Action
 | Item | Status | Evidence |
 | --- | --- | --- |
 | Latest `main` merged into PR #30 | **VERIFIED (Git)** | Merge commit `d3a5dae`; `ProjectStatus.md` conflict resolved additively, preserving both 3 November audit entries. |
-| Vercel Preview build logs | **FAILED to access; cause UNVERIFIED** | Vercel CLI reports `Logged out`; no `VERCEL_TOKEN`. Deployments `dpl_DAK5T9GRJLjXudXLo7PBj6DqC8nc` and `dpl_CDbiYXvV3z26XWxB4Z75ErU4EzEG` failed. The exact build error cannot be retrieved from this lane. |
+| Earlier Vercel Preview failures | **FAILED (historical); cause UNVERIFIED** | Deployments `dpl_DAK5T9GRJLjXudXLo7PBj6DqC8nc` and `dpl_CDbiYXvV3z26XWxB4Z75ErU4EzEG` failed. Vercel CLI reports `Logged out`; no `VERCEL_TOKEN`, so their build logs could not be retrieved. |
+| Current Vercel Preview deployment | **VERIFIED** | The new deployment on `b80d103` passed: https://vercel.com/haibt163s-projects/cohaitravel/Ap7ec9hTPMm5nmWsvD8cqnXPiPrS. This proves the updated branch deploys; it does not explain the earlier failures. |
 | Thanh Hoa destination added | **VERIFIED (fresh PGlite)** | `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` inserts `thanhhoa` / `thanh-hoa` with `provenance_state = 'modern-addition'` and `source_ref = null`; all migrations `0001`–`0012` applied in order. |
 | Pu Luong reassigned; Sapa unchanged | **VERIFIED (fresh PGlite)** | The `puluong` tour now has `destination_id = 'thanhhoa'`; `sapa` remains `source-backed`; `sapa-terraces` remains under `sapa`, and its three departure rows are unchanged. The misleading Sapa image on the Pu Luong journey was replaced with the Thanh Hoa editorial plate. |
 | Approved Thanh Hoa/Pu Luong photograph | **UNVERIFIED / missing** | No repository asset depicts Thanh Hoa or Pu Luong. A project-authored editorial SVG plate is used, not a photograph, and is recorded as provisional. |
 | Migration planner tests | **VERIFIED (local execution)** | New `scripts/migration-plan.test.mjs` runs six tests covering path acceptance, name extraction, applied filtering and numeric ordering; `node --test scripts/migration-plan.test.mjs` passes 6/6. |
 | Native Vietnamese speaker review | **DONE — Owner decision** | The Owner accepted and closed this item on 4 November 2026. No independent native-speaker review evidence exists in this lane. |
 | Google Search Console | **DONE — Owner decision** | The Owner accepted and closed this item on 4 November 2026. Repository evidence remains the committed verification file only; this lane did not perform a fresh Search Console inspection. |
-| PostgreSQL 16 migration path | **PENDING CI** | GitHub Actions on the updated PR head must apply `0012` through `test:domain`; run URL and output will be added after push. |
-| Standard gate on this branch | **VERIFIED (local execution)** | `node --test scripts/migration-plan.test.mjs` passes 6/6 and appears in `test:domain` (26/26 first suite). `test:domain`, `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` all exit 0; smoke applied 13 migrations through `0012`. |
+| PostgreSQL 16 migration path | **VERIFIED (CI)** | GitHub Actions run https://github.com/haibt163/cohai-travel/actions/runs/41767102485 on `b80d103` passed. Its log shows the six planner tests, `[integration] backend: real PostgreSQL` and `PASS on real PostgreSQL (row locking exercised)`; the integration test applies all migrations through `0012`. |
+| Standard gate on this branch | **VERIFIED (local + CI)** | Local: `node --test scripts/migration-plan.test.mjs` 6/6; `test:domain` 26/26 in the first suite; `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` exit 0; smoke applied 13 migrations through `0012`. CI run #41767102485 passed all gates. |
 | New destination routes | **VERIFIED (local runtime)** | Dev server returned 200 for `/en/destinations/thanh-hoa`, `/vn/destinations/thanh-hoa`, `/en/tours/pu-luong-nature-escape` and `/en/destinations`; the sitemap contains EN/VN Thanh Hoa alternates. |
 
-Vercel remains a separate, unresolved deployment problem: a green GitHub Actions run is not proof that the Vercel Preview works.
+The current Vercel Preview deployment passes on `b80d103`. The earlier two failures remain unexplained because their logs were inaccessible; the successful redeploy proves the branch can deploy but does not establish the earlier root cause.
 
 ## Evidence — 3 November 2026 (P2 modern-addition fact refresh; branch `content/p2-modern-additions-fact-refresh`)
 
