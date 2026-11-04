@@ -64,6 +64,20 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 
 > **Matrix review — 4 November 2026:** reconciled with `main` @ `4874bbe` and GitHub Actions run #41772194781. PR #29 and PR #30 are merged. P0.5 and P1.10 now cite the latest successful PostgreSQL 16 gate; P1.8 remains green. P0.2 remains 🟡: successful Preview deployments are not the same as a desktop/iPhone visual check. P2.18 remains 🟡.
 
+## Evidence — 4 November 2026 (PR #31 documentation reconciliation; branch `docs/refresh-stale-project-docs`)
+
+Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and Git. Base `main` @ `4874bbe`; merge commit `9da873b`. No rebase, reset or force-push; no merge to `main` was performed.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| PR #31 synchronised with latest `main` | **VERIFIED (Git)** | `origin/main` @ `4874bbe` merged into `docs/refresh-stale-project-docs` at `9da873b`; the branch is no longer `CONFLICTING`. |
+| `ProjectStatus.md` and `docs/P2_CANONICAL_RECONSTRUCTION.md` conflicts | **VERIFIED** | Both conflicts resolved additively: 3 November documentation-review evidence, 4 November PR #30 evidence, historical audit entries, governance rules, Thanh Hoa/Pu Luong evidence and planner-test completion are retained. No conflict markers remain. |
+| Stale post-PR #30 statements | **VERIFIED (documentation)** | PR #29/#30 are recorded as merged; the planner test is marked resolved; Thanh Hoa and the Pu Luong relationship are recorded as merged; native Vietnamese review and Google Search Console remain `DONE — Owner decision`, without claiming independent review/inspection. |
+| Migration planner tests execute | **VERIFIED (local)** | `node --test scripts/migration-plan.test.mjs` passes 6/6; the tests execute inside `test:domain` (26/26 first suite). `docs/REPO_PREVIEW_PARITY.md` now marks the old missing-file finding as resolved. |
+| Standard gate | **VERIFIED (local execution)** | `test:domain` (26/26 + 16/16), `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` exit 0; smoke applied 13 migrations through `0012`. |
+| GitHub Actions / Vercel Preview | **PENDING at time of writing** | The reconciled head must pass both after push; run URLs/deployment status will be recorded when available. |
+| Desktop/iPhone visual parity | **UNVERIFIED** | Preview deployment success is not the same as a browser visual check; P0.2 remains 🟡. |
+
 ## Evidence — 4 November 2026 (PR #30 follow-up; branch `content/p2-modern-additions-fact-refresh`, now merged)
 
 Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and GitHub Actions. Base merged from `main` @ `ac5cebe`; PR #30 was later merged at `4874bbe`. No Vercel token, Neon data or browser access.
