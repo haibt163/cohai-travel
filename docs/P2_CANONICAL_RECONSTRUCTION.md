@@ -1,6 +1,6 @@
 # CoHai Travel — P2 Canonical Reconstruction
 
-Last reviewed: 3 November 2026 (current progress note added; 11 September detail preserved).
+Last reviewed: 4 November 2026 (merged-state progress and 0011/0012 notes added; 11 September detail preserved).
 
 ## Purpose
 
@@ -64,15 +64,17 @@ The first five source-backed destination subjects have refreshed current copy in
 
 This is a factual-copy refresh, not a final commercial or media approval.
 
-### Post-11 September updates
+### Post-11 September updates — merged state
 
 - `migrations/0008_fact_checked_coastal_destinations.sql` refreshed Mekong Delta, Phu Quoc and Nha Trang.
 - `migrations/0009_fact_checked_source_backed_journeys.sql` refreshed the seven source-backed journeys.
 - `migrations/0010_repair_provenance_schema.sql` made the provenance schema repair idempotent.
-- GitHub Actions run #319 on `main` @ `1556e31` passed the full gate, including the PostgreSQL 16 booking integration test.
-- The four intentional modern additions remain labelled `modern-addition`; their fact refresh is tracked separately from this ledger.
+- `migrations/0011_fact_checked_modern_additions.sql` refreshed the four intentional modern-addition records (`siemreap`, `bangkok`, `angkor-dawn`, `puluong`) from official tourism sources.
+- `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` adds the `thanhhoa` destination and moves the `puluong` journey under it; Sapa and its other journeys remain unchanged. The new destination is a `modern-addition` with no legacy `source_ref`.
+- The fact-checked set now covers eight source-backed destination records and seven source-backed journeys.
+- GitHub Actions run #319 on `main` @ `1556e31` passed the full gate at the 3 November checkpoint; the latest merged `main` @ `4874bbe` is green in run #41772194781, including the PostgreSQL 16 booking integration test and the migration planner tests.
 
-The provenance label remains traceability metadata, not a publication-readiness claim.
+The provenance label remains traceability metadata, not a publication-readiness claim. The four original modern additions and Thanh Hoa remain intentional 2026 additions, not legacy reconstructions.
 
 ## Runtime readiness — fixed / verified 11 September 2026
 

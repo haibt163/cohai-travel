@@ -1,6 +1,6 @@
 # CoHai Travel — P2 2026 fact sources
 
-Last reviewed: 11 September 2026.
+Last reviewed: 3 November 2026 (modern-additions section added; earlier rows unchanged); 4 November 2026 (Thanh Hoa row added).
 
 This ledger records the current external sources used to refresh the first source-backed destination and journey set. It is intentionally narrower than a full publication audit: current prices, supplier claims, departure schedules, media licensing and route redirects remain separate gates.
 
@@ -28,6 +28,18 @@ This ledger records the current external sources used to refresh the first sourc
 | `mekong-slow` | Waterways, cycling, markets, orchards and village life as valid slow-travel modes in the Delta. | Vietnam Tourism — Mekong Delta travel ideas: https://vietnam.travel/things-to-do/how-to-travel-mekong-delta ; Vietnam Tourism — 4 memorable days in the Mekong Delta: https://www.vietnam.travel/things-to-do/4-memorable-days-mekong-delta |
 | `phuquoc-drift` | Beaches balanced with fish sauce, pepper, agriculture, fishing and protected/forested parts of the island. | Vietnam Tourism — Phu Quoc: https://vietnam.travel/places-to-go/southern-vietnam/phu-quoc ; Vietnam Tourism — Phu Quoc island: https://vietnam.travel/node/1465 |
 | `central-coast` | Hoi An–central coast–Nha Trang as a coherent coastal concept; Nha Trang islands, seafood and water activities; stop order and transport remain date-dependent. | Vietnam Tourism — Hoi An: https://beta-v2.vietnam.travel/places-to-go/central-vietnam/hoi-an ; Vietnam Tourism — Nha Trang: https://vietnam.travel/node/220 ; Vietnam Tourism — Deltas, Beaches and Plateaus itinerary: https://vietnam.travel/plan-your-trip/recommended-trip/deltas-beaches-and-plateaus |
+
+## Modern additions — official tourism sources (3–4 November 2026)
+
+These records are intentional 2026 additions, not legacy subjects. They remain `modern-addition`; the sources below support the copy added by `migrations/0011_fact_checked_modern_additions.sql` and `0012_add_thanh_hoa_destination_and_reassign_puluong.sql`.
+
+| Canonical record | Facts carried into current copy | Current source |
+| --- | --- | --- |
+| `siemreap` | Town about 7 km south of Angkor Wat on the plain between the Tonlé Sap and the Kulen hills; Angkor Wat, Angkor Thom/Bayon and Ta Prohm as the essential temple group; floating/stilted Tonlé Sap villages Kompong Phluk and Kompong Khleang; old French Quarter, Psar Chas market, riverside and Angkor National Museum. | Tourism Cambodia (Ministry of Tourism) — Siem Reap Province: https://tourismcambodia.org/provinces/47/siem-reap ; Siem Reap destination guide: https://tourismcambodia.org/destinations/siem-reap/ |
+| `bangkok` | Historic and religious sites including Wat Phra Kaew, Wat Pho, Wat Arun, the Golden Mountain and Wat Ratchanadda; palaces, museums, parks; Chatuchak, Sampeng and Yaowarat/Phahurat markets. | Tourism Authority of Thailand — Bangkok: https://www.tourismthailand.org/Destinations/Provinces/Bangkok/219 |
+| `angkor-dawn` | Angkor Wat as the largest religious monument, built by Suryavarman II in the early 12th century within a moat and 3.6 km outer wall; Bayon stone faces and bas-reliefs at Angkor Thom; Ta Prohm held by silk-cotton roots; Tonlé Sap lake and its 120 km river link to the Mekong; Kompong Phluk/Kompong Khleang villages. | Angkor Enterprise (official) — Angkor Wat: https://www.angkorenterprise.gov.kh/en/explore/685a10149b66c0d6db9be5d3 ; Bayon: https://www.angkorenterprise.gov.kh/en/explore/685a0ec29b66c0d6db9be544 ; Tonlé Sap: https://www.angkorenterprise.gov.kh/en/explore/685a773ad5b83514cb10edd2 ; Tourism Cambodia — Siem Reap Province: https://tourismcambodia.org/provinces/47/siem-reap |
+| `puluong` | Pu Luong Nature Reserve established 1999; more than 17,600 ha; limestone mountains, tropical forest and cultivated rice terraces; Thai and Muong communities and stilt houses; village paths, waterwheels and waterfalls; walking as the core activity. | Vietnam Tourism — Pu Luong, Thanh Hoa: https://vietnam.travel/things-to-do/pu-luong-thanh-hoa-hidden-paradise ; Pu Luong for nature lovers: https://vietnam.travel/things-to-do/pu-luong-nature-lovers |
+| `thanhhoa` | Province home to Pu Luong Nature Reserve, southwest of Hanoi; reserve established 1999, more than 17,600 ha; limestone mountains, tropical forest and cultivated terraces; Thai and Muong communities and stilt houses; village paths, waterwheels and waterfalls; Ho Citadel UNESCO World Heritage site (2011). | Vietnam Tourism — Pu Luong, Thanh Hoa: https://vietnam.travel/things-to-do/pu-luong-thanh-hoa-hidden-paradise ; Pu Luong for nature lovers: https://vietnam.travel/things-to-do/pu-luong-nature-lovers ; Heritage Sites of Vietnam: https://vietnam.travel/plan-your-trip/recommended-trip/heritage-sites-vietnam/ |
 
 ## Editorial boundary
 

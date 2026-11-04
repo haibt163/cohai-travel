@@ -88,7 +88,7 @@ GitHub Actions run #251 on `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` passed dom
 
 This runtime incident is therefore **FIXED / VERIFIED** under the project's evidence policy. The PostgreSQL SSL warning remains a separate non-blocking warning and is not part of this resolved incident.
 
-**Update — 3 November 2026:** `migrations/0008_fact_checked_coastal_destinations.sql` and `0009_fact_checked_source_backed_journeys.sql` extended the fact-checked set to eight destinations and seven journeys. GitHub Actions run #319 on `main` @ `1556e31` is the current successful repository gate. The unresolved gaps below remain, and P2.18 stays 🟡.
+**Update — 3 November 2026:** `migrations/0008_fact_checked_coastal_destinations.sql` and `0009_fact_checked_source_backed_journeys.sql` extended the fact-checked set to eight destinations and seven journeys. GitHub Actions run #319 was the successful repository gate at that date; the merged `main` @ `4874bbe` is green in run #41772194781. The unresolved gaps below remain, and P2.18 stays 🟡.
 
 ## Unresolved gaps
 

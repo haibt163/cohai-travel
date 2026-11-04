@@ -26,9 +26,9 @@ Roles, review and merge rules are defined in `docs/ENGINEERING_GOVERNANCE.md`.
 
 ## Current status
 
-`main` @ `1556e31` is green in GitHub Actions run #319. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged. Booking allocation remains transactional, stays/cars use finite date-aware inventory, contact is intentionally public with anti-spam/rate limiting, and bilingual canonical routing/metadata are implemented.
+`main` @ `4874bbe` is green in GitHub Actions run #41772194781. PR #29 and PR #30 are merged: the production database guard, the Thanh Hoa destination, the Pu Luong reassignment and the restored migration planner tests are on `main`. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged. Booking allocation remains transactional, stays/cars use finite date-aware inventory, contact is intentionally public with anti-spam/rate limiting, and bilingual canonical routing/metadata are implemented.
 
-Still open: browser confirmation of the live Vercel preview, Google Search Console property verification, confirmation of the Owner's Vercel environment variables, optional notification-provider delivery, and the remaining P2 content/media/URL/departure work. Repository CI does not prove any of the live-environment items. The synthetic seed must not be represented as completed migration content.
+Still open: desktop/iPhone browser confirmation of the live Vercel preview, confirmation of the Owner's Vercel environment variables, optional notification-provider delivery, and the remaining P2 content/media/URL/departure work. Native Vietnamese review and Google Search Console are **DONE — Owner decision** (4 November 2026); no independent native-speaker review or fresh Search Console inspection is claimed. Repository CI does not prove the live-environment items. The synthetic seed must not be represented as completed migration content.
 
 ## Standalone checkout
 

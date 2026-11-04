@@ -88,7 +88,7 @@ Final local evidence supplied on 11 September shows `npm run dev` starting succe
 
 GitHub Actions run #251 on commit `fbd44997d1120f95f6ba116b33cca71cfdc45b6e` also passed the complete quality gate — domain tests, typecheck, lint, build and production smoke — **VERIFIED**.
 
-**Update — 3 November 2026:** GitHub Actions run #319 on `main` @ `1556e31` is the current successful gate, including the PostgreSQL 16 booking integration test. Run #251 remains the historical evidence for the 11 September incident.
+**Update — 3 November 2026:** GitHub Actions run #319 on `main` @ `1556e31` was the successful gate at that date, including the PostgreSQL 16 booking integration test. The merged `main` @ `4874bbe` is green in run #41772194781. Run #251 remains the historical evidence for the 11 September incident.
 
 This incident is now recorded as **FIXED / VERIFIED** under the project's execution-evidence policy. No manual SQL or database deletion was required from the user.
 
