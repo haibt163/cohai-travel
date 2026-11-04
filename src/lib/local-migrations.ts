@@ -9,6 +9,8 @@ import migration0007 from "../../migrations/0007_fact_checked_destinations.sql?r
 import migration0008 from "../../migrations/0008_fact_checked_coastal_destinations.sql?raw";
 import migration0009 from "../../migrations/0009_fact_checked_source_backed_journeys.sql?raw";
 import migration0010 from "../../migrations/0010_repair_provenance_schema.sql?raw";
+import migration0011 from "../../migrations/0011_fact_checked_modern_additions.sql?raw";
+import migration0012 from "../../migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql?raw";
 
 /**
  * SQL is bundled explicitly instead of discovered with import.meta.glob().
@@ -28,4 +30,6 @@ export const localMigrations = [
   { name: "0008_fact_checked_coastal_destinations.sql", text: migration0008 },
   { name: "0009_fact_checked_source_backed_journeys.sql", text: migration0009 },
   { name: "0010_repair_provenance_schema.sql", text: migration0010 },
+  { name: "0011_fact_checked_modern_additions.sql", text: migration0011 },
+  { name: "0012_add_thanh_hoa_destination_and_reassign_puluong.sql", text: migration0012 },
 ] as const;

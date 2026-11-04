@@ -1,7 +1,6 @@
 # CoHai Travel — project status
 
-Last updated: 2 October 2026 (fresh verification of `main`; see "Evidence — 2 October 2026"
-below. Matrix rows not mentioned there are still carried forward from 15 September 2026).
+Last updated: 4 November 2026 (PR #30 follow-up: Vercel diagnosis, Thanh Hoa destination, migration planner test; see "Evidence — 4 November 2026" below).
 
 ## Executive status
 
@@ -56,6 +55,45 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 > re-verify any 🟢/🟡 status. Have a direct-repository Main Engineer
 > re-confirm current state against live Git/CI evidence at the next
 > implementation session before treating these as current.
+
+## Evidence — 4 November 2026 (PR #30 follow-up; branch `content/p2-modern-additions-fact-refresh`)
+
+Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and GitHub Actions. Base merged from `main` @ `ac5cebe`; no merge to `main` was performed. No Vercel token, Neon data or browser access.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| Latest `main` merged into PR #30 | **VERIFIED (Git)** | Merge commit `d3a5dae`; `ProjectStatus.md` conflict resolved additively, preserving both 3 November audit entries. |
+| Earlier Vercel Preview failures | **FAILED (historical); cause UNVERIFIED** | Deployments `dpl_DAK5T9GRJLjXudXLo7PBj6DqC8nc` and `dpl_CDbiYXvV3z26XWxB4Z75ErU4EzEG` failed. Vercel CLI reports `Logged out`; no `VERCEL_TOKEN`, so their build logs could not be retrieved. |
+| Current Vercel Preview deployment | **VERIFIED** | Deployment on `b80d103` passed; the docs-only head `ac885dc` also passed: https://vercel.com/haibt163s-projects/cohaitravel/DCCtbKxXjSfydf8KhsxoKvZXcsrA. This proves the updated branch deploys; it does not explain the earlier failures. |
+| Thanh Hoa destination added | **VERIFIED (fresh PGlite)** | `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` inserts `thanhhoa` / `thanh-hoa` with `provenance_state = 'modern-addition'` and `source_ref = null`; all migrations `0001`–`0012` applied in order. |
+| Pu Luong reassigned; Sapa unchanged | **VERIFIED (fresh PGlite)** | The `puluong` tour now has `destination_id = 'thanhhoa'`; `sapa` remains `source-backed`; `sapa-terraces` remains under `sapa`, and its three departure rows are unchanged. The misleading Sapa image on the Pu Luong journey was replaced with the Thanh Hoa editorial plate. |
+| Approved Thanh Hoa/Pu Luong photograph | **UNVERIFIED / missing** | No repository asset depicts Thanh Hoa or Pu Luong. A project-authored editorial SVG plate is used, not a photograph, and is recorded as provisional. |
+| Migration planner tests | **VERIFIED (local execution)** | New `scripts/migration-plan.test.mjs` runs six tests covering path acceptance, name extraction, applied filtering and numeric ordering; `node --test scripts/migration-plan.test.mjs` passes 6/6. |
+| Native Vietnamese speaker review | **DONE — Owner decision** | The Owner accepted and closed this item on 4 November 2026. No independent native-speaker review evidence exists in this lane. |
+| Google Search Console | **DONE — Owner decision** | The Owner accepted and closed this item on 4 November 2026. Repository evidence remains the committed verification file only; this lane did not perform a fresh Search Console inspection. |
+| PostgreSQL 16 migration path | **VERIFIED (CI)** | GitHub Actions run https://github.com/haibt163/cohai-travel/actions/runs/41767102485 on `b80d103` passed; the docs-only head `ac885dc` also passed in run https://github.com/haibt163/cohai-travel/actions/runs/41767434558. Its log shows the six planner tests, `[integration] backend: real PostgreSQL` and `PASS on real PostgreSQL (row locking exercised)`; the integration test applies all migrations through `0012`. |
+| Standard gate on this branch | **VERIFIED (local + CI)** | Local: `node --test scripts/migration-plan.test.mjs` 6/6; `test:domain` 26/26 in the first suite; `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` exit 0; smoke applied 13 migrations through `0012`. CI run #41767102485 passed all gates. |
+| New destination routes | **VERIFIED (local runtime)** | Dev server returned 200 for `/en/destinations/thanh-hoa`, `/vn/destinations/thanh-hoa`, `/en/tours/pu-luong-nature-escape` and `/en/destinations`; the sitemap contains EN/VN Thanh Hoa alternates. |
+
+The current Vercel Preview deployment passes on `b80d103`. The earlier two failures remain unexplained because their logs were inaccessible; the successful redeploy proves the branch can deploy but does not establish the earlier root cause.
+
+## Evidence — 3 November 2026 (P2 modern-addition fact refresh; branch `content/p2-modern-additions-fact-refresh`)
+
+Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution on Windows; base `main` @ `1556e31`. Official tourism pages were read directly (URLs in `docs/P2_2026_FACT_SOURCES.md`). No Vercel, Neon, live-site or browser access.
+
+| Item | Status | Evidence |
+| --- | --- | --- |
+| `siemreap`, `bangkok`, `angkor-dawn` and `puluong` now carry official-tourism-source EN/VN excerpt and body copy | **VERIFIED (local PGlite)** | `migrations/0011_fact_checked_modern_additions.sql` applied on a fresh PGlite database after `0001`–`0010`; the four selected rows returned the new copy and `provenance_state = 'modern-addition'`. No `source_ref` was assigned, because these are not legacy subjects. |
+| The dev/preview runtime registry includes the new migration | **VERIFIED (local execution)** | `src/lib/local-migrations.ts` registers `0011_fact_checked_modern_additions.sql`; `npm run test:smoke` logged `applying 12 local migration(s)` through `0011` and exited 0. |
+| Fact sources are recorded rather than inferred | **VERIFIED** | `docs/P2_2026_FACT_SOURCES.md` has one row per record with the facts carried and the exact Tourism Cambodia, Tourism Authority of Thailand, Angkor Enterprise and Vietnam Tourism URLs read on 3 November 2026. |
+| Migration applies on PostgreSQL 16 | **VERIFIED (CI)** | GitHub Actions `quality` job passed on `0291c0b22a30f19c5109f0c06ce2465c596cbd84` (run https://github.com/haibt163/cohai-travel/actions/runs/41645915839/job/125951075103); its log shows `[integration] backend: real PostgreSQL` and `PASS on real PostgreSQL (row locking exercised)`. |
+| Vercel Preview deployment | **FAILED (external); cause UNVERIFIED** | The Vercel Preview check failed on the same head (`dpl_DAK5T9GRJLjXudXLo7PBj6DqC8nc`). This lane has no Vercel token or log access. GitHub Actions and the local build pass; the preview failure must be diagnosed before merge. |
+| Bilingual quality | **DONE — Owner decision** | The Owner accepted and closed the Vietnamese copy on 4 November 2026. No independent native-speaker review evidence exists in this lane. |
+| `puluong` destination relationship | **DONE — Owner decision** | The Owner approved the relationship change; `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` reassigns the journey to the new `thanhhoa` destination. Sapa is unchanged. |
+| P2.18 fidelity | 🟡 remains | Copy fact refresh is one gate; media, URL, schedule and full source-coverage gaps remain open. |
+| Standard gate on this branch | **VERIFIED (local execution)** | `npm ci`, `test:domain`, `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` all exited 0; smoke applied 12 migrations through `0011`. `test:domain` used PGlite because the machine has no `TEST_DATABASE_URL`; the PR CI run supplies PostgreSQL 16. |
+
+Local `test:domain` also runs the PostgreSQL-specific booking test; without `TEST_DATABASE_URL` it falls back to PGlite and does not prove row locking. The PR's CI run provides the PostgreSQL 16 path. The separate Vercel Preview failure on the same head remains unresolved and must be inspected in Vercel.
 
 ## Evidence — 3 November 2026 (production database URL guard; branch `chore/require-database-url-production`)
 
