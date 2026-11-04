@@ -6,7 +6,7 @@ Seed rows point at `/media/*.jpg`.
 
 - Editorial SVG plates in this folder provide a non-blank standalone experience.
 - The repository currently contains provisional JPG stills for the seeded catalog.
-- `npm run media` can fetch replacement stills for development/preview use.
+- `node scripts/fetch-media.mjs` can fetch replacement stills for development/preview use. The old `npm run media` alias is not defined in `package.json`.
 
 ## Outstanding media fidelity work
 

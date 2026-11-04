@@ -2,7 +2,7 @@
  * Download curated Unsplash stills into public/media/*.jpg
  * so Cover can use the seed paths without a CDN at runtime.
  *
- * Usage: npm run media
+ * Usage: node scripts/fetch-media.mjs
  */
 import { createWriteStream, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";

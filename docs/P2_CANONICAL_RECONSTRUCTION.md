@@ -1,6 +1,6 @@
 # CoHai Travel — P2 Canonical Reconstruction
 
-Last reviewed: 11 September 2026.
+Last reviewed: 4 November 2026 (merged-state progress and 0011/0012 notes added; 11 September detail preserved).
 
 ## Purpose
 
@@ -64,7 +64,17 @@ The first five source-backed destination subjects have refreshed current copy in
 
 This is a factual-copy refresh, not a final commercial or media approval.
 
-**Update — 4 November 2026:** `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` adds the `thanhhoa` destination and moves the `puluong` journey under it; Sapa and its other journeys remain unchanged. The new destination is a `modern-addition` with no legacy `source_ref`.
+### Post-11 September updates — merged state
+
+- `migrations/0008_fact_checked_coastal_destinations.sql` refreshed Mekong Delta, Phu Quoc and Nha Trang.
+- `migrations/0009_fact_checked_source_backed_journeys.sql` refreshed the seven source-backed journeys.
+- `migrations/0010_repair_provenance_schema.sql` made the provenance schema repair idempotent.
+- `migrations/0011_fact_checked_modern_additions.sql` refreshed the four intentional modern-addition records (`siemreap`, `bangkok`, `angkor-dawn`, `puluong`) from official tourism sources.
+- `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` adds the `thanhhoa` destination and moves the `puluong` journey under it; Sapa and its other journeys remain unchanged. The new destination is a `modern-addition` with no legacy `source_ref`.
+- The fact-checked set now covers eight source-backed destination records and seven source-backed journeys.
+- GitHub Actions run #319 on `main` @ `1556e31` passed the full gate at the 3 November checkpoint; the latest merged `main` @ `4874bbe` is green in run #41772194781, including the PostgreSQL 16 booking integration test and the migration planner tests.
+
+The provenance label remains traceability metadata, not a publication-readiness claim. The four original modern additions and Thanh Hoa remain intentional 2026 additions, not legacy reconstructions.
 
 ## Runtime readiness — fixed / verified 11 September 2026
 
@@ -81,8 +91,8 @@ Under the engineering evidence policy, this incident is therefore **FIXED / VERI
 ## Implementation order
 
 1. Destination-led connected catalog UX — implemented.
-2. Source-backed canonical destinations — provenance established; first five destination records fact-refreshed.
-3. Source-backed canonical tours — next major reconstruction batch.
+2. Source-backed canonical destinations — provenance established; `0007` and `0008` refreshed eight destination records.
+3. Source-backed canonical tours — seven journeys refreshed in `0009`; further source subjects remain.
 4. Travel-information surfaces — rebuild durable subject matter with current facts.
 5. Stays/cars — selectively reconstruct and verify useful historical products.
 6. Departures — reconcile the historical schedule model with current availability rules.

@@ -1,11 +1,11 @@
-# CoHai Travel — Project Instructions
+# Cô Hai Travel — Project Instructions
 
 Project facts and rules. Universal rules are in `AGENTS.md`; roles and merge authority in `docs/ENGINEERING_GOVERNANCE.md`; report and review formats in
 `docs/AI_ENGINEERING_WORKFLOW.md`. This file adds project facts; it never weakens the universal rules.
 
 ## 1. Project Identity
 
-**CoHai Travel**
+**Cô Hai Travel**
 
 Repository:
 
@@ -23,7 +23,7 @@ Normal implementation work should use a dedicated feature branch or worktree.
 
 ## 2. Product
 
-CoHai Travel is a bilingual travel booking application for private journeys
+Cô Hai Travel is a bilingual travel booking application for private journeys
 in Vietnam, Cambodia, and Thailand.
 
 The product includes:
@@ -280,7 +280,7 @@ Detailed project procedures belong in `docs/`.
 - `AGENTS.md` (universal contract), `CLAUDE.md`, `.omp/AGENTS.md`,
   `.omp/RULES.md`
 - `docs/ENGINEERING_GOVERNANCE.md`, `docs/AI_ENGINEERING_WORKFLOW.md`
-- `docs/CONTENT_ARCHAEOLOGY.md`, `docs/PARITY_AUDIT.md`,
+- `docs/CONTENT_ARCHAEOLOGY.md`, `docs/REPO_PREVIEW_PARITY.md`,
   `docs/P2_MIGRATION_EXECUTION.md`, `docs/P1_NOTIFICATIONS.md`
 
 `AGENTS.project.md` stays a concise project contract, not a copy of these.
