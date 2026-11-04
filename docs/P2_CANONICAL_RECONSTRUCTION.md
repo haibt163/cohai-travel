@@ -64,6 +64,8 @@ The first five source-backed destination subjects have refreshed current copy in
 
 This is a factual-copy refresh, not a final commercial or media approval.
 
+**Update — 4 November 2026:** `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` adds the `thanhhoa` destination and moves the `puluong` journey under it; Sapa and its other journeys remain unchanged. The new destination is a `modern-addition` with no legacy `source_ref`.
+
 ## Runtime readiness — fixed / verified 11 September 2026
 
 The development database/bootstrap incident that blocked the landing page and most product routes is now closed.

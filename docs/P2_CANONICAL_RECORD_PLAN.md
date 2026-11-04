@@ -1,6 +1,6 @@
 # CoHai Travel — P2 Canonical Record Plan
 
-Last reviewed: 11 September 2026.
+Last reviewed: 11 September 2026; 3 November and 4 November 2026 notes added.
 
 ## Purpose
 
@@ -22,6 +22,7 @@ This document is a decision ledger, not a claim that every record is already pro
 | `nhatrang` | `source-backed` | `wp_posts:700` | Verify current coastal/product framing and media. |
 | `siemreap` | `modern-addition` | No direct legacy location mapping used in current provenance migration. | Keep only as an intentional 2026 addition; verify all current destination facts. |
 | `bangkok` | `modern-addition` | No direct legacy location mapping used in current provenance migration. | Keep only as an intentional 2026 addition; verify all current destination facts. |
+| `thanhhoa` | `modern-addition` | No direct legacy location mapping used in current provenance migration. | Keep as an intentional 2026 addition; copy is sourced to Vietnam Tourism and the image is an editorial plate pending approved photography. |
 
 ## Journey reconstruction set
 
@@ -38,6 +39,8 @@ This document is a decision ledger, not a claim that every record is already pro
 | `puluong` | `modern-addition` | No direct legacy journey mapping used in current provenance migration. | Keep as an intentional 2026 addition; independently verify current facts. |
 
 > **Note — 3 November 2026:** the four `modern-addition` records (`siemreap`, `bangkok`, `angkor-dawn`, `puluong`) now carry official-tourism-source copy in `migrations/0011_fact_checked_modern_additions.sql`, recorded in `docs/P2_2026_FACT_SOURCES.md`. They remain `modern-addition`; P2.18 remains 🟡 until the remaining editorial, media, URL, schedule and source-coverage gates close. The `puluong` tour is still seeded with `destination_id = 'sapa'`; this copy-only refresh does not change routing, and the relationship is an Owner decision.
+
+> **Note — 4 November 2026:** `migrations/0012_add_thanh_hoa_destination_and_reassign_puluong.sql` adds the `thanhhoa` destination (`thanh-hoa`) and reassigns the `puluong` journey to it. Sapa and its other journeys are unchanged. The new destination is `modern-addition`, has no legacy `source_ref`, and uses an editorial plate rather than an approved photograph.
 
 ## Runtime readiness checkpoint — 11 September 2026
 
