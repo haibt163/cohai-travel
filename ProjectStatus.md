@@ -75,7 +75,7 @@ Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and Git. Base `ma
 | Stale post-PR #30 statements | **VERIFIED (documentation)** | PR #29/#30 are recorded as merged; the planner test is marked resolved; Thanh Hoa and the Pu Luong relationship are recorded as merged; native Vietnamese review and Google Search Console remain `DONE — Owner decision`, without claiming independent review/inspection. |
 | Migration planner tests execute | **VERIFIED (local)** | `node --test scripts/migration-plan.test.mjs` passes 6/6; the tests execute inside `test:domain` (26/26 first suite). `docs/REPO_PREVIEW_PARITY.md` now marks the old missing-file finding as resolved. |
 | Standard gate | **VERIFIED (local execution)** | `test:domain` (26/26 + 16/16), `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` exit 0; smoke applied 13 migrations through `0012`. |
-| GitHub Actions / Vercel Preview | **PENDING at time of writing** | The reconciled head must pass both after push; run URLs/deployment status will be recorded when available. |
+| GitHub Actions / Vercel Preview | **VERIFIED** | GitHub Actions run https://github.com/haibt163/cohai-travel/actions/runs/41773305320 passed on `b35d3b5`; Vercel Preview deployment https://vercel.com/haibt163s-projects/cohaitravel/EJiPY5Jyyy7ddwYRskXS6LkgJoR9 completed. |
 | Desktop/iPhone visual parity | **UNVERIFIED** | Preview deployment success is not the same as a browser visual check; P0.2 remains 🟡. |
 
 ## Evidence — 4 November 2026 (PR #30 follow-up; branch `content/p2-modern-additions-fact-refresh`, now merged)
