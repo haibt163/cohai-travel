@@ -1,6 +1,6 @@
 # Cô Hai Travel — Project Instructions
 
-Project facts and rules. Universal rules are in `AGENTS.md`; roles and merge authority in `docs/ENGINEERING_GOVERNANCE.md`; report and review formats in
+Project facts and rules. Universal rules are in `AGENTS.md`; roles, approval and the merge gate in `docs/ENGINEERING_GOVERNANCE.md`; report and review formats in
 `docs/AI_ENGINEERING_WORKFLOW.md`. This file adds project facts; it never weakens the universal rules.
 
 ## 1. Project Identity
@@ -15,9 +15,8 @@ Canonical integration branch:
 
 `main`
 
-`main` is the protected repository source of record.
-
-Normal implementation work should use a dedicated feature branch or worktree.
+`main` is the source of record. Every change reaches it through a pull request
+from a sub-branch (`docs/ENGINEERING_GOVERNANCE.md`).
 
 ---
 

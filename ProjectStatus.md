@@ -1,10 +1,10 @@
 # Cô Hai Travel — project status
 
-Last updated: 4 November 2026 (PR #31 reconciled with `main` @ `4874bbe`; 3 and 4 November evidence retained below).
+Last updated: 22 November 2026 (`main` @ `7fb314d`, merge of PR #31; CI run 41773823338; 4 November evidence retained below).
 
 ## Executive status
 
-The engineering baseline is green on `main` @ `4874bbe` (GitHub Actions run #41772194781, 4 November 2026). PR #29 and PR #30 are merged: the production database guard, the Thanh Hoa destination with Pu Luong reassigned to it, and the restored migration planner tests are all on `main`. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged.
+The engineering baseline is green on `main` @ `7fb314d` (GitHub Actions run 41773823338, 4 November 2026; `quality` and `P2 Legacy Audit` jobs passed). PR #29, PR #30 and the PR #31 documentation reconciliation are merged: the production database guard, the Thanh Hoa destination with Pu Luong reassigned to it, the restored migration planner tests and the refreshed project documentation are all on `main`. Vercel Production deployment `7537985351` was built from `7fb314d`, and `https://cohaitravel.com` returned HTTP 200 on 22 November 2026. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged.
 
 P1 includes crawlable bilingual routing, locale-aware metadata, operational visibility for allowlisted staff and a provider-neutral notification contract. P2 is explicitly **Legacy Product Archaeology & Modern Reconstruction**: the 15+ year-old WordPress project is treated as a historical product/content source, not a customer-data migration target.
 
@@ -12,27 +12,17 @@ Repository and CI evidence does **not** prove the live Vercel preview's desktop/
 
 ## Current engineering governance
 
-Cô Hai Travel now operates under a three-role governance model:
-
-- **Main Engineers:** Claude Code (governed by `CLAUDE.md` for Claude-specific operating details), Codex CLI / Codex App with GPT/Codex models, or OMP CLI with DeepSeek / GLM / Kimi / Qwen through OpenRouter or OpenCode Go. Claude Code and Codex CLI/App have the same Main Engineer role and the same higher-trust, merge-capable governance standing; these remain interchangeable implementation lanes rather than a primary-plus-backup hierarchy, and switching between them — including because a session limit was hit — is routine.
-- **Chief Engineer:** the active chat/review lane, either Claude Chat or ChatGPT, providing the independent engineering review gate for codebases, architecture, tests, evidence, security, provenance and PRs. Claude Chat and ChatGPT have the same Chief Engineer role. Chat/repository access differences are environment capabilities, not governance differences.
-- **Project Owner:** Maris — final human authority and final green light before protected `main`.
-
-**Merge authority to `main`:** approval is held by Claude Chat, ChatGPT, or Maris; execution is held by Maris, Claude Code, or Codex CLI/App after the approval gate is satisfied (see `docs/ENGINEERING_GOVERNANCE.md` §6a). Chat/review lanes do not execute merges from chat-only environments, and OMP does not execute merges.
-
-**Codex Cloud is retired from the project governance and is not an approved engineering lane.**
-
-See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, `docs/AI_ENGINEERING_WORKFLOW.md` for the operating procedure, and `CLAUDE.md` for Claude Code's harness-specific rules.
+The Project Owner adopted a single harness-neutral standard in `docs/ENGINEERING_GOVERNANCE.md` on 22 November 2026. Any harness may serve as Main Engineer; every change uses a pull request from a sub-branch; only the Owner's approval on record authorizes a merge; Chief Engineer review is advisory; the Owner chooses two-lane or three-lane mode per task. The earlier three-role and merge-executor model is superseded.
 
 ## Audit matrix
 
 | Item | Status | Next action |
 | --- | --- | --- |
 | P0.1 Reproducible checkout | 🟢 | GitHub `main` remains source of record; keep local checkout synchronized at implementation checkpoints. |
-| P0.2 Preview/repo parity | 🟡 | Repository build/smoke and PR #30 Preview deployments are green; the latest `main` gate is run #41772194781. No desktop/iPhone browser check exists, so visual parity is not claimed. Owner to verify the preview; deployment success is not visual proof. |
+| P0.2 Preview/repo parity | 🟡 | Repository build/smoke and PR #30 Preview deployments are green; the latest `main` gate is run 41773823338 on `7fb314d`. No desktop/iPhone browser check exists, so visual parity is not claimed. Owner to verify the preview; deployment success is not visual proof. |
 | P0.3 Atomic tour booking | 🟢 | Preserve DB-backed transaction/locking semantics. |
 | P0.4 Stay/car finite inventory | 🟢 | Keep current finite-inventory model until a broader UX requirement is explicit. |
-| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions run #41772194781 on commit `4874bbe6648beae21909f08f2b297936628fa450` (4 November 2026), including the PostgreSQL 16 booking integration and migration planner tests. |
+| P0.5 CI | 🟢 | Latest full gate is VERIFIED by GitHub Actions run 41773823338 on commit `7fb314df2a7182f41bf49de6b28c7cea40e6e030` (4 November 2026), including the PostgreSQL 16 booking integration and migration planner tests. |
 | P0.6 Runtime migration bootstrap | 🟢 | Existing populated databases are adopted without reseeding; bundled migrations run deterministically and schema verification is enforced. |
 | P1.6 EN/VN URL architecture | 🟢 | Locale-prefixed application routes are canonical. |
 | P1.7 Locale-aware metadata | 🟢 | Titles/descriptions use locale-specific copy on public routes. |
@@ -64,6 +54,8 @@ See `docs/ENGINEERING_GOVERNANCE.md` for the authoritative governance contract, 
 
 > **Matrix review — 4 November 2026:** reconciled with `main` @ `4874bbe` and GitHub Actions run #41772194781. PR #29 and PR #30 are merged. P0.5 and P1.10 now cite the latest successful PostgreSQL 16 gate; P1.8 remains green. P0.2 remains 🟡: successful Preview deployments are not the same as a desktop/iPhone visual check. P2.18 remains 🟡.
 
+> **Current checkpoint — 22 November 2026:** `main` @ `7fb314d` passed GitHub Actions run 41773823338 (`quality` and `P2 Legacy Audit`). The matrix rows were last reviewed on 4 November; this docs-only revision did not re-verify them beyond the current CI checkpoint.
+
 ## Evidence — 4 November 2026 (PR #31 documentation reconciliation; branch `docs/refresh-stale-project-docs`)
 
 Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and Git. Base `main` @ `4874bbe`; merge commit `9da873b`. No rebase, reset or force-push; no merge to `main` was performed.
@@ -77,6 +69,8 @@ Author lane: OMP (DeepSeek V4.1 Flash). Direct local execution and Git. Base `ma
 | Standard gate | **VERIFIED (local execution)** | `test:domain` (26/26 + 16/16), `typecheck`, `lint` (0 errors, 4 pre-existing warnings), `build` and `test:smoke` exit 0; smoke applied 13 migrations through `0012`. |
 | GitHub Actions / Vercel Preview | **VERIFIED** | GitHub Actions run https://github.com/haibt163/cohai-travel/actions/runs/41773305320 passed on `b35d3b5`; Vercel Preview deployment https://vercel.com/haibt163s-projects/cohaitravel/EJiPY5Jyyy7ddwYRskXS6LkgJoR9 completed. |
 | Desktop/iPhone visual parity | **UNVERIFIED** | Preview deployment success is not the same as a browser visual check; P0.2 remains 🟡. |
+
+**Status update — 22 November 2026:** PR #31 is merged into `main` at `7fb314d`; this entry is retained as historical evidence.
 
 ## Evidence — 4 November 2026 (PR #30 follow-up; branch `content/p2-modern-additions-fact-refresh`, now merged)
 

@@ -1,6 +1,6 @@
 # CI policy
 
-Last reviewed: 3 November 2026.
+Last reviewed: 22 November 2026.
 
 ## Required gate
 
@@ -17,10 +17,10 @@ A failure at an earlier step blocks later steps; skipped later steps are not evi
 
 ## Dependency policy
 
-The repository has no root `.npmrc` and does not use `legacy-peer-deps`. `package.json` and `package-lock.json` are aligned, and the checked-in workflow runs plain `npm ci`. GitHub Actions run #41772194781 on `4874bbe` completed `npm ci`, `test:domain`, `typecheck`, `lint`, `build` and the production smoke test successfully. Keep the lockfile and manifest in parity; do not reintroduce a peer-resolution bypass.
+The repository has no root `.npmrc` and does not use `legacy-peer-deps`. `package.json` and `package-lock.json` are aligned, and the checked-in workflow runs plain `npm ci`. GitHub Actions run 41773823338 on `7fb314d` completed `npm ci`, `test:domain`, `typecheck`, `lint`, `build` and the production smoke test successfully. Keep the lockfile and manifest in parity; do not reintroduce a peer-resolution bypass.
 
 ## Runtime parity policy
 
 CI is the repository parity gate. A successful production smoke test must boot the checked-in production bundle using the tracked runtime and verify the public application document. Preview-only state must not be required for the build to pass.
 
-The `quality` job provisions PostgreSQL 16 and sets `TEST_DATABASE_URL` for `scripts/booking-concurrency.integration.mjs`, which exercises real row locking. Run #41772194781 is the current successful evidence for the complete chain on `main` @ `4874bbe`, including the migration planner tests.
+The `quality` job provisions PostgreSQL 16 and sets `TEST_DATABASE_URL` for `scripts/booking-concurrency.integration.mjs`, which exercises real row locking. Run 41773823338 is the current successful evidence for the complete chain on `main` @ `7fb314d`, including the migration planner tests.
