@@ -1,13 +1,13 @@
 # Documentation index
 
-Last reviewed: 3 November 2026.
+Last reviewed: 22 November 2026.
 
 ## Current project documents
 
 - `ProjectStatus.md` — active implementation ledger and ordered audit matrix.
 - `AGENTS.project.md` — project identity, boundaries and verification rules.
-- `docs/ENGINEERING_GOVERNANCE.md` — roles, authority and merge boundary.
-- `docs/AI_ENGINEERING_WORKFLOW.md` — evidence labels, handoffs and review workflow.
+- `docs/ENGINEERING_GOVERNANCE.md` — roles, operating modes, approval and merge gate.
+- `docs/AI_ENGINEERING_WORKFLOW.md` — session flow, evidence labels and handoff formats.
 - `docs/CI_POLICY.md` — mandatory CI chain and dependency reproducibility policy.
 - `docs/BOOKING_TEST_STRATEGY.md` — booking invariants and database-backed concurrency coverage.
 - `docs/P1_NOTIFICATIONS.md` — production notification delivery contract.
@@ -31,7 +31,7 @@ Last reviewed: 3 November 2026.
 
 - `AGENTS.md` — universal agent contract.
 - `CLAUDE.md` — Claude Code operating notes; imports the universal contract.
-- `.omp/AGENTS.md` — OMP lane notes.
+- `.omp/AGENTS.md` — OMP harness notes.
 - `.omp/RULES.md` — OMP hard tripwires.
 
 ## Historical / preserve

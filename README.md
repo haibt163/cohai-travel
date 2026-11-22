@@ -6,7 +6,7 @@ This repository is the source of record for the **React rebuild** of the old Vie
 
 ## Engineering governance
 
-Roles, review and merge rules are defined in `docs/ENGINEERING_GOVERNANCE.md`.
+Roles, operating modes, approval and the merge gate are defined in `docs/ENGINEERING_GOVERNANCE.md`.
 
 ## Project documentation
 
@@ -15,8 +15,8 @@ Roles, review and merge rules are defined in `docs/ENGINEERING_GOVERNANCE.md`.
 3. `OriginalWordPress.md` — legacy archive findings and reconstruction boundary.
 4. `ProjectStatus.md` — active audit/implementation ledger.
 5. `docs/README_STATUS.md` — index of the current project documents.
-6. `docs/ENGINEERING_GOVERNANCE.md` — AI engineering roles and approval boundary.
-7. `docs/AI_ENGINEERING_WORKFLOW.md` — implementation, audit, evidence and handoff workflow.
+6. `docs/ENGINEERING_GOVERNANCE.md` — operating modes, Owner approval and merge gate.
+7. `docs/AI_ENGINEERING_WORKFLOW.md` — session flow, evidence labels and handoff formats.
 8. `docs/CONTENT_ARCHAEOLOGY.md` — source-derived migration model and fidelity rules.
 9. `docs/REPO_PREVIEW_PARITY.md` — current repository ↔ preview reproducibility audit.
 10. `docs/P2_MIGRATION_EXECUTION.md` — legacy extraction, decision matrix and URL/media reconciliation workflow.
@@ -26,7 +26,7 @@ Roles, review and merge rules are defined in `docs/ENGINEERING_GOVERNANCE.md`.
 
 ## Current status
 
-`main` @ `4874bbe` is green in GitHub Actions run #41772194781. PR #29 and PR #30 are merged: the production database guard, the Thanh Hoa destination, the Pu Luong reassignment and the restored migration planner tests are on `main`. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged. Booking allocation remains transactional, stays/cars use finite date-aware inventory, contact is intentionally public with anti-spam/rate limiting, and bilingual canonical routing/metadata are implemented.
+`main` @ `7fb314d` (merge of PR #31) is green in GitHub Actions run 41773823338, and Vercel Production deployment `7537985351` was built from that SHA; `https://cohaitravel.com` returned HTTP 200 on 22 November 2026. PR #29, PR #30 and the PR #31 documentation reconciliation are merged: the production database guard, the Thanh Hoa destination, the Pu Luong reassignment and the restored migration planner tests are on `main`. The displayed brand is **Cô Hai Travel**; production SEO is fixed to `https://cohaitravel.com`; the localized sitemap, preview-disallowing robots behavior and Google Search Console verification file are merged. Booking allocation remains transactional, stays/cars use finite date-aware inventory, contact is intentionally public with anti-spam/rate limiting, and bilingual canonical routing/metadata are implemented.
 
 Still open: desktop/iPhone browser confirmation of the live Vercel preview, confirmation of the Owner's Vercel environment variables, optional notification-provider delivery, and the remaining P2 content/media/URL/departure work. Native Vietnamese review and Google Search Console are **DONE — Owner decision** (4 November 2026); no independent native-speaker review or fresh Search Console inspection is claimed. Repository CI does not prove the live-environment items. The synthetic seed must not be represented as completed migration content.
 
