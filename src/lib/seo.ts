@@ -1,5 +1,7 @@
 const DEV_SITE_URL = "http://localhost:3000";
 const CANONICAL_SITE_URL = "https://cohaitravel.com";
+
+export const SITE_NAME = "Cô Hai Travel";
 export type SeoLocale = "en" | "vn";
 
 type SeoLink = { rel: string; href: string; hrefLang?: string };
@@ -76,6 +78,7 @@ export function buildSeoHead(
   return {
     meta: [
       { title },
+      { property: "og:site_name", content: SITE_NAME },
       ...(description ? [{ name: "description", content: description }] : []),
       { property: "og:title", content: title },
       ...(description ? [{ property: "og:description", content: description }] : []),

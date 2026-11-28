@@ -13,7 +13,7 @@ export const Route = createFileRoute("/$locale/tours/$slug")({
     if (!data) throw notFound();
     return data;
   },
-  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.tour.title_vn : loaderData.tour.title_en} | CoHai Travel`, description: params.locale === "vn" ? loaderData.tour.excerpt_vn : loaderData.tour.excerpt_en, pathname: `/${params.locale}/tours/${loaderData.tour.slug}`, alternatePathname: (locale) => `/${locale}/tours/${loaderData.tour.slug}`, image: loaderData.tour.image }) : {},
+  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.tour.title_vn : loaderData.tour.title_en} | Cô Hai Travel`, description: params.locale === "vn" ? loaderData.tour.excerpt_vn : loaderData.tour.excerpt_en, pathname: `/${params.locale}/tours/${loaderData.tour.slug}`, alternatePathname: (locale) => `/${locale}/tours/${loaderData.tour.slug}`, image: loaderData.tour.image }) : {},
   component: TourDetail,
 });
 

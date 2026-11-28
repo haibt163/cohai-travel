@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { buildSeoHead, resolveSiteUrl } from "./seo.ts";
+import { buildSeoHead, resolveSiteUrl, SITE_NAME } from "./seo.ts";
 
 test("production never falls back to localhost", () => {
   assert.equal(resolveSiteUrl(undefined, false), undefined);
@@ -50,4 +50,16 @@ test("seoHead omits canonical, og:url and hreflang when no public URL is known",
   assert.equal(head.links.length, 0);
   assert.ok(!head.meta.some((m) => "property" in m && (m.property === "og:url" || m.property === "og:image")));
   assert.ok(!JSON.stringify(head).includes("localhost"));
+});
+
+
+test("SEO metadata declares the accented site name", () => {
+  const head = buildSeoHead("https://cohaitravel.com", {
+    title: "Stays | Cô Hai Travel",
+    pathname: "/en/stays",
+  });
+  assert.equal(SITE_NAME, "Cô Hai Travel");
+  assert.ok(head.meta.some(
+    (meta) => "property" in meta && meta.property === "og:site_name" && meta.content === SITE_NAME,
+  ));
 });

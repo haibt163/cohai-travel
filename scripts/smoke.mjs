@@ -94,7 +94,7 @@ try {
 
   for (const path of ["/en/", "/en/destinations", "/en/travel-notes", "/vn/travel-notes", "/en/contact"]) {
     const page = await get(path);
-    if (!/CoHai Travel/i.test(page.body)) {
+    if (!/Cô Hai Travel/i.test(page.body)) {
       throw new Error(`GET ${path} did not render the CoHai Travel application shell`);
     }
     console.log(`[smoke] GET ${path} -> ${page.response.status}; application route verified.`);

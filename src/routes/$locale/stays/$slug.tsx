@@ -13,7 +13,7 @@ export const Route = createFileRoute("/$locale/stays/$slug")({
     if (!stay) throw notFound();
     return { stay };
   },
-  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.stay.title_vn : loaderData.stay.title_en} | CoHai Travel`, description: params.locale === "vn" ? loaderData.stay.excerpt_vn : loaderData.stay.excerpt_en, pathname: `/${params.locale}/stays/${loaderData.stay.slug}`, alternatePathname: (l) => `/${l}/stays/${loaderData.stay.slug}`, image: loaderData.stay.image }) : {},
+  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.stay.title_vn : loaderData.stay.title_en} | Cô Hai Travel`, description: params.locale === "vn" ? loaderData.stay.excerpt_vn : loaderData.stay.excerpt_en, pathname: `/${params.locale}/stays/${loaderData.stay.slug}`, alternatePathname: (l) => `/${l}/stays/${loaderData.stay.slug}`, image: loaderData.stay.image }) : {},
   component: StayDetail,
 });
 
