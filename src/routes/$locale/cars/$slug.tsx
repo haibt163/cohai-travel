@@ -12,7 +12,7 @@ export const Route = createFileRoute("/$locale/cars/$slug")({
     if (!car) throw notFound();
     return { car };
   },
-  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.car.title_vn : loaderData.car.title_en} | CoHai Travel`, description: params.locale === "vn" ? loaderData.car.excerpt_vn : loaderData.car.excerpt_en, pathname: `/${params.locale}/cars/${loaderData.car.slug}`, alternatePathname: (l) => `/${l}/cars/${loaderData.car.slug}`, image: loaderData.car.image }) : {},
+  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.car.title_vn : loaderData.car.title_en} | Cô Hai Travel`, description: params.locale === "vn" ? loaderData.car.excerpt_vn : loaderData.car.excerpt_en, pathname: `/${params.locale}/cars/${loaderData.car.slug}`, alternatePathname: (l) => `/${l}/cars/${loaderData.car.slug}`, image: loaderData.car.image }) : {},
   component: CarDetail,
 });
 

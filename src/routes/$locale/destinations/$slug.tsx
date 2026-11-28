@@ -18,7 +18,7 @@ export const Route = createFileRoute("/$locale/destinations/$slug")({
     ]);
     return { destination, tours, stays, cars };
   },
-  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.destination.title_vn : loaderData.destination.title_en} | CoHai Travel`, description: params.locale === "vn" ? loaderData.destination.excerpt_vn : loaderData.destination.excerpt_en, pathname: `/${params.locale}/destinations/${loaderData.destination.slug}`, alternatePathname: (l) => `/${l}/destinations/${loaderData.destination.slug}`, image: loaderData.destination.image }) : {},
+  head: ({ loaderData, params }) => loaderData ? seoHead({ locale: params.locale === "vn" ? "vn" : "en", title: `${params.locale === "vn" ? loaderData.destination.title_vn : loaderData.destination.title_en} | Cô Hai Travel`, description: params.locale === "vn" ? loaderData.destination.excerpt_vn : loaderData.destination.excerpt_en, pathname: `/${params.locale}/destinations/${loaderData.destination.slug}`, alternatePathname: (l) => `/${l}/destinations/${loaderData.destination.slug}`, image: loaderData.destination.image }) : {},
   component: DestinationDetail,
 });
 

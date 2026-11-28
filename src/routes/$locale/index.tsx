@@ -1,7 +1,7 @@
 import { ArrowRight, Compass, MapPinned } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { listTours } from "@/lib/catalog";
-import { seoHead } from "@/lib/seo";
+import { absoluteUrl, seoHead, SITE_NAME } from "@/lib/seo";
 import { siteCopy, useI18n } from "@/lib/locale";
 import { Cover } from "@/components/cover";
 import { SearchBox } from "@/components/search-box";
@@ -9,7 +9,30 @@ import { TourCard } from "@/components/tour-card";
 
 export const Route = createFileRoute("/$locale/")({
   loader: async () => ({ tours: await listTours({ data: {} }) }),
-  head: ({ params }) => { const locale = params.locale === "vn" ? "vn" : "en"; return seoHead({ locale, title: siteCopy(locale, "metaHomeTitle"), description: siteCopy(locale, "metaHomeDescription"), pathname: `/${params.locale}`, alternatePathname: (l) => `/${l}` }); },
+  head: ({ params }) => {
+    const locale = params.locale === "vn" ? "vn" : "en";
+    return {
+      ...seoHead({
+        locale,
+        title: siteCopy(locale, "metaHomeTitle"),
+        description: siteCopy(locale, "metaHomeDescription"),
+        pathname: `/${params.locale}`,
+        alternatePathname: (l) => `/${l}`,
+      }),
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_NAME,
+            alternateName: "cohaitravel.com",
+            url: absoluteUrl("/en"),
+          }),
+        },
+      ],
+    };
+  },
   component: Home,
 });
 

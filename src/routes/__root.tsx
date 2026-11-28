@@ -4,10 +4,10 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { LocaleProvider, type Locale } from "@/lib/locale";
 import { Shell } from "@/components/shell";
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl, SITE_NAME } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "Cô Hai Travel";
+const APP_NAME = SITE_NAME;
 const APP_DESCRIPTION = "Private journeys in Vietnam, Cambodia and Thailand. Booked in Australian dollars, with live departures and thoughtful local detail.";
 
 function localeFromPathname(pathname: string): Locale {

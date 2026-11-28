@@ -11,10 +11,10 @@ export const Route = createFileRoute("/$locale/travel-notes")({
     const vietnamese = locale === "vn";
     return seoHead({
       locale,
-      title: vietnamese ? "Ghi chú hành trình | CoHai Travel" : "Travel notes | CoHai Travel",
+      title: vietnamese ? "Ghi chú hành trình | Cô Hai Travel" : "Travel notes | Cô Hai Travel",
       description: vietnamese
-        ? "Ghi chú nguồn dẫn cho việc lên kế hoạch hành trình chậm qua những điểm đến của CoHai Travel."
-        : "Source-led planning notes for slower journeys through CoHai Travel destinations.",
+        ? "Ghi chú nguồn dẫn cho việc lên kế hoạch hành trình chậm qua những điểm đến của Cô Hai Travel."
+        : "Source-led planning notes for slower journeys through Cô Hai Travel destinations.",
       pathname: `/${locale}/travel-notes`,
       alternatePathname: (nextLocale) => `/${nextLocale}/travel-notes`,
     });
@@ -37,8 +37,8 @@ function TravelNotesPage() {
         kicker={vietnamese ? "Đọc trước khi đi" : "Read before you go"}
         title={vietnamese ? "Ghi chú hành trình." : "Travel notes."}
         body={vietnamese
-          ? "Những ý tưởng lên đường được xây từ các chủ đề di sản của CoHai và nguồn du lịch chính thức hiện hành — không phải lời hứa về lịch trình hay điều kiện vận hành."
-          : "Planning ideas rebuilt from CoHai’s source-backed subjects and current official tourism material — not promises about a specific itinerary or operating conditions."}
+          ? "Những ý tưởng lên đường được xây từ các chủ đề di sản của Cô Hai và nguồn du lịch chính thức hiện hành — không phải lời hứa về lịch trình hay điều kiện vận hành."
+          : "Planning ideas rebuilt from Cô Hai’s source-backed subjects and current official tourism material — not promises about a specific itinerary or operating conditions."}
       />
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 md:pb-24">
         <div className="mb-8 flex gap-4 rounded-3xl border border-border bg-surface p-5 shadow-border">
